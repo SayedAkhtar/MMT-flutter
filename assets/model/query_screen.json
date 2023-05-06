@@ -1,0 +1,48 @@
+{
+  "active_query": [
+    {
+      "id": 1,
+      "name": "official",
+      "specialization": "Bariatric Medicine/Surgery",
+      "doctor_response": "What is Lorem Ipsum?\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\r\n\r\nWhy do we use it?\r\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "is_payment_required": false,
+      "is_payment_done": false,
+      "created_at": "Feb 18, 2023 | 11:02 am"
+    },
+    {
+      "id": 3,
+      "name": "officia",
+      "specialization": "Bariatric Medicine/Surgery",
+      "doctor_response": "Ut eget urna vel urna lacinia luctus sit amet pretium metus. Mauris laoreet, dolor vel vestibulum cursus, elit mi vulputate velit, faucibus accumsan enim tortor non enim. Maecenas pretium nisi augue, id tincidunt enim blandit ac. Aliquam euismod libero cursus purus mollis sagittis. Suspendisse ullamcorper neque magna. Aenean urna lectus, viverra sit amet facilisis in, placerat et metus. Donec pellentesque sagittis lacus in tincidunt. Sed elit elit, interdum sed purus eu, elementum vulputate lacus.Sed bibendum vitae nunc eget tempus. Nunc tincidunt dui in tristique laoreet. Aliquam consequat arcu libero, eu pulvinar lorem viverra vitae. Cras porttitor elit nunc, non suscipit odio placerat at. Phasellus pharetra mattis erat eleifend elementum. Donec euismod lobortis porta. Praesent blandit orci id urna pellentesque ultrices. Proin ut mi metus. Aliquam erat volutpat. Vestibulum id lacus eros. Quisque non lacus nulla. Nam accumsan bibendum ligula a porta. Aenean arcu libero, facilisis in lectus vitae, laoreet congue erat. Ut ac lacus magna. In sit amet fermentum lacus, iaculis laoreet diam. Suspendisse scelerisque interdum felis ac interdum. Suspendisse congue venenatis ex, semper tincidunt odio bibendum eget. Praesent elit sem, lobortis ut lorem at, facilisis varius mauris. Phasellus vehicula nibh lectus, ut posuere tellus sagittis eget. Nullam hendrerit tristique rhoncus. Sed fringilla sollicitudin lacus, quis auctor eros molestie quis. Nunc imperdiet vel risus quis molestie. Vivamus libero tortor, ultricies non dui eu, iaculis tempor lorem. Aenean viverra tellus sit amet enim placerat elementum non nec lacus. Ut eu volutpat lorem, convallis fermentum libero. Aliquam faucibus, augue non vulputate vulputate, nisl ante hendrerit massa, non vehicula nulla magna nec nibh. Nullam id varius turpis. Maecenas massa ligula, vestibulum nec diam quis, lacinia rhoncus ex.",
+      "is_payment_required": true,
+      "is_payment_done": false,
+      "created_at": "Feb 18, 2023 | 11:02 am"
+    }
+  ],
+  "all_query": [
+    {
+      "id": 1,
+      "name": "official",
+      "specialization": "Bariatric Medicine/Surgery",
+      "created_at": "Feb 18, 2023 | 11:02 am",
+      "is_completed": false,
+      "completed_at": "Feb 05, 2023 | 12:02 pm"
+    },
+    {
+      "id": 2,
+      "name": "officia",
+      "specialization": "Bariatric Medicine/Surgery",
+      "created_at": "Feb 18, 2023 | 11:02 am",
+      "is_completed": false,
+      "completed_at": "Feb 05, 2023 | 12:02 pm"
+    },
+    {
+      "id": 3,
+      "name": "officia",
+      "specialization": "Bariatric Medicine/Surgery",
+      "created_at": "Feb 18, 2023 | 11:02 am",
+      "is_completed": false,
+      "completed_at": "Feb 05, 2023 | 12:02 pm"
+    }
+  ]
+}

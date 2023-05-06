@@ -1,0 +1,27 @@
+{
+  "username": "Tony",
+  "password": "$2y$10$L3en6JTaHg.ddGq4pDzSP.Dbrg4XDI9LlEtrZ1bgg2qkKDDDh5fL2",
+  "email": "tony123@gamil.com",
+  "name": "Tony",
+  "gender": "male",
+  "is_active": true,
+  "user_type": 1,
+  "added_by": null,
+  "updated_at": "2023-02-18T23:58:14.000000Z",
+  "created_at": "2023-02-18T23:58:14.000000Z",
+  "id": 4,
+  "roles": [
+    {
+      "id": 1,
+      "name": "System User",
+      "guard_name": "web",
+      "created_at": "2023-02-18T23:32:27.000000Z",
+      "updated_at": "2023-02-18T23:32:27.000000Z",
+      "pivot": {
+        "model_id": "4",
+        "role_id": "1",
+        "model_type": "App\\Models\\User"
+      }
+    }
+  ]
+}

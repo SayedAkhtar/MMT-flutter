@@ -1,0 +1,49 @@
+{
+  "hospitals": [
+    {
+      "id": 1,
+      "name": "Haag-Miller",
+      "address": "18218 Nathen Rue\nEliezerborough, NC 55214",
+      "description": "Knave was standing before them, in chains, with a T!' said the Hatter. He had been would have appeared to them she heard a little door was shut again, and looking at it gloomily: then he dipped it into his plate. Alice did not quite sure whether it was indeed: she was talking. 'How CAN I have to go down the chimney?--Nay, I shan't! YOU do it!--That I won't, then!--Bill's to go down the chimney close above her: then, saying to herself, 'I don't see how he can EVEN finish, if he thought it had.",
+      "geo_location": "56.818382,-22.729678",
+      "logo": "https://via.placeholder.com/640x480.png/00eeaa?text=rerum",
+      "images": [
+        "https://via.placeholder.com/640x480.png/008855?text=vero",
+        "https://via.placeholder.com/640x480.png/005555?text=nesciunt",
+        "https://via.placeholder.com/640x480.png/00ddee?text=aut",
+        "https://via.placeholder.com/640x480.png/00cc11?text=molestias",
+        "https://via.placeholder.com/640x480.png/000000?text=id",
+        "https://via.placeholder.com/640x480.png/000066?text=dolores",
+        "https://via.placeholder.com/640x480.png/00eeaa?text=beatae",
+        "https://via.placeholder.com/640x480.png/000022?text=qui",
+        "https://via.placeholder.com/640x480.png/0077cc?text=eum",
+        "https://via.placeholder.com/640x480.png/008800?text=ad"
+      ],
+      "is_active": true,
+      "created_at": "2023-02-12T11:30:09.000000Z",
+      "updated_at": "2023-02-12T11:30:09.000000Z",
+      "added_by": null,
+      "updated_by": null
+    }
+  ],
+  "doctors": [
+    {
+      "id": 1,
+      "name": "fugiat",
+      "phone": 1,
+      "email": "albina19@hotmail.com",
+      "start_of_service": "2023-02-05T12:09:05.000000Z",
+      "awards": "vitae",
+      "description": "tempore",
+      "designation": "MDS",
+      "qualification": "MBBS",
+      "faq": "autem",
+      "time_slots": "eos",
+      "is_active": true,
+      "created_at": "2023-02-12T08:37:58.000000Z",
+      "updated_at": "2023-02-12T08:37:58.000000Z",
+      "added_by": 4,
+      "updated_by": null
+    }
+  ]
+}
