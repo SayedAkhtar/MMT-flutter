@@ -28,6 +28,7 @@ class BaseProvider extends GetConnect{
 
   dynamic responseHandler(Response response) async {
     var logger = Logger();
+    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -47,18 +48,22 @@ class BaseProvider extends GetConnect{
         throw Exception('You are not authorized to access this resource');
       case 404:
         throw Exception("The resource you are trying to access in not found");
+      case 405:
+        throw Exception("Method not allowed");
       case 400:
       case 422:
         var responseJson = response.body;
         ErrorResponse error = ErrorResponse.fromJson(responseJson);
-        if(error.error! == 'Unauthenticated'){
+        if(error.error!.replaceAll(RegExp('[^A-Za-z0-9]'), '') == 'Unauthenticated'){
           storage.delete(key: "token");
           Get.offNamedUntil(Routes.login, (route) => false);
+          throw Exception("Login token got expired. Please login again.");
         }
         throw Exception("${error.error}");
       case 500:
       default:
         logger.d(response.body);
+        print(response.body);
         throw Exception('Server is not responding please try again later.');
     }
   }

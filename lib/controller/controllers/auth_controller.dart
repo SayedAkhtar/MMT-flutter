@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,9 +23,11 @@ class AuthController extends GetxController {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final oldPasswordController = TextEditingController();
   final gender = "male".obs;
   int loginMethod = 0;
   var isLoggedIn = false.obs;
+  bool showLoginPassword = false;
 
   late AuthProvider _provider;
   final UserController _user = Get.find<UserController>();
@@ -94,9 +98,9 @@ class AuthController extends GetxController {
     if (_storageController.get('token') != null ||
         _storageController.get('token') != "") {
       Loaders.loadingDialog(title: "Checking Credentials");
-      User? res =
+      LocalUser? res =
           await _provider.checkToken(token: _storageController.get('token'));
-      if(res == null){
+      if (res == null) {
         await Get.offAllNamed(Routes.login);
         return;
       }
@@ -111,12 +115,28 @@ class AuthController extends GetxController {
 
   void phoneLogin() async {
     if (phoneLoginFormKey.currentState!.validate()) {
-      User? res = await _provider.login(
+      LocalUser? res = await _provider.login(
           phone: phoneController.text, password: passwordController.text);
       if (res != null) {
         _user.user = res;
+        print(res);
         _storageController.set(key: "token", value: res.token!);
         isLoggedIn.value = true;
+        try {
+          final userCredential = await FirebaseAuth.instance.signInAnonymously();
+          // final fcmToken = await FirebaseMessaging.instance.getToken();
+          await _provider.updateFirebase(userCredential.user!.uid, "fcmToken!");
+          print(userCredential.user!.uid);
+          // print(fcmToken);
+        } on FirebaseAuthException catch (e) {
+          switch (e.code) {
+            case "operation-not-allowed":
+              print("Anonymous auth hasn't been enabled for this project.");
+              break;
+            default:
+              print("Unknown error.");
+          }
+        }
         phoneController.text = "";
         passwordController.text = "";
         update();
@@ -126,7 +146,8 @@ class AuthController extends GetxController {
   }
 
   void logout() async {
-    if(await _provider.logout()){
+    Loaders.loadingDialog();
+    if (await _provider.logout()) {
       Get.offAllNamed(Routes.login);
     }
   }
@@ -141,13 +162,13 @@ class AuthController extends GetxController {
     update();
   }
 
-  void resendOtp(){
-    // _provider.
+  void resendOtp() async {
+    await _provider.resendOtp();
   }
 
-  void verifyOtp({required String otp}) async{
+  void verifyOtp({required String otp}) async {
     bool res = await _provider.validateOtp(otp, phoneController.text);
-    if(res){
+    if (res) {
       Loaders.successDialog("Phone number verified successfully");
       Get.toNamed(Routes.home);
     }

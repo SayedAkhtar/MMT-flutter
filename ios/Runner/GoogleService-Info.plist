@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>588843241739-3vi332nsq1j6dnp42n6729sb7nblr62h.apps.googleusercontent.com</string>
+	<string>922681658193-fhui2l8k8lunrj57a7epknoal0q6th87.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.588843241739-3vi332nsq1j6dnp42n6729sb7nblr62h</string>
+	<string>com.googleusercontent.apps.922681658193-fhui2l8k8lunrj57a7epknoal0q6th87</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBaeJLyynP5bxTJivRdUKwzvcAcsXjYkuI</string>
+	<string>AIzaSyASWXIHAXY3_pVZntIq7XQcR2IDSKlEihM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>588843241739</string>
+	<string>922681658193</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.mmt</string>
 	<key>PROJECT_ID</key>
-	<string>mmt-development-flutter</string>
+	<string>mymedtrip-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mmt-development-flutter.appspot.com</string>
+	<string>mymedtrip-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:588843241739:ios:a726734a978245b9d9920e</string>
+	<string>1:922681658193:ios:ceef44b3da9aa9e86aa170</string>
+	<key>DATABASE_URL</key>
+	<string>https://mymedtrip-app-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

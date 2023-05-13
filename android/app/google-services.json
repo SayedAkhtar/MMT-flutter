@@ -1,37 +1,38 @@
 {
   "project_info": {
-    "project_number": "588843241739",
-    "project_id": "mmt-development-flutter",
-    "storage_bucket": "mmt-development-flutter.appspot.com"
+    "project_number": "922681658193",
+    "firebase_url": "https://mymedtrip-app-default-rtdb.firebaseio.com",
+    "project_id": "mymedtrip-app",
+    "storage_bucket": "mymedtrip-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:588843241739:android:c52522d04c3f50ced9920e",
+        "mobilesdk_app_id": "1:922681658193:android:588e3e7c8aab646d6aa170",
         "android_client_info": {
           "package_name": "com.example.mmt_"
         }
       },
       "oauth_client": [
         {
-          "client_id": "588843241739-8q7u2flt9l38a8vig1derpoj5i4so3dj.apps.googleusercontent.com",
+          "client_id": "922681658193-jir3u6uuam1id4at9ogcq43kkm59ndul.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD53jZc2qgaxfenWHiwmQYLakd-NwQckDA"
+          "current_key": "AIzaSyCwa0paL-G-HEGoi7k3OYgOK9wpPgD_nlg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "588843241739-8q7u2flt9l38a8vig1derpoj5i4so3dj.apps.googleusercontent.com",
+              "client_id": "922681658193-jir3u6uuam1id4at9ogcq43kkm59ndul.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "588843241739-3vi332nsq1j6dnp42n6729sb7nblr62h.apps.googleusercontent.com",
+              "client_id": "922681658193-fhui2l8k8lunrj57a7epknoal0q6th87.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.mmt"

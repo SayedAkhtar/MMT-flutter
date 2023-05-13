@@ -29,6 +29,7 @@ class QueryController extends GetxController {
   RxInt specializationId = 0.obs;
   RxInt hospitalId = 0.obs;
   RxInt doctorId = 0.obs;
+  RxInt patientFaminlyId = 0.obs;
   RxString briefHistory = "".obs;
   RxString preferredCountry = "India".obs;
   String medicalVisaPath = '';
@@ -75,6 +76,9 @@ class QueryController extends GetxController {
     _formData.fields.add(MapEntry("hospital_id", hospitalId.value.toString()));
     if(doctorId.value !=0 ){
       _formData.fields.add(MapEntry("doctor_id",doctorId.value.toString()));
+    }
+    if(patientFaminlyId.value !=0 ){
+      _formData.fields.add(MapEntry("patient_family_id",patientFaminlyId.value.toString()));
     }
     if(briefHistory.value != ""){
       _formData.fields.add(MapEntry("medical_history", briefHistory.value));

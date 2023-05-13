@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/controller/controllers/hospital_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/models/hospital_model.dart';
@@ -19,12 +20,10 @@ class Hospital_preview_page extends GetView<HospitalController> {
 
   @override
   Widget build(BuildContext context) {
-    print(controller.selectedHospital!.name);
     // return Placeholder();
-    return SafeArea(
-      child: Scaffold(
-        body: PageWithData(context, controller.selectedHospital!)
-      ),
+    return Scaffold(
+      appBar: CustomAppBar(pageName: controller.selectedHospital!.name!,),
+      body: PageWithData(context, controller.selectedHospital!)
     );
   }
 
@@ -38,7 +37,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
             top: 0,
             left: 0,
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
+              height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
               child: Image.network(
                 hospital.logo??'https://via.placeholder.com/640x480.png/00eeaa?text=No%20Image',
@@ -50,7 +49,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
             bottom: 0,
             left: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.45,
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 24.0),
               decoration: BoxDecoration(
@@ -127,7 +126,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
                           onTap: (){},
                           image: 'Images/blog.png', title: 'Blog',
                         ),
-                        CustomSpacer.m(),
+                        CustomSpacer.s(),
                         _hospitalFeatureButton(context,
                             onTap: () {
                               Get.toNamed(Routes.treatmentsAvailable);
@@ -148,7 +147,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
                         },
                           image: "Images/Md.png", title: "Patient testimonials",
                         ),
-                        CustomSpacer.m(),
+                        CustomSpacer.s(),
                         _hospitalFeatureButton(
                           context,
                           onTap: () {
@@ -180,6 +179,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
               color: MYcolors.greycolor
           ),
           height: MediaQuery.of(context).size.height * 0.10,
+
           child: Row(
             children: [
               Column(
@@ -192,13 +192,14 @@ class Hospital_preview_page extends GetView<HospitalController> {
                     width: 40,
                     // fit: BoxFit.fill,
                   ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                        color: MYcolors.blackcolor,
-                        fontFamily: "Brandon",
-                        fontSize: 15),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          color: MYcolors.blackcolor,
+                          fontFamily: "Brandon",
+                          fontSize: 15),
+                    ),
                   ),
                 ],
               ),

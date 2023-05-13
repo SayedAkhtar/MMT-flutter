@@ -2,6 +2,7 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:mmt_/bindings/AuthBinding.dart';
 import 'package:mmt_/bindings/DoctorBinding.dart';
 import 'package:mmt_/bindings/HospitalBinding.dart';
+import 'package:mmt_/bindings/InitialBinding.dart';
 import 'package:mmt_/bindings/QueryBinding.dart';
 import 'package:mmt_/screens/Home_screens/faqs.dart';
 import 'package:mmt_/screens/Home_screens/home_bottom.dart';
@@ -33,9 +34,10 @@ import 'package:mmt_/screens/Video_consult/teleconsult.dart';
 import 'package:mmt_/screens/Video_consult/thankyou.dart';
 import 'package:mmt_/screens/connects/connect_homepage.dart';
 import 'package:mmt_/screens/connects/messages_page.dart';
+import 'package:mmt_/screens/connects/support_connect.dart';
 import 'package:mmt_/screens/connects/video_call_screen.dart';
 import 'package:mmt_/screens/login/complete_signup.dart';
-import 'package:mmt_/screens/login/help_page.dart';
+import 'package:mmt_/screens/Settings_page/help_page.dart';
 import 'package:mmt_/screens/login/language_page.dart';
 import 'package:mmt_/screens/login/login_fingerprint.dart';
 import 'package:mmt_/screens/auth/login.dart';
@@ -89,6 +91,7 @@ class Routes {
   static String teleconsultationConfirm = '/teleconsultation_confirm';
   static String teleconsultationConnect = '/teleconsultation_connect';
   static String videoChat = '/video_chat';
+  static String supportCall = '/support_call';
 
 }
 
@@ -100,7 +103,7 @@ final getPages = [
   GetPage(
       name: Routes.login,
       page: () => const LoginPage(),
-      binding: AuthBinding()
+      bindings: [AuthBinding(),InitialBinding()]
   ),
   GetPage(
       name: Routes.registerFirstStep,
@@ -269,5 +272,10 @@ final getPages = [
       name: Routes.videoChat,
       page: () => const Video_Call_Screen()
   ),
+  GetPage(
+      name: Routes.supportCall,
+      page: () => const SupportConnect()
+  ),
+
 ];
 

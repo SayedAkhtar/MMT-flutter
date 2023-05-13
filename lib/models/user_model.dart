@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class User {
+class LocalUser {
   String? username;
   String? password;
   String? email;
@@ -21,7 +21,11 @@ class User {
   late int id;
   String? token;
 
-  User(
+  static const int TYPE_PATIENT = 1;
+  static const int TYPE_DOCTOR = 4;
+  static const int TYPE_HCF = 3;
+
+  LocalUser(
       {this.username,
       this.password,
       this.email,
@@ -40,13 +44,13 @@ class User {
       required this.id,
       this.token});
 
-  User.fromJson(Map<String, dynamic> json) {
+  LocalUser.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     password = json['password'];
     email = json['email'];
     phoneNo = json['phone'].toString();
     name = json['name'];
-    image = json['image'];
+    image = json['avatar'];
     gender = json['gender'];
     country = json['country'];
     dob = json['dob'];

@@ -26,6 +26,29 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) calendar events</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires to access your photo library to show image on profile and send via chat</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) contact use</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) location use</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) location use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires to access your microphone to record video with your voice send via chat</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires to access your photo library to show image on profile and send via chat</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>$(PRODUCT_NAME) reminder use</string>
+	<key>NSFaceIDUsageDescription</key>
+    <string>Why is my app authenticating using face id?</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -47,25 +70,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSAppTransportSecurity</key>
-    <dict>
-       <key>NSAllowsArbitraryLoads</key><true/>
-    </dict>
-    <key>NSCalendarsUsageDescription</key>
-      <string>$(PRODUCT_NAME) calendar events</string>
-    <key>NSRemindersUsageDescription</key>
-      <string>$(PRODUCT_NAME) reminder use</string>
-    <key>NSCameraUsageDescription</key>
-      <string>This app requires to access your photo library to show image on profile and send via chat</string>
-    <key>NSMicrophoneUsageDescription</key>
-      <string>This app requires to access your microphone to record video with your voice send via chat</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-      <string>This app requires to access your photo library to show image on profile and send via chat</string>
-    <key>NSContactsUsageDescription</key>
-       <string>$(PRODUCT_NAME) contact use</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-      <string>$(PRODUCT_NAME) location use</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-      <string>$(PRODUCT_NAME) location use</string>
 </dict>
 </plist>

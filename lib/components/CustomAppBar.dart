@@ -23,33 +23,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: preferredSize.height,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: (showDivider == true)?MYcolors.blackcolor.withOpacity(0.2):Colors.transparent))
-      ),
-      padding: const EdgeInsets.only(left: 16.6, right: 16.0),
-      child: Row(
-        children: [
-          showBack?SmallIconButton(
-              onTap: () {
-                Get.back();
-              },
-              icon: Icons.arrow_back_ios_new_outlined
-          ):SizedBox(),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.02,
-          ),
-          Text(
-            pageName.tr,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              // fontFamily: "Brandon",
-              fontSize: 25,
+    return SafeArea(
+      child: Container(
+        height: preferredSize.height,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: (showDivider == true)?MYcolors.blackcolor.withOpacity(0.2):Colors.transparent))
+        ),
+        padding: const EdgeInsets.only(left: 16.6, right: 16.0),
+        child: Row(
+          children: [
+            showBack?SmallIconButton(
+                onTap: () {
+                  Get.back();
+                },
+                icon: Icons.arrow_back_ios_new_outlined
+            ):SizedBox(),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.02,
             ),
-          )
-        ],
+            Text(
+              pageName.tr,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontFamily: "Brandon",
+                fontSize: 25,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -49,21 +46,34 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB3zpdPFZHof19ydzy6XYqSYEoafYvKIi8',
+    appId: '1:922681658193:web:0c19c89833e51c376aa170',
+    messagingSenderId: '922681658193',
+    projectId: 'mymedtrip-app',
+    authDomain: 'mymedtrip-app.firebaseapp.com',
+    databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
+    storageBucket: 'mymedtrip-app.appspot.com',
+    measurementId: 'G-ELKMH046XM',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD53jZc2qgaxfenWHiwmQYLakd-NwQckDA',
-    appId: '1:588843241739:android:c52522d04c3f50ced9920e',
-    messagingSenderId: '588843241739',
-    projectId: 'mmt-development-flutter',
-    storageBucket: 'mmt-development-flutter.appspot.com',
+    apiKey: 'AIzaSyCwa0paL-G-HEGoi7k3OYgOK9wpPgD_nlg',
+    appId: '1:922681658193:android:588e3e7c8aab646d6aa170',
+    messagingSenderId: '922681658193',
+    projectId: 'mymedtrip-app',
+    databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
+    storageBucket: 'mymedtrip-app.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBaeJLyynP5bxTJivRdUKwzvcAcsXjYkuI',
-    appId: '1:588843241739:ios:a726734a978245b9d9920e',
-    messagingSenderId: '588843241739',
-    projectId: 'mmt-development-flutter',
-    storageBucket: 'mmt-development-flutter.appspot.com',
-    iosClientId: '588843241739-3vi332nsq1j6dnp42n6729sb7nblr62h.apps.googleusercontent.com',
+    apiKey: 'AIzaSyASWXIHAXY3_pVZntIq7XQcR2IDSKlEihM',
+    appId: '1:922681658193:ios:ceef44b3da9aa9e86aa170',
+    messagingSenderId: '922681658193',
+    projectId: 'mymedtrip-app',
+    databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
+    storageBucket: 'mymedtrip-app.appspot.com',
+    iosClientId: '922681658193-fhui2l8k8lunrj57a7epknoal0q6th87.apps.googleusercontent.com',
     iosBundleId: 'com.example.mmt',
   );
 }

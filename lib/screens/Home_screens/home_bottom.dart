@@ -13,6 +13,8 @@ import 'package:mmt_/screens/connects/connect_homepage.dart';
 import 'package:mmt_/screens/update_screen/query_confirmed.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../constants/api_constants.dart';
+
 class Home_screen extends StatefulWidget {
   const Home_screen({super.key});
 
@@ -26,7 +28,7 @@ class _Home_screenState extends State<Home_screen> {
     if (index == 2) {
       openWhatsapp(
           text: "Hello, I have query regarding MyMedTrip.",
-          number: "+919818237391");
+          number: WHATSAPP_NUMBER);
     } else {
       setState(() {
         _selectedIndex = index;
@@ -63,66 +65,65 @@ class _Home_screenState extends State<Home_screen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: getHomeViewWidget(),
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/bottom-nav-home.svg'),
-            activeIcon: SvgPicture.asset(
-              'assets/icons/bottom-nav-home.svg',
-              colorFilter:
-                  ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
-            ),
-            label: 'Home'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/bottom-nav-query.svg'),
-            activeIcon: SvgPicture.asset(
-              'assets/icons/bottom-nav-query.svg',
-              colorFilter:
-                  ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
-            ),
-            label: 'Query'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/bottom-nav-whatsapp.svg'),
-            activeIcon: SvgPicture.asset(
-              'assets/icons/bottom-nav-whatsapp.svg',
-              colorFilter:
-                  ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
-            ),
-            label: 'Whatsapp'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/bottom-nav-updates.svg'),
-            activeIcon: SvgPicture.asset(
-              'assets/icons/bottom-nav-updates.svg',
-              colorFilter:
-                  ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
-            ),
-            label: 'Updates'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/icons/bottom-nav-connect.svg'),
-            activeIcon: SvgPicture.asset(
-              'assets/icons/bottom-nav-connect.svg',
-              colorFilter:
-                  ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
-            ),
-            label: 'Connect'.tr,
-            // backgroundColor: MYcolors.blackcolor
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        unselectedItemColor: MYcolors.blacklightcolors,
-        selectedItemColor: MYcolors.bluecolor,
-        onTap: _onItemTapped,
+    showSelectedLabels: true,
+    showUnselectedLabels: true,
+    items: <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: SvgPicture.asset('assets/icons/bottom-nav-home.svg'),
+        activeIcon: SvgPicture.asset(
+          'assets/icons/bottom-nav-home.svg',
+          colorFilter:
+              ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
+        ),
+        label: 'Home'.tr,
       ),
-    ));
+      BottomNavigationBarItem(
+        icon: SvgPicture.asset('assets/icons/bottom-nav-query.svg'),
+        activeIcon: SvgPicture.asset(
+          'assets/icons/bottom-nav-query.svg',
+          colorFilter:
+              ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
+        ),
+        label: 'Query'.tr,
+      ),
+      BottomNavigationBarItem(
+        icon: SvgPicture.asset('assets/icons/bottom-nav-whatsapp.svg'),
+        activeIcon: SvgPicture.asset(
+          'assets/icons/bottom-nav-whatsapp.svg',
+          colorFilter:
+              ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
+        ),
+        label: 'Whatsapp'.tr,
+      ),
+      BottomNavigationBarItem(
+        icon: SvgPicture.asset('assets/icons/bottom-nav-updates.svg'),
+        activeIcon: SvgPicture.asset(
+          'assets/icons/bottom-nav-updates.svg',
+          colorFilter:
+              ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
+        ),
+        label: 'Updates'.tr,
+      ),
+      BottomNavigationBarItem(
+        icon: SvgPicture.asset('assets/icons/bottom-nav-connect.svg'),
+        activeIcon: SvgPicture.asset(
+          'assets/icons/bottom-nav-connect.svg',
+          colorFilter:
+              ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
+        ),
+        label: 'Connect'.tr,
+        // backgroundColor: MYcolors.blackcolor
+      ),
+    ],
+    currentIndex: _selectedIndex,
+    unselectedItemColor: MYcolors.blacklightcolors,
+    selectedItemColor: MYcolors.bluecolor,
+    onTap: _onItemTapped,
+      ),
+    );
   }
 
   Widget getHomeViewWidget(){

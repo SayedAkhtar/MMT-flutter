@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/controller/controllers/auth_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/screens/login/help_page.dart';
+import 'package:mmt_/screens/Settings_page/help_page.dart';
 import 'package:mmt_/screens/login/verify_confirm.dart';
 
 import '../../constants/colors.dart';

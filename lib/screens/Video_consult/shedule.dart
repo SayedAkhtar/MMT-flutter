@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/constants/colors.dart';
 import 'package:mmt_/constants/razorpay_constants.dart';
 import 'package:mmt_/controller/controllers/teleconsult_controller.dart';
+import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/helper/Loaders.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/routes.dart';
 import 'package:mmt_/screens/Video_consult/thankyou.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -51,32 +54,37 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            pageName: '',
+    return Scaffold(
+      appBar: CustomAppBar(
+        pageName: '',
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: CustomSpacer.S),
+        child: Column(
+    children: [
+        Lottie.asset("assets/lottie/appointment-schedule.json"),
+        Text(
+          "You have Selected : ${_controller.selectedSlot.dayName} ${Utils.formatDate(DateTime.fromMillisecondsSinceEpoch(_controller.selectedSlot.timestamp * 1000))}",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
           ),
-      body: Column(
-        children: [
-          Lottie.asset("assets/lottie/appointment-schedule.json"),
-          Text(
-            "You have Selected : ${_controller.selectedSlot.dayName} ${new DateTime.fromMillisecondsSinceEpoch(_controller.selectedSlot.timestamp * 1000).isUtc}",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
+        ),
+        Text(
+          "Or Want to Rechedule your video Consulation ?",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
           ),
-          Text(
-            "Or Want to Rechedule your video Consulation ?",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Container(
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.02,
+        ),
+        GestureDetector(
+          onTap: (){
+            Get.back();
+          },
+          child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: MYcolors.greycolor),
@@ -91,13 +99,12 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
               ),
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03,
-          ),
-          ElevatedButton(
+        ),
+        Spacer(),
+        SafeArea(
+          child: ElevatedButton(
             onPressed: () {
-              // _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount: 190));
-              Get.toNamed(Routes.teleconsultationConfirm);
+              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount: 190));
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -112,8 +119,10 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
               ),
             ),
           ),
-        ],
+        ),
+    ],
+        ),
       ),
-    ));
+    );
   }
 }

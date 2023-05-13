@@ -1,7 +1,10 @@
+import 'package:mmt_/models/faq_model.dart';
+
 class Home {
   List<Hospitals>? hospitals;
   List<DoctorsHome>? doctors;
   List<String>? banners;
+  List<Faq>? faqs;
 
   Home({this.hospitals, this.doctors});
 
@@ -22,6 +25,12 @@ class Home {
       banners = <String>[];
       json['banners'].forEach((v) {
         banners?.add(v);
+      });
+    }
+    if(json['faq'] != null){
+      faqs = <Faq>[];
+      json['faq'].forEach((v) {
+        faqs?.add(Faq.fromJson(v));
       });
     }
   }

@@ -37,4 +37,35 @@ class TeleconsultProvider extends BaseProvider {
     }
     return false;
   }
+
+  Future getConsultationList() async{
+    try{
+      Response? response = await get('/consultations');
+      if(response.status.hasError){
+        return Future.error(response.body);
+      }
+      else{
+        return response.body['DATA'];
+      }
+    }catch(e){
+      Loaders.errorDialog(e.toString());
+    }
+    return null;
+  }
+
+  Future<bool> storeConsultationRequest(data) async{
+    try{
+      Response? response = await post('/submit-consultation', data);
+      if(response.status.hasError){
+        return Future.error(response.body);
+      }
+      else{
+        print(response.body);
+        return true;
+      }
+    }catch(e){
+      Loaders.errorDialog(e.toString());
+    }
+    return false;
+  }
 }

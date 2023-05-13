@@ -76,7 +76,6 @@ class DoctorProvider extends GetConnect {
   Future<List<Doctor>> getAllDoctors({String? parameter}) async{
     _headers['Authorization'] = "Bearer $_token";
     _headers['Accept'] = "application/json";
-    print("======= > $_token");
     List<Doctor> _doctor = [];
     try{
       String uri = '/doctors';
@@ -84,6 +83,7 @@ class DoctorProvider extends GetConnect {
         uri = "$uri${parameter}";
       }
       Response response = await get(uri, contentType: 'application/json', headers: _headers);
+      print(response.body);
       if (response.statusCode == 200) {
         List jsonString = await response.body["data"];
         jsonString.forEach((element) => _doctor.add(Doctor.fromJson(element)));

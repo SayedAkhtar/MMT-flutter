@@ -46,13 +46,14 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
       });
       debouncer.run(() async {
 
-        Response res = await GetConnect().get("$base_uri/admin/ajax-search/${widget.searchTable}?term=${term}", headers: {"Accepts": "application/json"});
+        Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=${term}", headers: {"Accepts": "application/json"});
         if(res.isOk){
           var json = res.body['data'];
           if(json.isNotEmpty) {
             SearchQueryResult result = SearchQueryResult.fromJson(json);
             print(result);
             if (result.list!.isNotEmpty) {
+              print(result.list!.first.name);
               setState(() {
                 searchResult = result.list!;
               });
@@ -68,7 +69,7 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
   }
 
   Future firstSearch() async{
-    Response res = await GetConnect().get("$base_uri/admin/ajax-search/${widget.searchTable}", headers: {"Accepts": "application/json"});
+    Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}", headers: {"Accepts": "application/json"});
     if(res.isOk){
       var json = res.body['data'];
       if(json.isNotEmpty) {

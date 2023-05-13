@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/screens/login/help_page.dart';
+import 'package:mmt_/screens/Settings_page/help_page.dart';
 
 import '../../constants/colors.dart';
 

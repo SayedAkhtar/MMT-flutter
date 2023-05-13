@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/components/CustomAutocomplete.dart';
 import 'package:mmt_/controller/controllers/user_controller.dart';
@@ -25,12 +26,12 @@ class Add_family_page extends StatefulWidget {
 
 class _Add_family_pageState extends State<Add_family_page> {
   final formKey = GlobalKey<FormState>();
-  late User? familyMember;
+  late LocalUser? familyMember;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    familyMember = User(id: 0, speciality: null);
+    familyMember = LocalUser(id: 0, speciality: null);
   }
   @override
   Widget build(BuildContext context) {
@@ -91,19 +92,21 @@ class _Add_family_pageState extends State<Add_family_page> {
                           OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
-
-                      TextFormField(
-                        onSaved: (value){
-                          familyMember?.phoneNo = value!;
-                        },
-                        keyboardType: TextInputType.number,
+                      IntlPhoneField(
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.call),
                           contentPadding:
-                              EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-                          hintText: "Contact no.".tr,
+                          EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                          hintText: "Phone",
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          counterText: "",
                         ),
+                        onChanged: (phone) {
+                          familyMember?.phoneNo = phone.completeNumber!;
+                        },
+                        initialCountryCode: "IN",
                       ),
 
                       TextFormField(
@@ -117,13 +120,6 @@ class _Add_family_pageState extends State<Add_family_page> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                      ),
-                      CustomAutocomplete(
-                        searchTable: "specializations",
-                        selectedId : 0.obs,
-                        onSelected: (Result result) {
-                          familyMember?.speciality = result.id.toString();
-                        },
                       ),
                       TextFormField(
                         decoration: InputDecoration(

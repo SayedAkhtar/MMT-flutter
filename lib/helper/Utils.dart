@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mmt_/constants/api_constants.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Utils {
   static void checkResponseVariableType(Map<String, dynamic> json){
@@ -65,5 +71,62 @@ class Utils {
       default:
         return 'Wrong Month';
     }
+  }
+
+  static String formatDate(DateTime date){
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+  static String formatDateWithTime(DateTime date){
+    return DateFormat('yyyy-MM-dd hh:mm a').format(date);
+  }
+
+  static Future<File?> saveFileToDevice(String filename, String url) async {
+    HttpClient client = HttpClient();
+    try{
+      if(await Permission.storage.request().isGranted){
+        var request = await client.getUrl(Uri.parse(url));
+        var response = await request.close();
+        print(response);
+        var bytes = await consolidateHttpClientResponseBytes(response);
+        String dir = '/storage/emulated/0/Download';
+        if(Platform.isIOS){
+          Directory? downloadsDir = await getTemporaryDirectory();
+            dir = downloadsDir.path;
+        }
+        print(dir);
+        if(dir != null){
+          File file = new File('$dir/$filename');
+          print(file);
+          await file.writeAsBytes(bytes);
+          return file;
+        }
+      }else{
+        Get.snackbar("Error","File save permissions denied" );
+        // Loaders.errorDialog("File save permissions denined");
+        print("Permissions not granted");
+      }
+
+    }catch(ex){
+      Get.snackbar("Error",ex.toString() );
+      print(ex);
+    }
+    return null;
+//     var status = await Permission.storage.status;
+//     if (!status.isGranted) {
+//       await Permission.storage.request();
+//     }
+//
+//     var dir = Platform.isAndroid
+//         ? '/storage/emulated/0/Download'
+//         : await FilePicker.platform.getDirectoryPath();
+//
+// // Create the file and write the data to it
+//     var file = File('$dir/$filename');
+//
+//     bool alreadyDownloaded = await file.exists();
+//
+//     await file.writeAsBytes(data, flush: true);
+//
+//     return 'file://${file.path}';
   }
 }

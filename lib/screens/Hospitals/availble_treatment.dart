@@ -4,316 +4,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/constants/colors.dart';
+import 'package:mmt_/controller/controllers/hospital_controller.dart';
+import 'package:mmt_/helper/CustomSpacer.dart';
 
-class Available_Treatment extends StatefulWidget {
+class Available_Treatment extends GetView<HospitalController> {
   const Available_Treatment({super.key});
 
   @override
-  State<Available_Treatment> createState() => _Available_TreatmentState();
-}
-
-class _Available_TreatmentState extends State<Available_Treatment> {
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          GestureDetector(
-            onTap: () {
-              Get.back();
-            },
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: MediaQuery.of(context).size.width * 0.1,
-                    decoration: BoxDecoration(
-                      color: MYcolors.greycolor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 20,
-                    )),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Text(
-                  "Available Treatment",
-                  style: TextStyle(
-                    fontFamily: "Brandon",
-                    fontSize: 22,
+    // print(controller.selectedHospital?.treatment?.first.name);
+    if(controller.selectedHospital != null
+        && controller.selectedHospital!.treatment != null
+        && controller.selectedHospital!.treatment!.isNotEmpty){
+      return Scaffold(
+        appBar: CustomAppBar(pageName: "Available Treatment", showDivider: true,),
+        body: Padding(
+          padding: const EdgeInsets.all(CustomSpacer.S),
+          child: ListView.builder(
+            itemCount: controller.selectedHospital!.treatment!.length,
+              itemBuilder: (ctx, i){
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          child: Text(
+                            " ${controller.selectedHospital!.treatment![i].name}",
+                            style: TextStyle(
+                              fontFamily: "Brandon",
+                              fontSize: 18,
+                            ),
+                          )),
+                      Row(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.05,
+                            child: Image.asset(
+                              "Images/dollar.png",
+                              color: MYcolors.bluecolor,
+                              // fit: BoxFit.fill,
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01,
+                          ),
+                          Text(
+                            "${controller.selectedHospital!.treatment![i].price}",
+                            style: TextStyle(
+                              fontFamily: "BrandonMed",
+                              fontSize: 15,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
+                );
+              }
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Divider(
-            thickness: 1,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Text(
-                      " Treatment 1",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 18,
-                      ),
-                    )),
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                          child: Image.asset(
-                            "Images/dollar.png",
-                            color: MYcolors.bluecolor,
-                            // fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Text(
-                          "20,000-40,000",
-                          style: TextStyle(
-                            fontFamily: "BrandonMed",
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Text(
-                      " Treatment 2",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 18,
-                      ),
-                    )),
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                          child: Image.asset(
-                            "Images/dollar.png",
-                            color: MYcolors.bluecolor,
-                            // fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Text(
-                          "20,000-40,000",
-                          style: TextStyle(
-                            fontFamily: "BrandonMed",
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Text(
-                      " Treatment 3",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 18,
-                      ),
-                    )),
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                          child: Image.asset(
-                            "Images/dollar.png",
-                            color: MYcolors.bluecolor,
-                            // fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Text(
-                          "20,000-40,000",
-                          style: TextStyle(
-                            fontFamily: "BrandonMed",
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Text(
-                      " Treatment 4",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 18,
-                      ),
-                    )),
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                          child: Image.asset(
-                            "Images/dollar.png",
-                            color: MYcolors.bluecolor,
-                            // fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Text(
-                          "20,000-40,000",
-                          style: TextStyle(
-                            fontFamily: "BrandonMed",
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Text(
-                      " Treatment 5",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 18,
-                      ),
-                    )),
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                          child: Image.asset(
-                            "Images/dollar.png",
-                            color: MYcolors.bluecolor,
-                            // fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Text(
-                          "20,000-40,000",
-                          style: TextStyle(
-                            fontFamily: "BrandonMed",
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-        ],
-      ),
-    ));
+        ),
+      );
+    }
+    return Scaffold(
+        appBar: CustomAppBar(pageName: "Available Treatment", showDivider: true,),
+        body: Center(child: Text("No treatment added for this hospital yet."),)
+    );
   }
 }

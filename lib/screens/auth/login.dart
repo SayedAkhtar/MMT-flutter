@@ -12,45 +12,48 @@ class LoginPage extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             children: [
-              Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SmallIconButton(
-                      onTap: () => Get.back(),
-                      icon: Icons.arrow_back_ios_new_outlined),
-                  const Spacer(),
-                  SmallIconButton(
-                      onTap: () {
-                        
-                      }, icon: Icons.question_mark_rounded)
-                ],
+              SafeArea(
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SmallIconButton(
+                        onTap: () => Get.back(),
+                        icon: Icons.arrow_back_ios_new_outlined),
+                    const Spacer(),
+                    SmallIconButton(
+                        onTap: () {}, icon: Icons.question_mark_rounded)
+                  ],
+                ),
+              ),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    "MyMedTrip",
+                    style: TextStyle(
+                        fontFamily: "Brandon",
+                        fontSize: 50,
+                        color: MYcolors.blacklightcolors),
+                  ),
+                ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.07,
+                height: 135,
+                child: SingleChildScrollView(
+                  child: GetBuilder<AuthController>(
+                      init: controller,
+                      builder: (_) {
+                        return phoneLogin();
+                      }),
+                ),
               ),
-              const Text(
-                "MyMedTrip",
-                style: TextStyle(
-                    fontFamily: "Brandon",
-                    fontSize: 50,
-                    color: MYcolors.blacklightcolors),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-              ),
-              GetBuilder<AuthController>(
-                  init: controller,
-                  builder: (_) {
-                    return phoneLogin();
-                  }),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
@@ -61,8 +64,6 @@ class LoginPage extends GetView<AuthController> {
                     width: MediaQuery.of(context).size.width * 0.58,
                   ),
                   Container(
-                    // margin: EdgeInsets.only(left: 10),
-                    // padding: EdgeInsets.only(left: 10),
                     alignment: Alignment.topRight,
                     child: const Text(
                       "Forgot password ?",
@@ -81,7 +82,7 @@ class LoginPage extends GetView<AuthController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Dont have an account ?",
+                    "Don't have an account? ",
                     style: TextStyle(
                         fontFamily: "Brandon",
                         fontSize: 15,
@@ -155,22 +156,22 @@ class LoginPage extends GetView<AuthController> {
         key: controller.phoneLoginFormKey,
         child: Column(
           children: [
-
             Container(
               alignment: Alignment.center,
               width: constraint.maxWidth,
               child: IntlPhoneField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.call),
-                  contentPadding: EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                  contentPadding:
+                      EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                   hintText: "Phone",
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   counterText: "",
                 ),
-                onChanged: (phone){
-                  controller.phoneController.text = phone.completeNumber;
+                onChanged: (phone) {
+                  controller.phoneController.text = phone.number;
                 },
                 initialCountryCode: "IN",
               ),
@@ -180,19 +181,30 @@ class LoginPage extends GetView<AuthController> {
             ),
             Container(
               width: constraint.maxWidth,
-              child: TextFormField(
-                controller: controller.passwordController,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  contentPadding:
-                      EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-                  // hintStyle: TextStyle(fontSize: 13),
-                  // prefixText: "Password",
-                  prefixIcon: const Icon(Icons.key),
-                  suffixIcon: IconButton(icon: const Icon(Icons.visibility), onPressed: ()=>{},),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
+              child: GetBuilder<AuthController>(
+                builder: (ctrl) {
+                  return TextFormField(
+                    controller: controller.passwordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: !controller.showLoginPassword,
+                    obscuringCharacter: '*',
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      contentPadding:
+                          const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                      prefixIcon: const Icon(Icons.key),
+                      suffixIcon: IconButton(
+                        icon: controller.showLoginPassword ? const Icon(Icons.visibility):const Icon(Icons.visibility_off)  ,
+                        onPressed: () {
+                          controller.showLoginPassword = !controller.showLoginPassword;
+                          controller.update();
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  );
+                }
               ),
             ),
           ],
@@ -216,9 +228,9 @@ class LoginPage extends GetView<AuthController> {
                 validator: controller.validator,
                 controller: controller.emailController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.call),
+                  prefixIcon: const Icon(Icons.call),
                   contentPadding:
-                      EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                      const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                   hintText: "Email",
                   // hintStyle: TextStyle(fontSize: 13),
                   border: OutlineInputBorder(

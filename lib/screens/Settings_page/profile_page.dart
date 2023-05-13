@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,49 +24,52 @@ class Profile_Page extends GetView<UserController> {
   @override
   Widget build(BuildContext context) {
     final PageController pageController = PageController();
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Profile",
+    pageName: "Profile",
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomSpacer.s(),
-            _userAvatar(context),
-            CustomSpacer.s(),
-            Container(
-              constraints: BoxConstraints(
-                minHeight: 450,
-                maxHeight: 500,
-              ),
-                child: PageView(
-                  controller: pageController,
-                  children: [
-                    Card(
-                      child: _profileDetails(context),
-                    ),
-                    Card(
-                      child: _medicalDetails(context),
-                    ),
-                  ],
-                )
-            ),
-          ],
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CustomSpacer.s(),
+        _userAvatar(context),
+        CustomSpacer.s(),
+        Container(
+          constraints: BoxConstraints(
+            minHeight: 450,
+            maxHeight: 500,
+          ),
+            child: PageView(
+              controller: pageController,
+              children: [
+                Card(
+                  child: _profileDetails(context),
+                ),
+                Card(
+                  child: _medicalDetails(context),
+                ),
+              ],
+            )
         ),
+      ],
+    ),
       ),
-    ));
+    );
   }
 
   Widget _userAvatar(BuildContext context){
+    ImageProvider image = AssetImage("Images/PR.png");
+    if(controller.user!.image != null && controller.user!.image != ''){
+      image = NetworkImage(controller.user!.image!);
+    }
     return Stack(children: [
       ClipOval(
         child: Material(
           color: Colors.transparent,
           child: Ink.image(
-            image: AssetImage("Images/PR.png"),
+            image: image,
             fit: BoxFit.cover,
             width: 100,
             height: 100,
@@ -90,7 +94,26 @@ class Profile_Page extends GetView<UserController> {
                   actions: <BottomSheetAction>[
                     BottomSheetAction(
                       title: Text('UploadNew Photo'.tr),
-                      onPressed: (_) {},
+                      onPressed: (_) async{
+                        FilePickerResult? result =
+                            await FilePicker.platform.pickFiles(
+                          dialogTitle: "Upload medical visa",
+                          type: FileType.custom,
+                          allowedExtensions: [
+                            'jpeg',
+                            'jpg',
+                            'heic',
+                            'png'
+                          ],
+                        );
+
+                        if (result != null) {
+                          Get.back();
+                          controller.updateProfileImage(controller.user!.id, result.files.single.path!);
+                        } else {
+                          // User canceled the picker
+                        }
+                      },
                     ),
                     BottomSheetAction(
                       title: Text('Choose from Library'.tr),

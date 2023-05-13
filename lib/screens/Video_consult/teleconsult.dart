@@ -127,7 +127,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                               ),
                               label: Text("${e.dayName}"),
                               onPressed: (){
-                                controller.confirmAppointmentSlot(e, controller.doctors.value[index].price);
+                                controller.confirmAppointmentSlot(e, controller.doctors.value[index].price, controller.doctors.value[index].id!);
                               },
                             )).toList(),
                           );
