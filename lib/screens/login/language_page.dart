@@ -38,13 +38,6 @@ class _Language_pageState extends State<Language_page> {
         padding: const EdgeInsets.all(CustomSpacer.S),
         child: Column(
           children: [
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.05,
-            // ),
-            // Container(
-            //   height: MediaQuery.of(context).size.height * 0.50,
-            //   child: Lottie.asset('assets/lottie/onboarding-page.json'),
-            // ),
             Spacer(),
             SizedBox(
               height: 120,
@@ -157,6 +150,7 @@ class _Language_pageState extends State<Language_page> {
             ),
             GestureDetector(
               onTap: () {
+                _storage.set(key: 'language', value: selectedLanguage);
                 Get.toNamed(Routes.login);
               },
               child: Container(
@@ -189,6 +183,5 @@ class _Language_pageState extends State<Language_page> {
     setState(() {
       selectedLanguage = lang;
     });
-    _storage.set(key: 'language', value: lang);
   }
 }

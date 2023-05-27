@@ -8,7 +8,7 @@ class Heading extends StatelessWidget {
   Widget build(BuildContext context) {
     return TranslatedText(
       text: heading,
-      style: const TextStyle(fontFamily: "Brandon", fontSize: 20),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
     );
   }
 }

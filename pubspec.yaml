@@ -1,7 +1,7 @@
-name: mmt_
+name: MyMedTrip
 version: 1.0.0+1
 publish_to: none
-description: A new Flutter project.
+description: Amazon of medical tourism
 environment: 
   sdk: '>=2.18.6 <3.0.0'
 
@@ -42,6 +42,9 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   local_auth: ^2.1.6
   image_picker: ^0.8.7+5
+  google_fonts: ^4.0.4
+  webview_flutter: ^4.2.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies: 
   dart_code_metrics: ^5.7.2
@@ -86,4 +89,15 @@ flutter:
       fonts: 
         - asset: fonts/BrandonText-Medium.otf
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/playstore.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icons/playstore.png"
+    background_color: "#ffffff"
+    theme_color: "#0e3f84"
 

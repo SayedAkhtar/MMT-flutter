@@ -13,6 +13,7 @@ import 'package:mmt_/components/SmallIconButton.dart';
 import 'package:mmt_/components/StyledTextFormField.dart';
 import 'package:mmt_/components/TranslatedText.dart';
 import 'package:mmt_/controller/controllers/auth_controller.dart';
+import 'package:mmt_/controller/controllers/local_storage_controller.dart';
 import 'package:mmt_/controller/controllers/user_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/helper/Utils.dart';
@@ -31,7 +32,8 @@ class User_Profile extends GetView<UserController> {
   Widget build(BuildContext context) {
     final LocalAuthentication auth = LocalAuthentication();
     final AuthController _authController = Get.find<AuthController>();
-
+    final LocalStorageController _storage = Get.find<LocalStorageController>();
+    print(controller.user?.image);
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Settings",
@@ -49,7 +51,7 @@ class User_Profile extends GetView<UserController> {
                         Container(
                           height: MediaQuery.of(context).size.height * 0.15,
                           width: MediaQuery.of(context).size.width * 0.4,
-                          child: controller.user?.image != null
+                          child: controller.user?.image != null && controller.user!.image!.isNotEmpty
                               ? Image.network(
                                   Utils.absoluteUri(controller.user?.image))
                               : Image.asset("Images/PR.png"),
@@ -86,24 +88,39 @@ class User_Profile extends GetView<UserController> {
                           availableBiometrics = <BiometricType>[];
                           print(e);
                         }
-                        print(availableBiometrics);
                         try {
                           var data = await auth.authenticate(
                               localizedReason: "Use face id to authenticate",
                               options: AuthenticationOptions(
                                 stickyAuth: true,
                               ));
-                          print(data);
-                        } catch (e) {
-                          print(e);
+                          if(data){
+                            String? key = _storage.get('biometric');
+                            if(key == null){
+                              controller.updateBiometric(controller.user!.id, controller.user!.gender, controller.user!.id);
+                              _storage.set(key : 'biometric', value: controller.user!.id.toString());
+                            }else{
+                              controller.updateBiometric(controller.user!.id, controller.user!.gender, null);
+                              _storage.delete(key: 'biometric');
+                            }
+                          }
+                        } on PlatformException catch ( e) {
+                          Get.snackbar("Not Supported",e.message.toString(), snackPosition: SnackPosition.BOTTOM);
+                          print(e.message);
+                        }catch(e){
+                          print(e.toString());
                         }
                       },
-                      label: "Fingerprint",
-                      linkAction: Switch(
-                        value: false,
-                        onChanged: (value) {
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      label: "Biometric",
+                      linkAction: GetBuilder<UserController>(
+                        builder: (ctrl) {
+                          return Switch(
+                            value: controller.user?.biometric == null ? false: true,
+                            onChanged: (value) {
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          );
+                        }
                       ),
                     ),
                     _menuLinks(context, onTap: () {
@@ -187,20 +204,17 @@ class User_Profile extends GetView<UserController> {
       required String label,
       Widget? linkAction,
       String subLabel = ""}) {
-    return Container(
-      decoration: BoxDecoration(
-          border:
-              Border(bottom: BorderSide(color: context.theme.dividerColor))),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                  foregroundColor: MYcolors.blackcolor,
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: CustomSpacer.XS, horizontal: CustomSpacer.S)),
-              onPressed: onTap,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+          padding: const EdgeInsets.symmetric(
+              vertical: CustomSpacer.XS, horizontal: CustomSpacer.S),
+        decoration: BoxDecoration(
+            border:
+                Border(bottom: BorderSide(color: context.theme.dividerColor))),
+        child: Row(
+          children: [
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -223,9 +237,9 @@ class User_Profile extends GetView<UserController> {
                 ],
               ),
             ),
-          ),
-          linkAction ?? SizedBox(),
-        ],
+            linkAction ?? SizedBox(),
+          ],
+        ),
       ),
     );
   }

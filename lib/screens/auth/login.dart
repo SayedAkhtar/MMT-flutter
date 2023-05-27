@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mmt_/components/SmallIconButton.dart';
 import 'package:mmt_/constants/colors.dart';
 import 'package:mmt_/controller/controllers/auth_controller.dart';
 import 'package:mmt_/routes.dart';
+
+import '../../controller/controllers/local_storage_controller.dart';
 
 class LoginPage extends GetView<AuthController> {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final LocalAuthentication auth = LocalAuthentication();
+    final LocalStorageController _storage = Get.find<LocalStorageController>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -134,8 +140,26 @@ class LoginPage extends GetView<AuthController> {
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
               GestureDetector(
-                onTap: () {
-                  //Get.to(Login_fingerprint_page());
+                onTap: () async {
+                  try {
+                    var data = await auth.authenticate(
+                        localizedReason: "Use face id to authenticate",
+                        options: const AuthenticationOptions(
+                          stickyAuth: true,
+                        ));
+                    if(data){
+                      String? bioId = _storage.get('biometric');
+                      if(bioId == null || bioId.isEmpty){
+                        Get.snackbar("Verification Failed", "Please re enable biometric from profile settings to use it", snackPosition: SnackPosition.BOTTOM);
+                      }else{
+                        controller.loginWithBiometric(bioId);
+                      }
+                    }
+                  } on PlatformException catch (e) {
+                    Get.snackbar("Not Supported", e.message.toString(), snackPosition: SnackPosition.BOTTOM);
+                  }catch(e){
+                    print(e);
+                  }
                 },
                 child: const Text(
                   "Biometric login",

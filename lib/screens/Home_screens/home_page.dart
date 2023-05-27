@@ -188,8 +188,7 @@ class _HomePageState extends State<HomePage> {
                                 "assets/icons/generate-query.svg"),
                             Text(
                               "Generate \nQuery".tr,
-                              style: const TextStyle(
-                                  fontFamily: "Brandon", color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -207,8 +206,7 @@ class _HomePageState extends State<HomePage> {
                             SvgPicture.asset("assets/icons/video.svg"),
                             Text(
                               "Video \nConsultation".tr,
-                              style: const TextStyle(
-                                  fontFamily: "Brandon", color: Colors.black),
+                              style: const TextStyle( color: Colors.black),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -220,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                           _ctrl.queryType = 2;
                           _ctrl.currentStep.value = QueryStep.documentForVisa;
                           _ctrl.stepData = {};
-                          Get.to(() => QueryForm());
+                          Get.to(() => const QueryForm());
                         },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -230,8 +228,7 @@ class _HomePageState extends State<HomePage> {
                             SvgPicture.asset("assets/icons/medical-visa.svg"),
                             Text(
                               "Medical \nvisa".tr,
-                              style: const TextStyle(
-                                  fontFamily: "Brandon", color: Colors.black),
+                              style: const TextStyle( color: Colors.black),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -687,39 +684,41 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    _rowHeader(context, "FAQs", () {
-                      Get.toNamed(Routes.faq);
-                    }),
+                    const Heading(heading: "FAQs"),
                     Obx(() {
                       if (_homeController.isLoading.isFalse) {
-                        print(_homeController.faqs);
                         List<Widget> f = [];
                         _homeController.faqs!.forEach((element) {
-                          f.add(Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              //
-                                color: MYcolors.whitecolor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: MYcolors.blacklightcolors, width: 0.5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    // /color: Color.fromARGB(255, 189, 181, 181),
-                                    color: Colors.grey.withOpacity(0.5),
-                                    blurRadius: 2,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 1),
-                                  )
-                                ]),
-                            // margin: EdgeInsets.only(left: 2),
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            child: Text(
-                              "${element.question} >",
-                              style: TextStyle(
-                                fontFamily: "Brandon",
-                                fontSize: 15,
+                          f.add(InkWell(
+                            onTap: (){
+                              Get.defaultDialog(title: element.question!,
+                                  content:Text(element.answer!)
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(CustomSpacer.XS),
+                              decoration: BoxDecoration(
+                                  color: MYcolors.whitecolor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: MYcolors.blacklightcolors, width: 0.5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      blurRadius: 2,
+                                      spreadRadius: 0,
+                                      offset: const Offset(0, 1),
+                                    )
+                                  ]),
+                              child: Text(
+                                "${element.question}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600
+                                ),
+                                maxLines: 2,
                               ),
                             ),
                           ));
@@ -727,39 +726,6 @@ class _HomePageState extends State<HomePage> {
                         return Wrap(
                           runSpacing: CustomSpacer.XS,
                           children: f,
-                        );
-                        return ListView.builder(
-                          itemCount: _homeController.faqs!.length,
-                            itemBuilder: (ctx, i){
-                              return Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  //
-                                    color: MYcolors.whitecolor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: MYcolors.blacklightcolors, width: 0.5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // /color: Color.fromARGB(255, 189, 181, 181),
-                                        color: Colors.grey.withOpacity(0.5),
-                                        blurRadius: 2,
-                                        spreadRadius: 0,
-                                        offset: Offset(0, 1),
-                                      )
-                                    ]),
-                                // margin: EdgeInsets.only(left: 2),
-                                height: MediaQuery.of(context).size.height * 0.06,
-                                width: MediaQuery.of(context).size.width * 0.95,
-                                child: Text(
-                                  "Lorem Ips is simply dummy text >",
-                                  style: TextStyle(
-                                    fontFamily: "Brandon",
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              );
-                            }
                         );
                       }
                       return const Center(
@@ -780,14 +746,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _rowHeader(BuildContext context, String heading, VoidCallback action) {
+  Widget _rowHeader(BuildContext context, String heading, VoidCallback action,
+      {String? text}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Heading(heading: heading),
         TextButtonWithIcon(
           onPressed: action,
-          text: "More",
+          text: text ?? "More",
           icon: Icons.chevron_right_outlined,
         ),
       ],

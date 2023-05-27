@@ -10,6 +10,7 @@ import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/components/CustomAutocomplete.dart';
 import 'package:mmt_/controller/controllers/user_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
 import 'package:mmt_/models/user_model.dart';
 import 'package:mmt_/screens/Settings_page/add_family_list.dart';
@@ -63,7 +64,7 @@ class _Add_family_pageState extends State<Add_family_page> {
                       ),
                       TextFormField(
                         onSaved: (value) {
-                          familyMember?.dob = value!;
+                          familyMember?.dob = Utils.formatStringToDateTime(value!);
                         },
                         inputFormatters: [DateInputFormatter()],
                         keyboardType: TextInputType.datetime,

@@ -16,19 +16,11 @@ class AuthProvider extends BaseProvider {
   @override
   void onInit() {
     httpClient.baseUrl = api_uri;
+    super.onInit();
   }
 
-  Future<LocalUser?> register(
-      String name, String password, String email, String gender) async {
-    Map<String, dynamic> body = {
-      "username": name,
-      "password": password,
-      "email": email,
-      "name": name,
-      "gender": gender,
-      "is_active": true,
-      "role": 4
-    };
+  Future<LocalUser?> register(Map<String, dynamic> body) async {
+
     // try {
       Loaders.loadingDialog();
       Response response = await post('/register', body,
@@ -54,8 +46,8 @@ class AuthProvider extends BaseProvider {
     return null;
   }
 
-  Future<LocalUser?> login({required String phone, required String password}) async {
-    Map<String, dynamic> body = {"phone": phone, "password": password};
+  Future<LocalUser?> login({required String phone, required String password, String? language}) async {
+    Map<String, dynamic> body = {"phone": phone, "password": password, "language": language};
     try {
       Loaders.loadingDialog();
       Response? response = await post("/login", body,
@@ -78,8 +70,7 @@ class AuthProvider extends BaseProvider {
       Response? response = await post("/validate-token", {},
           contentType: "application/json",
           headers: _headers);
-      responseHandler(response);
-      var jsonString = await response.body["DATA"];
+      var jsonString = await responseHandler(response);
       return LocalUser.fromJson(jsonString);
     } catch (error) {
       Loaders.errorDialog(error.toString());
@@ -193,6 +184,22 @@ class AuthProvider extends BaseProvider {
       Loaders.errorDialog(error.toString());
     } finally {}
     return false;
+  }
+
+  Future<LocalUser?> loginWithBioID({required String id}) async {
+    Map<String, dynamic> body = {"local_auth": id};
+    try {
+      Loaders.loadingDialog();
+      Response? response = await post("/login-with-bio", body,
+          contentType: "application/json",
+          headers: {'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json'});
+      await responseHandler(response);
+      var jsonString = await response.body["DATA"];
+      return LocalUser.fromJson(jsonString);
+    } catch (error) {
+      Loaders.errorDialog(error.toString());
+    } finally {}
+    return null;
   }
 
 

@@ -13,6 +13,7 @@ class HomeController extends GetxController {
   List<DoctorsHome> doctors = [];
   List<Faq> faqs = [];
   List<String> banners = [];
+  List<Stories> stories = [];
   List blogs = [];
   var isLoading = true.obs;
   @override
@@ -37,14 +38,17 @@ class HomeController extends GetxController {
     banners = [];
     blogs =[];
     faqs = [];
+    stories = [];
     Home? data = await _provider.getHomeData();
     List<Blog> blogData = await _provider.fetchBlogData();
+    print(data);
     if(data != null){
       hospitals.addAll(data.hospitals!);
       doctors.addAll(data.doctors!);
       banners.addAll(data.banners!);
       faqs.addAll(data.faqs!);
       blogs = blogData;
+      stories = data.stories!;
       isLoading.value = false;
     }
     update();

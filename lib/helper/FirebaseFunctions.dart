@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mmt_/helper/Loaders.dart';
 
 class FirebaseFunctions {
   static Future<String?> uploadImage(File? imageFile) async {
@@ -13,32 +14,10 @@ class FirebaseFunctions {
       String ext = imageFile.path.split('.').last;
       final Reference ref =
           storage.ref().child('query_docs/${DateTime.now()}.${ext}');
-      final UploadTask uploadTask = ref.putFile(imageFile);
       Get.defaultDialog(
           title: "Uploading",
-          content: StreamBuilder(
-            stream: uploadTask.snapshotEvents,
-            builder:
-                (BuildContext context, AsyncSnapshot<TaskSnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.connectionState == ConnectionState.active ||
-                  snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return const Text('Error');
-                } else if (snapshot.hasData) {
-                  return Text(
-                      "${((snapshot.data!.bytesTransferred / snapshot.data!.totalBytes) * 100).toInt()} %",
-                      style:
-                          const TextStyle(color: Colors.white10, fontSize: 24));
-                } else {
-                  return const Text('Empty data');
-                }
-              } else {
-                return Text('State: ${snapshot.connectionState}');
-              }
-            },
-          ));
+          content: const CircularProgressIndicator());
+      final UploadTask uploadTask = ref.putFile(imageFile);
       await uploadTask.whenComplete(() => print('Image uploaded'));
 
       final imageUrl = await ref.getDownloadURL();
@@ -47,6 +26,7 @@ class FirebaseFunctions {
       }
       return imageUrl;
     } catch (e) {
+      Loaders.errorDialog("Image not uploaded. Please try again.", title: "Opps!!");
       print('Error uploading image: $e');
     } finally {
       if (Get.isDialogOpen != null && Get.isDialogOpen!) {
@@ -80,6 +60,7 @@ class FirebaseFunctions {
       }
       return filePaths;
     } catch (e) {
+      Loaders.errorDialog("Image not uploaded. Please try again.", title: "Opps!!");
       print('Error uploading image: $e');
     } finally {
       if (Get.isDialogOpen != null && Get.isDialogOpen!) {

@@ -24,6 +24,7 @@ class AuthController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final oldPasswordController = TextEditingController();
+  String countryCode = "";
   final gender = "male".obs;
   int loginMethod = 0;
   var isLoggedIn = false.obs;
@@ -64,13 +65,22 @@ class AuthController extends GetxController {
 
   void register() async {
     if (registerFormKey.currentState!.validate()) {
-      Get.toNamed(Routes.otpVerify);
-      // User? user = await _provider.register(nameController.text,
-      //     passwordController.text, emailController.text, gender.value);
-      // if (user != null) {
-      //   _storageController.set(key: "token", value: user.token!);
-      //   Get.toNamed(Routes.home);
-      // }
+      Map<String, dynamic> body = {
+        "username": nameController.text,
+        "password": passwordController.text,
+        "email": emailController.text,
+        "name": nameController.text,
+        "phone": phoneController.text,
+        "gender": gender,
+        "is_active": true,
+        "role": 1,
+        'country_code': countryCode
+      };
+      LocalUser? user = await _provider.register(body);
+      if (user != null) {
+        _storageController.set(key: "token", value: user.token!);
+        Get.toNamed(Routes.home);
+      }
     }
   }
 
@@ -115,18 +125,17 @@ class AuthController extends GetxController {
 
   void phoneLogin() async {
     if (phoneLoginFormKey.currentState!.validate()) {
+      String? language = _storageController.get('language');
       LocalUser? res = await _provider.login(
-          phone: phoneController.text, password: passwordController.text);
+          phone: phoneController.text, password: passwordController.text, language: language);
       if (res != null) {
         _user.user = res;
-        print(res);
         _storageController.set(key: "token", value: res.token!);
         isLoggedIn.value = true;
         try {
           final userCredential = await FirebaseAuth.instance.signInAnonymously();
           // final fcmToken = await FirebaseMessaging.instance.getToken();
           await _provider.updateFirebase(userCredential.user!.uid, "fcmToken!");
-          print(userCredential.user!.uid);
           // print(fcmToken);
         } on FirebaseAuthException catch (e) {
           switch (e.code) {
@@ -142,6 +151,35 @@ class AuthController extends GetxController {
         update();
         Get.offAllNamed(Routes.home);
       }
+    }
+  }
+
+  void loginWithBiometric(String id) async{
+    LocalUser? res = await _provider.loginWithBioID(
+        id: id);
+    if (res != null) {
+      _user.user = res;
+      _storageController.set(key: "token", value: res.token!);
+      isLoggedIn.value = true;
+      try {
+        final userCredential = await FirebaseAuth.instance.signInAnonymously();
+        // final fcmToken = await FirebaseMessaging.instance.getToken();
+        await _provider.updateFirebase(userCredential.user!.uid, "fcmToken!");
+        print(userCredential.user!.uid);
+        // print(fcmToken);
+      } on FirebaseAuthException catch (e) {
+        switch (e.code) {
+          case "operation-not-allowed":
+            print("Anonymous auth hasn't been enabled for this project.");
+            break;
+          default:
+            print("Unknown error.");
+        }
+      }
+      phoneController.text = "";
+      passwordController.text = "";
+      update();
+      Get.offAllNamed(Routes.home);
     }
   }
 

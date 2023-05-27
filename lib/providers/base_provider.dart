@@ -10,10 +10,11 @@ class BaseProvider extends GetConnect{
   late LocalStorageController storage;
   @override
   void onInit(){
+    print("CAlling this");
     storage = Get.find<LocalStorageController>();
     final token = storage.get('token');
     httpClient.baseUrl = api_uri;
-
+    print(httpClient);
     httpClient.defaultContentType = "application/json";
     httpClient.timeout = const Duration(seconds: 8);
 
@@ -28,7 +29,9 @@ class BaseProvider extends GetConnect{
 
   dynamic responseHandler(Response response) async {
     var logger = Logger();
-    print(response.statusCode);
+
+    logger.d(response.statusCode);
+    logger.d(response.headers);
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -63,7 +66,9 @@ class BaseProvider extends GetConnect{
       case 500:
       default:
         logger.d(response.body);
-        print(response.body);
+        if(Get.isDialogOpen!){
+          Get.back();
+        }
         throw Exception('Server is not responding please try again later.');
     }
   }

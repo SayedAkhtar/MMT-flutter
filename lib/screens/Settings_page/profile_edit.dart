@@ -8,6 +8,7 @@ import 'package:mmt_/components/CustomAutocomplete.dart';
 import 'package:mmt_/constants/colors.dart';
 import 'package:mmt_/controller/controllers/user_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
 import 'package:pattern_formatter/date_formatter.dart';
 
@@ -56,10 +57,10 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   TextFormField(
-                    initialValue: controller.user?.dob,
+                    initialValue: Utils.formatDate(controller.user?.dob),
                     inputFormatters: [DateInputFormatter()],
                     keyboardType: TextInputType.datetime,
-                    onSaved: (value){controller.user?.dob = value!;},
+                    onSaved: (value){controller.user?.dob = Utils.formatStringToDateTime(value!);},
                     decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
@@ -107,15 +108,15 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
-                  CustomAutocomplete(
-                      searchTable: "specializations",
-                      selectedId : 0.obs,
-                    initialValue: controller.user?.speciality == null ? "Select Specialization": controller.user?.speciality,
-                    onSelected: (Result result) {
-                      controller.user?.speciality = result.name;
-                        specializationId = result.id!;
-                    },
-                  ),
+                  // CustomAutocomplete(
+                  //     searchTable: "specializations",
+                  //     selectedId : 0.obs,
+                  //   initialValue: controller.user?.speciality ?? "Select Specialization",
+                  //   onSelected: (Result result) {
+                  //     controller.user?.speciality = result.name;
+                  //       specializationId = result.id!;
+                  //   },
+                  // ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
@@ -125,7 +126,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                       onSaved: (value) {controller.user?.treatmentCountry = value!;},
                       decoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                            const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                         hintText: "Preferred country to for treatment".tr,
                         border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

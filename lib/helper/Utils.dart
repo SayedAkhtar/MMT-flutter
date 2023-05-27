@@ -74,11 +74,16 @@ class Utils {
     }
   }
 
-  static String formatDate(DateTime date){
-    return DateFormat('yyyy-MM-dd').format(date);
+  static String formatDate(DateTime? date){
+    if(date == null)return '';
+    return DateFormat('dd/MM/yyyy').format(date);
   }
   static String formatDateWithTime(DateTime date){
-    return DateFormat('yyyy-MM-dd hh:mm a').format(date);
+    return DateFormat('dd/MM/yyyy hh:mm a').format(date);
+  }
+
+  static DateTime formatStringToDateTime(String date){
+    return DateFormat('dd/MM/yyyy').parse(date);
   }
 
   static Future<File?> saveFileToDevice(String filename, String url) async {
@@ -134,5 +139,9 @@ class Utils {
   static Future<bool> willPopCallback() async {
     Get.offAllNamed(Routes.home);
     return false; // return true if the route to be popped
+  }
+
+  static String getFirebaseFileExt(String path){
+    return (path.split('?')[0]).split('.').last;
   }
 }

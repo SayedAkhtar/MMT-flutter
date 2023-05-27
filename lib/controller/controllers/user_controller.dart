@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:mmt_/helper/Loaders.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/models/user_model.dart';
 import 'package:mmt_/providers/user_provider.dart';
 import 'package:mmt_/routes.dart';
@@ -16,52 +18,58 @@ class UserController extends GetxController {
   final oldPasswordController = TextEditingController();
   @override
   void onInit() {
+    _provider = Get.put(UserProvider());
     super.onInit();
   }
 
   @override
   void onReady() {
     super.onReady();
-    _provider = Get.put(UserProvider());
   }
 
   @override
   void onClose() {
     super.onClose();
-    if(!_provider.isDisposed){
-      _provider.dispose();
-    }
+    // if(!_provider.isDisposed){
+    //   _provider.dispose();
+    // }
   }
 
   void updateUser(id) async{
     Map<String, dynamic> postBody = {
       "name": user?.name,
-      "dob": user?.dob,
+      "dob": Utils.formatDate(user?.dob).toString(),
       "phone": user?.phoneNo,
       "gender": user?.gender,
       "specialization_id": user?.speciality,
       "treatment_country": user?.treatmentCountry,
     };
-    bool res = await _provider.updateUserInfo(id, postBody);
-    if(res){
-      Get.toNamed(Routes.home);
+    Loaders.loadingDialog();
+    LocalUser? res = await _provider.updateUserInfo(id, postBody);
+    if(res != null){
+      user = res;
+      update();
+      // Get.showSnackbar(const GetSnackBar(title: "Profile Updated", duration: Duration(seconds: 1),));
+      Future.delayed(const Duration(seconds: 1), () =>Get.toNamed(Routes.home));
     }
   }
 
   void updateProfileImage(id, path) async{
-    FormData form = FormData({});
-    form.files.add(MapEntry("avatar", MultipartFile(File(path), filename: "${DateTime.now().microsecondsSinceEpoch}.${path.split('.').last}")));
-    form.fields.add(MapEntry("gender", user!.gender!));
-    bool res = await _provider.updateUserAvatar(id, form);
-    if(res){
-      Get.toNamed(Routes.home);
-    }
+    var logger = Logger();
+    logger.d(message)
+    // FormData form = FormData({});
+    // form.files.add(MapEntry("avatar", MultipartFile(File(path), filename: "${DateTime.now().microsecondsSinceEpoch}.${path.split('.').last}")));
+    // form.fields.add(MapEntry("gender", user!.gender!));
+    // bool res = await _provider.updateUserAvatar(id, form);
+    // if(res){
+    //   Get.toNamed(Routes.home);
+    // }
   }
 
   void addFamily(userId, LocalUser family) async{
     Map<String, dynamic> postBody = {
       "name": family.name,
-      "dob": family.dob,
+      "dob": Utils.formatDate(family.dob),
       "phone": family.phoneNo,
       "gender": family.gender,
       "relationship": family.relationWithPatient,
@@ -81,7 +89,7 @@ class UserController extends GetxController {
   void listFamily() async{
     List<LocalUser> res = await _provider.listFamilies();
     familiesList = res;
-    print(familiesList);
+    update();
   }
 
   void updatePassword(id, oldPassword, newPassword) async{
@@ -94,5 +102,17 @@ class UserController extends GetxController {
     // if(res){
     //   Get.toNamed(Routes.home);
     // }
+  }
+
+  void updateBiometric(id,gender, value) async{
+    Map<String, dynamic> postBody = {
+      "local_auth": value,
+      "gender": gender,
+    };
+    LocalUser? res = await _provider.updateUserInfo(id, postBody);
+    if(res != null){
+      user = res;
+    }
+    update();
   }
 }

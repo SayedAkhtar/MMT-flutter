@@ -5,6 +5,7 @@ class Home {
   List<DoctorsHome>? doctors;
   List<String>? banners;
   List<Faq>? faqs;
+  List<Stories>? stories;
 
   Home({this.hospitals, this.doctors});
 
@@ -31,6 +32,13 @@ class Home {
       faqs = <Faq>[];
       json['faq'].forEach((v) {
         faqs?.add(Faq.fromJson(v));
+      });
+    }
+
+    if(json['stories'] != null ){
+      stories = <Stories>[];
+      json['stories'].forEach((v) {
+        stories?.add(Stories.fromJson(v));
       });
     }
   }
@@ -115,5 +123,17 @@ class DoctorsHome {
     data['start_of_service'] = exp;
     data['specialization'] = specialization;
     return data;
+  }
+}
+
+class Stories{
+  String? type;
+  String? value;
+
+  Stories({this.type, this.value});
+
+  Stories.fromJson(Map<String, dynamic> json){
+    type = json['type'];
+    value = json['value'];
   }
 }

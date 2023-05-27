@@ -102,14 +102,14 @@ class _SearchScreenState extends State<SearchScreen> {
         future: searchDoctorsAndHospitals(),
         builder: (_, AsyncSnapshot snapshot){
           if(searchFieldController.text.length < 3){
-            return const Text("Please enter 3 or more character to begin search");
+            return const Padding(padding: EdgeInsets.all(CustomSpacer.S), child: Text("Please enter 3 or more character to begin search"),);
           }
           if(snapshot.hasData){
             List result = snapshot.data;
             return searchSection(result);
           }
           if(snapshot.connectionState == ConnectionState.waiting){
-            return const Text("Searching .....");
+            return const Center(child: CircularProgressIndicator(),);
           }
           return const Text("No data to display");
         },
@@ -165,10 +165,15 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${data[index]['name']}", style: TextStyle(fontSize: 22),),
-                              Text("${data[index]['description']}",
-                                style: TextStyle(fontSize: 14,),
-                                softWrap: true,
+                              Text(data[index]['name'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
+                              SizedBox(
+                                height: 60,
+                                child: RichText(
+                                  text: TextSpan(text: data[index]['description'],
+                                    style: const TextStyle(fontSize: 16, color: Colors.black54)
+                                  ),
+                                  overflow: TextOverflow.clip,
+                                ),
                               )
                             ],
                           ),

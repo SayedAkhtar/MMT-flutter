@@ -67,7 +67,7 @@ class _QueryFormState extends State<QueryForm> {
                       (controller.queryType == QueryType.query)?
                       CustomStep(
                       stepName: stepName[0],
-                      isActive: controller.currentStep.value > 0,
+                      isActive: controller.currentStep.value > 1,
                       isLast: false,
                       function: () {
                         controller.currentStep.value = QueryStep.doctorResponse;
@@ -75,7 +75,7 @@ class _QueryFormState extends State<QueryForm> {
                       }):const SizedBox(),
                       CustomStep(
                           stepName: stepName[1],
-                          isActive: controller.currentStep.value > 1 ,
+                          isActive: controller.currentStep.value >= QueryStep.documentForVisa ,
                           isLast: false,
                           function: () {
                             if(queryStep < QueryStep.documentForVisa){
@@ -87,7 +87,7 @@ class _QueryFormState extends State<QueryForm> {
                       controller.showPaymentPage ?
                       CustomStep(
                           stepName: stepName[2],
-                          isActive: controller.currentStep.value > QueryStep.documentForVisa,
+                          isActive: controller.currentStep.value >= QueryStep.payment,
                           isLast: false,
                           function: () {
                             if(queryStep < QueryStep.payment){
@@ -98,7 +98,7 @@ class _QueryFormState extends State<QueryForm> {
                       }):const SizedBox(),
                       CustomStep(
                           stepName: stepName[3],
-                          isActive: controller.currentStep.value > QueryStep.payment,
+                          isActive: controller.currentStep.value >= QueryStep.payment,
                           isLast: true,
                           function: () {
                             if(queryStep < QueryStep.ticketsAndVisa){

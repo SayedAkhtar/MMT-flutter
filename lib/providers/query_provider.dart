@@ -25,6 +25,7 @@ class QueryProvider extends BaseProvider {
     _token = _storage.get('token');
     _headers['Authorization'] = "Bearer $_token";
     _headers['Accept'] = "application/json";
+    super.onInit();
   }
 
   Future<QueryScreen?> getQueryScreenData() async {
@@ -56,7 +57,7 @@ class QueryProvider extends BaseProvider {
       Loaders.loadingDialog(title: "Uploading Data");
       Response response = await post('/queries', data, headers: _headers);
       print(response.body);
-      responseHandler(response);
+      var jsonBody = await responseHandler(response);
       if(response.isOk){
         return true;
       }

@@ -1,16 +1,21 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/components/SmallIconButton.dart';
 import 'package:mmt_/components/TranslatedText.dart';
 import 'package:mmt_/controller/controllers/user_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/routes.dart';
 import 'package:mmt_/screens/Settings_page/add_family.dart';
 import 'package:mmt_/screens/Settings_page/medical_edit.dart';
@@ -23,6 +28,7 @@ class Profile_Page extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
+
     final PageController pageController = PageController();
     return Scaffold(
       appBar: CustomAppBar(
@@ -30,30 +36,29 @@ class Profile_Page extends GetView<UserController> {
       ),
       body: Padding(
     padding: const EdgeInsets.all(16.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CustomSpacer.s(),
-        _userAvatar(context),
-        CustomSpacer.s(),
-        Container(
-          constraints: BoxConstraints(
-            minHeight: 450,
-            maxHeight: 500,
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomSpacer.s(),
+          _userAvatar(context),
+          CustomSpacer.s(),
+          Container(
+            constraints: BoxConstraints(
+              minHeight: 450,
+              maxHeight: 500,
+            ),
+              child: PageView(
+                controller: pageController,
+                children: [
+                  Card(
+                    child: _profileDetails(context),
+                  )
+                ],
+              )
           ),
-            child: PageView(
-              controller: pageController,
-              children: [
-                Card(
-                  child: _profileDetails(context),
-                ),
-                Card(
-                  child: _medicalDetails(context),
-                ),
-              ],
-            )
-        ),
-      ],
+        ],
+      ),
     ),
       ),
     );
@@ -93,16 +98,32 @@ class Profile_Page extends GetView<UserController> {
                   context: context,
                   actions: <BottomSheetAction>[
                     BottomSheetAction(
-                      title: Text('UploadNew Photo'.tr),
+                      title: Text('Upload new photo'.tr),
+                      onPressed: (_) async{
+                        try {
+                          ImagePicker _picker = ImagePicker();
+                          final XFile? cameraImage = await _picker
+                              .pickImage(source: ImageSource.camera);
+                          if (cameraImage == null) return;
+                          // File imageFile = File(cameraImage.path);
+                          controller.updateProfileImage(controller.user!.id, cameraImage.path);
+                        } catch (e) {
+                          print(e.toString());
+                        } finally {
+                          Get.back();
+                        }
+                      },
+                    ),
+                    BottomSheetAction(
+                      title: Text('Choose from Library'.tr),
                       onPressed: (_) async{
                         FilePickerResult? result =
                             await FilePicker.platform.pickFiles(
-                          dialogTitle: "Upload medical visa",
+                          dialogTitle: "Upload your profile picture",
                           type: FileType.custom,
                           allowedExtensions: [
                             'jpeg',
                             'jpg',
-                            'heic',
                             'png'
                           ],
                         );
@@ -115,10 +136,7 @@ class Profile_Page extends GetView<UserController> {
                         }
                       },
                     ),
-                    BottomSheetAction(
-                      title: Text('Choose from Library'.tr),
-                      onPressed: (_) {},
-                    ),
+
                     BottomSheetAction(
                       title: Text('Remove Photo'.tr,
                           style: TextStyle(color: MYcolors.redcolor)),
@@ -157,7 +175,7 @@ class Profile_Page extends GetView<UserController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TranslatedText(
-                text: "Patient details",
+                text: "Details",
                 style: TextStyle(
                   color: MYcolors.bluecolor,
                   fontWeight: FontWeight.bold,
@@ -176,70 +194,82 @@ class Profile_Page extends GetView<UserController> {
               ),
             ],
           ),
-          Table(
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(110),
-              1: FixedColumnWidth(25),
-              2: FlexColumnWidth()
-            },
-            children: [
-              TableRow(
+          GetBuilder<UserController>(
+            builder: (ctrl) {
+              print(ctrl.user!.country);
+              return Table(
+                columnWidths: const <int, TableColumnWidth>{
+                  0: FixedColumnWidth(110),
+                  1: FixedColumnWidth(25),
+                  2: FlexColumnWidth()
+                },
                 children: [
-                  _profileKeyText( "Name",),
-                  Text(":"),
-                  _profileValueText(controller.user?.name)
-                ]
-              ),
-              TableRow(
-                children: [
-                  _profileKeyText("DOB"),
-                  Text(":"),
-                  _profileValueText(controller.user?.dob),
-                ]
-              ),
-              TableRow(
-                  children: [
-                    _profileKeyText("Gender"),
-                    Text(":"),
-                    _profileValueText(controller.user?.gender),
-                  ]
-              ),
-              TableRow(
-                  children: [
-                    _profileKeyText("Contact"),
-                    Text(":"),
-                    _profileValueText(controller.user?.phoneNo),
-                  ]
-              ),
-              TableRow(
-                  children: [
-                    _profileKeyText("Email"),
-                    Text(":"),
-                    _profileValueText(controller.user?.email),
-                  ]
-              ),
-              // TableRow(
-              //     children: [
-              //       _profileKeyText("City"),
-              //       Text(":"),
-              //       _profileValueText(controller.user?.name),
-              //     ]
-              // ),
-              TableRow(
-                  children: [
-                    _profileKeyText("Speciality"),
-                    Text(":"),
-                    _profileValueText(controller.user?.speciality),
-                  ]
-              ),
-              TableRow(
-                  children: [
-                    _profileKeyText("Country"),
-                    Text(":"),
-                    _profileValueText(controller.user?.country),
-                  ]
-              )
-            ],
+                  TableRow(
+                    children: [
+                      _profileKeyText( "Name",),
+                      Text(":"),
+                      _profileValueText(controller.user?.name)
+                    ]
+                  ),
+                  TableRow(
+                    children: [
+                      _profileKeyText("DOB"),
+                      Text(":"),
+                      _profileValueText(Utils.formatDate(controller.user?.dob)),
+                    ]
+                  ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Gender"),
+                        Text(":"),
+                        _profileValueText(controller.user?.gender),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Contact"),
+                        Text(":"),
+                        _profileValueText(controller.user?.phoneNo),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Email"),
+                        Text(":"),
+                        _profileValueText(controller.user?.email),
+                      ]
+                  ),
+                  // TableRow(
+                  //     children: [
+                  //       _profileKeyText("City"),
+                  //       Text(":"),
+                  //       _profileValueText(controller.user?.name),
+                  //     ]
+                  // ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Speciality"),
+                        Text(":"),
+                        _profileValueText(controller.user?.speciality),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Country"),
+                        Text(":"),
+                        _profileValueText(controller.user?.country),
+                      ]
+                  ),
+                  TableRow(
+                      children: [
+                        _profileKeyText("Treatment Country"),
+                        Text(":"),
+                        _profileValueText(controller.user?.treatmentCountry),
+                      ]
+                  )
+                ],
+              );
+            }
           ),
         ],
       ),

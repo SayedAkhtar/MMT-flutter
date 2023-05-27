@@ -8,7 +8,7 @@ class LocalUser {
   String? name;
   String? gender;
   String? country;
-  String? dob;
+  DateTime? dob;
   String? image;
   String? speciality;
   String? treatmentCountry;
@@ -20,6 +20,7 @@ class LocalUser {
   String? createdAt;
   late int id;
   String? token;
+  int? biometric;
 
   static const int TYPE_PATIENT = 1;
   static const int TYPE_DOCTOR = 4;
@@ -42,6 +43,7 @@ class LocalUser {
       this.updatedAt,
       this.createdAt,
       required this.id,
+        this.biometric,
       this.token});
 
   LocalUser.fromJson(Map<String, dynamic> json) {
@@ -53,8 +55,8 @@ class LocalUser {
     image = json['avatar'];
     gender = json['gender'];
     country = json['country'];
-    dob = json['dob'];
-    treatmentCountry = json['treatment_country'];
+    dob = json['dob'] != null ? DateTime.parse(json['dob']): null;
+    treatmentCountry = json["patient_details"] != null ? json["patient_details"]['treatment_country'] : '';
     isActive = json['is_active'];
     userType = json['user_type'];
     addedBy = json['added_by'];
@@ -63,6 +65,7 @@ class LocalUser {
     token = json['token'];
     id = json['id']??0;
     speciality = json['speciality'];
+    biometric = json['local_auth' ];
   }
 
   Map<String, dynamic> toJson() {
@@ -79,6 +82,7 @@ class LocalUser {
     data['updated_at'] = updatedAt;
     data['created_at'] = createdAt;
     data['id'] = id;
+    data['biometric'] = biometric;
     return data;
   }
 }

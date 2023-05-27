@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:mmt_/constants/api_constants.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/helper/Debouncer.dart';
@@ -28,8 +29,9 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    // debounce(specializationQueryText, (callback) => searchSpecializations(), time: 1.seconds);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      super.initState();
+    });
   }
   @override
   void dispose() {
@@ -39,13 +41,13 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
 @override
   // TODO: implement mounted
   bool get mounted => super.mounted;
+
   Future search(term) async{
     if(mounted){
       setState(() {
         isSearching = true;
       });
       debouncer.run(() async {
-
         Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=${term}", headers: {"Accepts": "application/json"});
         if(res.isOk){
           var json = res.body['data'];
@@ -89,11 +91,16 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      super.initState();
+    });
     return Autocomplete<Result>(
       displayStringForOption: CustomAutocomplete._displayStringForOption,
       optionsBuilder: (TextEditingValue textEditingValue) async {
         if (textEditingValue.text.isEmpty) {
-          await firstSearch();
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+            await firstSearch();
+          });
         }
         if(textEditingValue.text.length > 2){
           await search(textEditingValue.text);
@@ -123,11 +130,6 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
             }
             return null;
           },
-          // onChanged: (text){
-          //   if(text.length > 2){
-          //     search(text);
-          //   }
-          // },
           decoration: InputDecoration(
             hintText: widget.hintText,
             suffixIcon: const Icon(Icons.arrow_drop_down),

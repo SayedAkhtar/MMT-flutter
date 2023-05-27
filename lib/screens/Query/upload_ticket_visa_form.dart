@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/helper/FirebaseFunctions.dart';
+import 'package:mmt_/helper/Utils.dart';
 import 'package:mmt_/screens/Medical_visa/visa_end_page.dart';
 
 import '../../constants/colors.dart';
@@ -50,10 +51,10 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
     QueryResponse data = await _provider.getQueryStepData(
         _controller.selectedQuery, QueryStep.ticketsAndVisa);
     if (data.response!.isNotEmpty) {
-      if (data.response!['tickets'].isNotEmpty) {
+      if (data.response!['tickets'] != null && data.response!['tickets'].isNotEmpty) {
         files = data.response!['tickets'];
       }
-      if (data.response!['visa'].isNotEmpty) {
+      if (data.response!['visa']!= null && data.response!['visa'].isNotEmpty) {
         files.addAll(data.response!['visa']);
       }
       setState(() {
@@ -76,9 +77,28 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                   scrollDirection: Axis.horizontal,
                   itemCount: files.length,
                   itemBuilder: (_, i) {
+                    print((files[i].split('?')[0]).split('.').last);
                     return Stack(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         children: [
+                          Utils.getFirebaseFileExt(files[i]) == 'pdf'?
+                          Container(
+                            margin:
+                            EdgeInsets.only(right: CustomSpacer.S, top: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                  color: MYcolors.blackcolor, width: 0.2),
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/icons/pdf_file.png'
+                                  ),
+                                  fit: BoxFit.cover),
+                            ),
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: const SizedBox(),
+                          ):
                           Container(
                             margin:
                                 EdgeInsets.only(right: CustomSpacer.S, top: 10),
@@ -86,31 +106,42 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                               borderRadius: BorderRadius.circular(7),
                               border: Border.all(
                                   color: MYcolors.blackcolor, width: 0.2),
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                    files[i],
-                                  ),
-                                  fit: BoxFit.cover),
                             ),
+                            clipBehavior: Clip.hardEdge,
                             height: MediaQuery.of(context).size.height * 0.1,
                             width: MediaQuery.of(context).size.width * 0.2,
-                            child: const SizedBox(),
-                          ),
-                          Positioned(
-                            right: -8,
-                            top: -12,
-                            child: IconButton(
-                              color: Colors.white,
-                              onPressed: () {
-                                files.removeAt(i);
-                                setState(() {});
+                            child: Image.network(
+                              files[i],
+                              fit: BoxFit.fill,
+                              loadingBuilder: (BuildContext context, Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
                               },
-                              icon: Icon(
-                                Icons.remove_circle,
-                                color: Colors.redAccent,
-                              ),
                             ),
                           ),
+                          // Positioned(
+                          //   right: -8,
+                          //   top: -12,
+                          //   child: IconButton(
+                          //     color: Colors.white,
+                          //     onPressed: () {
+                          //       files.removeAt(i);
+                          //       setState(() {});
+                          //     },
+                          //     icon: Icon(
+                          //       Icons.remove_circle,
+                          //       color: Colors.redAccent,
+                          //     ),
+                          //   ),
+                          // ),
                         ]);
                   }),
             ),

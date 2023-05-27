@@ -41,6 +41,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
     //   return CircularProgressIndicator();
     // }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: SingleChildScrollView(
@@ -140,11 +141,14 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.03,
             ),
-            Text(
-              docPath.isNotEmpty? "${docPath.length} documents uploaded" : "Upload the document here".tr,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+            Flexible(
+              child: Text(
+                docPath.isNotEmpty? "${docPath.length} documents uploaded" : "Upload the document here".tr,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                
               ),
             )
           ],
@@ -155,16 +159,24 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
               return SizedBox();
             }
             return Container(
-              height: 100,
+              height: 50,
+              margin: EdgeInsets.only(top: CustomSpacer.XS),
               child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
                 itemCount: con.stepData['patient']?.length,
                   itemBuilder: (_, i){
                   return Container(
-                    height: 90,
-                    width: 90,
+                    height: 50,
+                    width: 50,
+                    padding: EdgeInsets.all(CustomSpacer.XS),
+                    margin: EdgeInsets.only(right: CustomSpacer.XS),
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: MYcolors.blackcolor, width: 0.2),
                       image: DecorationImage(
-                          image: NetworkImage(con.stepData['patient']?[1]),
+                          image: AssetImage('assets/icons/pdf_file.png'),
+                        fit: BoxFit.scaleDown,
                         onError: (_, stackTrace){
                             print(_);
                         }

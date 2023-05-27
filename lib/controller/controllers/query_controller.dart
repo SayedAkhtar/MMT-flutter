@@ -100,28 +100,34 @@ class QueryController extends GetxController {
   }
 
   Future<void> uploadStepData(Map<String, dynamic> data, int currentStep) async {
+    stepData = {};
     Map<String, dynamic> formData = {};
     formData["current_step"] = currentStep;
     formData["type"] = queryType;
     formData['response'] = data;
     formData['query_id'] = selectedQuery;
     // print(formData);
-    bool res = await _provider.postQueryGenerationData(formData);
-    if(res){
-      Get.offNamed(Routes.startQuery);
-      switch(currentStep){
-        case QueryStep.doctorResponse:
-          Get.toNamed(Routes.activeQueryTermsConditions);
-          break;
-        case QueryStep.documentForVisa:
-        case QueryStep.payment:
-        case QueryStep.ticketsAndVisa:
-          Get.toNamed(Routes.activeQueryProcessing);
-        break;
-        default:
-          Get.to(() => const QuerySubmissionSuccess());
+    try{
+      bool res = await _provider.postQueryGenerationData(formData);
+      if(res){
+        Get.offNamed(Routes.startQuery);
+        switch(currentStep){
+          case QueryStep.doctorResponse:
+            Get.toNamed(Routes.activeQueryTermsConditions);
+            break;
+          case QueryStep.documentForVisa:
+          case QueryStep.payment:
+          case QueryStep.ticketsAndVisa:
+            Get.toNamed(Routes.activeQueryProcessing);
+            break;
+          default:
+            Get.to(() => const QuerySubmissionSuccess());
+        }
       }
+    }catch(e){
+      Loaders.errorDialog(e.toString());
     }
+
   }
 
 
@@ -154,6 +160,9 @@ class QueryController extends GetxController {
     currentStep.value = queryScreen.activeQuery![selectedIndex].currentStep!;
     queryType = queryScreen.activeQuery![selectedIndex].type!;
     this.selectedIndex = selectedIndex;
+    print(id);
+    print(selectedIndex);
+    print(currentStep.value);
     Get.to(() => QueryForm());
     // Get.toNamed(Routes.activeQueryDoctorReply);
   }
@@ -170,6 +179,7 @@ class QueryController extends GetxController {
   }
 
   void getCurrentStepData( int step ) async{
+    stepData = {};
     if(selectedQuery != 0){
       isLoaded.value = false;
       QueryResponse? data = await _provider.getQueryStepData(selectedQuery, step);

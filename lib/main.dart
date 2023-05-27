@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mmt_/firebase_options.dart';
 import 'package:mmt_/locale/AppTranslation.dart';
 import 'package:mmt_/routes.dart';
@@ -57,7 +59,9 @@ void main() async {
   //     print('Message also contained a notification: ${message.notification}');
   //   }
   // });
-
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(GetMaterialApp(
     home: const Loading_page(),
     debugShowCheckedModeBanner: false,
@@ -69,7 +73,7 @@ void main() async {
     title: "My Medical Trip",
     getPages: getPages,
     theme: ThemeData(
-      fontFamily: "Brandon"
+      fontFamily: GoogleFonts.poppins().fontFamily,
     ),
   ));
 }
