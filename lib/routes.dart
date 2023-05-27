@@ -10,7 +10,7 @@ import 'package:mmt_/screens/Hospitals/availble_treatment.dart';
 import 'package:mmt_/screens/Hospitals/doctors_details.dart';
 import 'package:mmt_/screens/Hospitals/doctors_list.dart';
 import 'package:mmt_/screens/Hospitals/hospital_preview.dart';
-import 'package:mmt_/screens/Hospitals/hospitals_page.dart';
+import 'package:mmt_/screens/Hospitals/hospitals_list_page.dart';
 import 'package:mmt_/screens/Hospitals/patient_stories.dart';
 import 'package:mmt_/screens/Medical_visa/doctor_reply.dart';
 import 'package:mmt_/screens/Medical_visa/document_preview.dart';
@@ -227,7 +227,7 @@ final getPages = [
   // ),
   GetPage(
       name: Routes.hospitals,
-      page: () => const Hospitals_page()
+      page: () => const HospitalsListPage()
   ),
   GetPage(
       name: Routes.hospitalPreview,

@@ -143,7 +143,7 @@ class _DoctorReplyState extends State<DoctorReply> {
             ),
             ElevatedButton(
               onPressed: () {
-                controller.navigateToTermsPage(docPath);
+                // controller.navigateToTermsPage(docPath);
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

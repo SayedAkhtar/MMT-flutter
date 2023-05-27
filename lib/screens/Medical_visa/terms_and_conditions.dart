@@ -1,3 +1,4 @@
+
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
@@ -5,13 +6,17 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
+import 'package:mmt_/constants/query_step_name.dart';
+import 'package:mmt_/controller/controllers/query_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:mmt_/models/query_response_model.dart';
 import 'package:mmt_/routes.dart';
 import 'package:mmt_/screens/Medical_visa/document_visa.dart';
+import 'package:mmt_/screens/Query/query_form.dart';
 
 import '../../constants/colors.dart';
 
-class Terms_and_Conditions extends StatelessWidget {
+class Terms_and_Conditions extends GetView<QueryController> {
   const Terms_and_Conditions({super.key});
   @override
   Widget build(BuildContext context) {
@@ -32,7 +37,12 @@ class Terms_and_Conditions extends StatelessWidget {
             Spacer(),
             GestureDetector(
               onTap: () {
-                Get.toNamed(Routes.activeQueryUploadVisa);
+                if(controller.currentStep.value == QueryStep.documentForVisa && !controller.showPaymentPage){
+                  controller.currentStep.value = controller.currentStep.value + 2;
+                }else{
+                  controller.currentStep.value = controller.currentStep.value + 1;
+                }
+                Get.to(() => QueryForm());
               },
               child: Container(
                 decoration: BoxDecoration(

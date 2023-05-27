@@ -47,6 +47,8 @@ class HomeController extends GetxController {
       blogs = blogData;
       isLoading.value = false;
     }
+    update();
+    // refresh();
   }
 
 

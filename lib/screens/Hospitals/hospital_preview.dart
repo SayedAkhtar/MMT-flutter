@@ -100,26 +100,9 @@ class Hospital_preview_page extends GetView<HospitalController> {
                       ],
                     ),
                     CustomSpacer.s(),
-                    Text(
-                      "Other details",
-                      style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                          color: MYcolors.blacklightcolors,
-                          fontFamily: "Brandon",
-                          fontSize: 20),
-                    ),
-                    CustomSpacer.xs(),
-                    Text(
-                      hospital.description!,
-                      style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                          color: MYcolors.blacklightcolors,
-                          fontFamily: "Brandon",
-                          fontSize: 16),
-                    ),
                     CustomSpacer.xs(),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _hospitalFeatureButton(
                           context,
@@ -142,9 +125,9 @@ class Hospital_preview_page extends GetView<HospitalController> {
                       children: [
                         _hospitalFeatureButton(
                           context,
-                        onTap: () {
-                          Get.toNamed(Routes.patientTestimony);
-                        },
+                          onTap: () {
+                            Get.toNamed(Routes.patientTestimony);
+                          },
                           image: "Images/Md.png", title: "Patient testimonials",
                         ),
                         CustomSpacer.s(),
@@ -156,7 +139,18 @@ class Hospital_preview_page extends GetView<HospitalController> {
                           image: "Images/St.png", title: "Doctors",
                         ),
                       ],
-                    )
+                    ),
+                    CustomSpacer.l(),
+                    Text(
+                      hospital.description!,
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                          color: MYcolors.blacklightcolors,
+                          fontFamily: "Brandon",
+                          fontSize: 16),
+                    ),
+
+
                   ],
                 ),
               ),

@@ -41,6 +41,7 @@ dependencies:
   shimmer: ^2.0.0
   youtube_player_flutter: ^8.1.2
   local_auth: ^2.1.6
+  image_picker: ^0.8.7+5
 
 dev_dependencies: 
   dart_code_metrics: ^5.7.2

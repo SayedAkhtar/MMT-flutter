@@ -4,13 +4,17 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:mmt_/constants/query_step_name.dart';
 import 'package:mmt_/constants/razorpay_constants.dart';
 import 'package:mmt_/helper/Loaders.dart';
 import 'package:mmt_/models/confirmed_query.dart';
 import 'package:mmt_/models/generate_query_model.dart';
+import 'package:mmt_/models/query_response_model.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
 import 'package:mmt_/providers/query_provider.dart';
 import 'package:mmt_/routes.dart';
+import 'package:mmt_/screens/Query/query_form.dart';
 import 'package:mmt_/screens/Query/query_submission_success.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -24,6 +28,11 @@ class QueryController extends GetxController {
   RxString specializationQueryText = "".obs;
   final RxList<Result> specializations = <Result>[].obs;
   int selectedQuery = 0;
+  int selectedIndex = 0;
+
+  RxInt currentStep = 0.obs;
+  Map<String, dynamic> stepData= {};
+  bool showPaymentPage = false;
 
   // ----- Generate Query Page Variables ---- //
   RxInt specializationId = 0.obs;
@@ -32,8 +41,9 @@ class QueryController extends GetxController {
   RxInt patientFaminlyId = 0.obs;
   RxString briefHistory = "".obs;
   RxString preferredCountry = "India".obs;
-  String medicalVisaPath = '';
-  String passportPath = '';
+  List<String> medicalVisaPath = [''];
+  List<String> passportPath = [''];
+  int queryType = 1;
   final generateQueryForm = GlobalKey<FormState>().obs;
 
   String doctor_response = "";
@@ -61,6 +71,7 @@ class QueryController extends GetxController {
     QueryScreen? res =await _provider.getQueryScreenData();
     if(res != null){
       queryScreen = res;
+      print(queryScreen.activeQuery![0].toJson());
       isLoaded.value = true;
     }else{
       emptyScreen = true;
@@ -69,41 +80,50 @@ class QueryController extends GetxController {
   }
 
   void generateQuery() async{
-    FormData _formData = FormData({});
-    _formData.fields.add(MapEntry("specialization_id", specializationId.value.toString()));
-    if(hospitalId.value == 0){
-    }
-    _formData.fields.add(MapEntry("hospital_id", hospitalId.value.toString()));
-    if(doctorId.value !=0 ){
-      _formData.fields.add(MapEntry("doctor_id",doctorId.value.toString()));
-    }
-    if(patientFaminlyId.value !=0 ){
-      _formData.fields.add(MapEntry("patient_family_id",patientFaminlyId.value.toString()));
-    }
-    if(briefHistory.value != ""){
-      _formData.fields.add(MapEntry("medical_history", briefHistory.value));
-    }
-    _formData.fields.add(MapEntry("preferred_country", preferredCountry.value));
-    if(medicalVisaPath != ''){
-      _formData.files.add(MapEntry('medical_visa', MultipartFile(File(medicalVisaPath), filename: 'medical_visa')));
-    }
-    if(passportPath != ''){
-      _formData.files.add(MapEntry('passport_image', MultipartFile(File(passportPath), filename: 'medical_visa')));
-    }
-    print(_formData.fields);
+    Map<String, dynamic> formData = {};
+    Map<String, dynamic> responseData = {};
+    formData["current_step"] = 1;
+    formData["type"] = queryType;
+    responseData["history"] = briefHistory.value;
+    responseData["country"] = preferredCountry.value;
+    responseData["medical_report"] = medicalVisaPath;
+    responseData["passport"] = passportPath;
+    formData['response'] = responseData;
 
-    bool res = await _provider.postQueryGenerationData(_formData);
+    print(formData);
+
+    bool res = await _provider.postQueryGenerationData(formData);
     if(res){
       Get.offNamed(Routes.startQuery);
       Get.to(QuerySubmissionSuccess());
     }
   }
 
-  Future<ConfirmedQuery>? confirmedQuery() async{
-    /** ToDo : Make it Void function **/
-    return Future.delayed(Duration(seconds: 2));
-    return await _provider.getConfirmedQueryDetail();
+  Future<void> uploadStepData(Map<String, dynamic> data, int currentStep) async {
+    Map<String, dynamic> formData = {};
+    formData["current_step"] = currentStep;
+    formData["type"] = queryType;
+    formData['response'] = data;
+    formData['query_id'] = selectedQuery;
+    // print(formData);
+    bool res = await _provider.postQueryGenerationData(formData);
+    if(res){
+      Get.offNamed(Routes.startQuery);
+      switch(currentStep){
+        case QueryStep.doctorResponse:
+          Get.toNamed(Routes.activeQueryTermsConditions);
+          break;
+        case QueryStep.documentForVisa:
+        case QueryStep.payment:
+        case QueryStep.ticketsAndVisa:
+          Get.toNamed(Routes.activeQueryProcessing);
+        break;
+        default:
+          Get.to(() => const QuerySubmissionSuccess());
+      }
+    }
   }
+
 
   void uploadVisaDocuments({required String path, required String name}) async{
     await _provider.uploadVisaDocuments(path: path, fieldName: name);
@@ -125,28 +145,42 @@ class QueryController extends GetxController {
 
 
   //--------- Navigation with data -----------//
-  void navigateToDoctorsPage(int id, String response){
+  void navigateToQueryForm(int id, int selectedIndex, String response){
     doctor_response = response;
     selectedQuery = id;
-    update();
-    Get.toNamed(Routes.activeQueryDoctorReply);
+    currentStep.value = 0;
+    showPaymentPage = queryScreen.activeQuery![selectedIndex].isPaymentRequired!;
+    getCurrentStepData(queryScreen.activeQuery![selectedIndex].currentStep!);
+    currentStep.value = queryScreen.activeQuery![selectedIndex].currentStep!;
+    queryType = queryScreen.activeQuery![selectedIndex].type!;
+    this.selectedIndex = selectedIndex;
+    Get.to(() => QueryForm());
+    // Get.toNamed(Routes.activeQueryDoctorReply);
   }
 
-  void navigateToTermsPage(String docPath) async{
+  void navigateToTermsPage(List<String> docPath, int currentStep) async{
     if(docPath.isEmpty){
       Get.toNamed(Routes.activeQueryTermsConditions);
       return;
     }
-    Loaders.loadingDialog();
-    FormData form = new FormData({});
-    form.files.add(MapEntry('document', MultipartFile(File(docPath), filename:  "${DateTime.now().microsecondsSinceEpoch}.${docPath.split('.').last}")));
-    form.fields.add(MapEntry('query_id', selectedQuery.toString()));
-    bool res = await _provider.updatePatientResponse(form);
-    if(res){
-      Get.toNamed(Routes.activeQueryTermsConditions);
-    }else{
-      Loaders.errorDialog("Could not upload file please try again");
+    Map<String, dynamic> formData = {};
+    formData['patient'] = docPath;
+    formData['doctor'] = stepData['doctor'];
+    uploadStepData(formData, currentStep);
+  }
+
+  void getCurrentStepData( int step ) async{
+    if(selectedQuery != 0){
+      isLoaded.value = false;
+      QueryResponse? data = await _provider.getQueryStepData(selectedQuery, step);
+      if(data != null){
+        stepData = data.response!;
+        showPaymentPage = data!.paymentRequired!;
+      }
     }
+    isLoaded.value = true;
+    update();
+
   }
 
 }

@@ -25,7 +25,9 @@ class LoginPage extends GetView<AuthController> {
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SmallIconButton(
-                        onTap: () => Get.back(),
+                        onTap: () {
+                          Get.toNamed(Routes.languageSelector);
+                        },
                         icon: Icons.arrow_back_ios_new_outlined),
                     const Spacer(),
                     SmallIconButton(

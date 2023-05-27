@@ -60,7 +60,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                     child: Row(
                       children: [
                         Container(
-                          width: 200,
+                          width: 100,
                           height: 100,
                           decoration: BoxDecoration(
                               image: DecorationImage(

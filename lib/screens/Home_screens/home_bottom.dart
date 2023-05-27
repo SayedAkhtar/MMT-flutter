@@ -133,11 +133,11 @@ class _Home_screenState extends State<Home_screen> {
       case 1:
         return const Query_page();
       case 3:
-        return QueryConfirmed();
+        return const QueryConfirmed();
       case 4:
         return const Connect_Home_page();
       default:
-        return const HomePage();
+        return HomePage();
     }
   }
 }

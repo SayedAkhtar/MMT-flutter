@@ -5,18 +5,20 @@ import 'package:get/get.dart';
 import 'package:mmt_/helper/Loaders.dart';
 import 'package:mmt_/models/error_model.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
+import 'package:mmt_/providers/base_provider.dart';
 import '../constants/api_constants.dart';
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/hospital_model.dart';
 
-class HospitalProvider extends GetConnect {
-  final _storage = Get.find<LocalStorageController>();
+class HospitalProvider extends BaseProvider {
+  final LocalStorageController _storage = Get.find<LocalStorageController>();
   final Map<String, String> _headers = {};
   String? _token;
   @override
   void onInit() {
     httpClient.baseUrl = api_uri;
     _token = _storage.get('token');
+    super.onInit();
   }
 
   Future<Hospital?> getHospitalById(id) async{
@@ -51,6 +53,23 @@ class HospitalProvider extends GetConnect {
     return null;
   }
 
+  Future<List<Hospital?>?> getAllHospitals() async {
+    List<Hospital?> hospitals= [];
+    try {
+      Response response = await get('/hospitals',
+          contentType: 'application/json', headers: _headers);
+      var jsonString = await responseHandler(response);;
+      jsonString.forEach((element) {
+        hospitals.add(Hospital.fromJson(element));
+      });
+      print(hospitals);
+      return hospitals;
+      // return ConfirmedQuery.fromJson(jsonString);
+    } catch (error) {
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
+    return null;
+  }
   // Future<Result> ajaxSearch(term) async{
   //
   // }

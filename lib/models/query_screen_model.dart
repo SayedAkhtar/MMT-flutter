@@ -42,6 +42,9 @@ class ActiveQuery {
   String? stepNote;
   bool? isPaymentRequired;
   bool? isPaymentDone;
+  bool? isConfirmed;
+  int? currentStep;
+  int? type;
   String? createdAt;
 
   ActiveQuery(
@@ -53,6 +56,9 @@ class ActiveQuery {
       this.stepNote,
       this.isPaymentRequired,
       this.isPaymentDone,
+        this.isConfirmed,
+      this.currentStep,
+        this.type,
       this.createdAt});
 
   ActiveQuery.fromJson(Map<String, dynamic> json) {
@@ -62,9 +68,12 @@ class ActiveQuery {
     doctorResponse = json['doctor_response'];
     stepName = json['query_step_name'];
     stepNote = json['query_step_note'];
-    isPaymentRequired = json['is_payment_required'];
+    isPaymentRequired = json['payment_required'];
     isPaymentDone = json['is_payment_done'];
+    isConfirmed = json['is_confirmed'];
+    currentStep = json['current_step'];
     createdAt = json['created_at'];
+    type = json['type'] == 2? QueryType.medicalVisa : QueryType.query;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,6 +85,7 @@ class ActiveQuery {
     data['is_payment_required'] = isPaymentRequired;
     data['is_payment_done'] = isPaymentDone;
     data['created_at'] = createdAt;
+    data['current_step'] = currentStep;
     return data;
   }
 }
@@ -115,4 +125,9 @@ class AllQuery {
     data['completed_at'] = completedAt;
     return data;
   }
+}
+
+class QueryType{
+  static const query = 1;
+  static const medicalVisa = 2;
 }

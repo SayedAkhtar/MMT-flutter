@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:mmt_/components/CustomAppBar.dart';
 import 'package:mmt_/constants/colors.dart';
+import 'package:mmt_/constants/query_step_name.dart';
 import 'package:mmt_/controller/controllers/query_controller.dart';
 import 'package:mmt_/helper/CustomSpacer.dart';
 import 'package:mmt_/models/confirmed_query.dart';
@@ -16,12 +17,14 @@ class QueryConfirmed extends GetView<QueryController> {
   const QueryConfirmed({super.key});
   @override
   Widget build(BuildContext context) {
+    QueryProvider _provider = Get.put(QueryProvider());
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(pageName: "Confirmed details".tr, showDivider: true ),
         body: FutureBuilder(
-          future: controller.confirmedQuery(),
-          builder: (context, AsyncSnapshot<ConfirmedQuery> data) {
+          future: _provider.getConfirmedQueryDetail(controller.selectedQuery),
+          builder: (context, AsyncSnapshot data) {
+            print(data);
             if (data.hasData) {
               return Padding(
                 padding: const EdgeInsets.all(CustomSpacer.S),

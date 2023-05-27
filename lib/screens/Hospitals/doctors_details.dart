@@ -44,8 +44,13 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
     child: Stack(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.55,
+          height: 100,
           width: double.infinity,
+          child: Image.asset('assets/back-md.jpg', fit: BoxFit.fill,),
+        ),
+        SizedBox(
+          height: 80,
+          width: 80,
           child: Image.network(
             controller.selectedDoctor!.image!,
             fit: BoxFit.fill,

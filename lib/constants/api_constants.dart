@@ -6,4 +6,6 @@ const String LOGIN_PATH = "$api_uri/login";
 
 const String WHATSAPP_NUMBER = "+919818237391";
 
-const String SUPPORT_EMAIL = "mymedtrip25@gmail.com";
+const String SUPPORT_EMAIL = "hi@mymedtrip.com";
+
+const String NO_IMAGE = 'https://shahpourpouyan.com/wp-content/uploads/2018/10/orionthemes-placeholder-image-1.png';

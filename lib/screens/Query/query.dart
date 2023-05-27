@@ -8,6 +8,7 @@ import 'package:mmt_/routes.dart';
 import 'package:mmt_/screens/Query/generate_new_query.dart';
 
 import '../../constants/colors.dart';
+import '../../models/query_screen_model.dart';
 
 class Query_page extends StatefulWidget {
   const Query_page({super.key});
@@ -50,6 +51,7 @@ class _Query_pageState extends State<Query_page> {
                                 "Date: ${_controller.queryScreen.activeQuery![index].createdAt}",
                             response: _controller.queryScreen
                                 .activeQuery![index].doctorResponse!,
+                            selectedIndex: index,
                             stepName: _controller
                                 .queryScreen.activeQuery![index].stepName!,
                             stepNote: _controller
@@ -107,19 +109,29 @@ class _Query_pageState extends State<Query_page> {
       required String date,
       required String response,
       required String stepName,
+      required int selectedIndex,
       required String stepNote,
       required QueryController controller}) {
-    List<Color> color = response.isNotEmpty
+    ActiveQuery currQuery = controller.queryScreen.activeQuery![selectedIndex];
+    // String stepTitle = controller.queryScreen.activeQuery![selectedIndex].type! == QueryType.medicalVisa ? "MMT Admin's ":"";
+    List<Color> color = (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa)
         ? [MYcolors.greenlightcolor, MYcolors.bluecolor]
-        : [Colors.deepOrangeAccent, Colors.redAccent];
+        : [Color(0xffe29578), Color(0xffe26d5c)];
     return GestureDetector(
       onTap: () {
-        if (response.isNotEmpty) {
-          controller.navigateToDoctorsPage(id, response);
+        if(currQuery.isConfirmed!){
+          controller.selectedQuery = id;
+          controller.selectedIndex = selectedIndex;
+          Get.toNamed(Routes.confirmedQuery);
+          return;
+        }
+        if (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa) {
+          controller.navigateToQueryForm(id, selectedIndex, response);
         } else {
           Get.showSnackbar(const GetSnackBar(
             message:
-                "Please wait untill we get the doctor's response for your query",
+                "Please wait until we get the doctor's response for your query",
+            duration: Duration(seconds: 2),
           ));
         }
       },
@@ -141,7 +153,7 @@ class _Query_pageState extends State<Query_page> {
                 color: Colors.grey.withOpacity(0.5),
                 blurRadius: 2,
                 spreadRadius: 0,
-                offset: Offset(0, 1),
+                offset: const Offset(0, 1),
               )
             ]),
         width: 350,
@@ -187,13 +199,13 @@ class _Query_pageState extends State<Query_page> {
                 children: [
                   Text(
                     stepName,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontFamily: "Brandon",
                         fontSize: 15,
                         color: MYcolors.greycolor),
                   ),
                   const Text(
-                    "Doctor's Response :-",
+                    "Response :-",
                     style: TextStyle(
                         fontFamily: "Brandon",
                         fontSize: 15,

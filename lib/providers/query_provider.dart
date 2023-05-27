@@ -3,16 +3,19 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mmt_/constants/api_constants.dart';
+import 'package:mmt_/constants/query_step_name.dart';
 import 'package:mmt_/helper/Loaders.dart';
 import 'package:mmt_/models/confirmed_query.dart';
+import 'package:mmt_/models/query_response_model.dart';
 import 'package:mmt_/models/query_screen_model.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
+import 'package:mmt_/providers/base_provider.dart';
 import 'package:mmt_/routes.dart';
 
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/error_model.dart';
 
-class QueryProvider extends GetConnect {
+class QueryProvider extends BaseProvider {
   late String? _token;
   final Map<String, String> _headers = {};
   final LocalStorageController _storage = Get.find<LocalStorageController>();
@@ -47,49 +50,31 @@ class QueryProvider extends GetConnect {
     return null;
   }
 
-  Future<bool> postQueryGenerationData(FormData data) async {
+  Future<bool> postQueryGenerationData(Map data) async {
 
-    // try{
+    try{
       Loaders.loadingDialog(title: "Uploading Data");
       Response response = await post('/queries', data, headers: _headers);
       print(response.body);
+      responseHandler(response);
       if(response.isOk){
         return true;
-      }else{
-        var jsonString = response.body;
-        if( jsonString is Map<String, dynamic>){
-          ErrorResponse error= ErrorResponse.fromJson(jsonString);
-          Loaders.errorDialog(error.error!, title: error.message!);
-        }
-        printError(info: "postQueryGenerationData response body is null");
-         throw Exception("postQueryGenerationData response body is null");
       }
-    // }catch(e){
-    //   Loaders.errorDialog(e.toString());
-    // }
+    }catch(e){
+      Loaders.errorDialog(e.toString());
+    }
     return false;
   }
 
-  Future getConfirmedQueryDetail() async{
-    // try {
-    //   Response response = await get('/confirmed-query',
-    //       contentType: 'application/json', headers: _headers);
-    //   if (response.isOk) {
-    //     var jsonString = await response.body["DATA"];
-    //     ConfirmedQuery data = ConfirmedQuery.fromJson(jsonString);
-    //     return data;
-    //   }
-    //   if (response.hasError) {
-    //     var jsonString = await response.body;
-    //     ErrorResponse error = ErrorResponse.fromJson(jsonString);
-    //     Loaders.errorDialog(error.error!, title: error.message!);
-    //     if (error.error == "Unauthenticated") {
-    //       _storage.delete(key: "token");
-    //     }
-    //   }
-    // } catch (error) {
-    //   Loaders.errorDialog(error.toString(), title: "Error");
-    // }
+  Future getConfirmedQueryDetail(int queryId) async{
+    try {
+      Response response = await get('/queries/${queryId}/${QueryStep.queryConfirmed}',
+          contentType: 'application/json', headers: _headers);
+      var jsonString = await responseHandler(response);
+      return ConfirmedQuery.fromJson(jsonString);
+    } catch (error) {
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
     return null;
   }
 
@@ -148,4 +133,30 @@ class QueryProvider extends GetConnect {
     return false;
   }
 
+  Future getQueryStepData(int queryId, int step) async{
+    try {
+      Response response = await get('/queries/${queryId}/${step}',
+          contentType: 'application/json', headers: _headers);
+      var jsonString = await responseHandler(response);
+      return QueryResponse.fromJson(jsonString);
+    } catch (error) {
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
+  }
+
+  Future<bool> postMedicalVisaQueryData(Map data) async {
+
+    try{
+      Loaders.loadingDialog(title: "Uploading Data");
+      Response response = await post('/queries', data, headers: _headers);
+      print(response.body);
+      responseHandler(response);
+      if(response.isOk){
+        return true;
+      }
+    }catch(e){
+      Loaders.errorDialog(e.toString());
+    }
+    return false;
+  }
 }

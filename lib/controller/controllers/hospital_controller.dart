@@ -42,4 +42,8 @@ class HospitalController extends GetxController {
       Get.toNamed(Routes.hospitalPreview);
     }
   }
+
+  void getAllHospitals() async{
+    var _hospital = _provider.getAllHospitals();
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mmt_/constants/api_constants.dart';
+import 'package:mmt_/routes.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -128,5 +129,10 @@ class Utils {
 //     await file.writeAsBytes(data, flush: true);
 //
 //     return 'file://${file.path}';
+  }
+
+  static Future<bool> willPopCallback() async {
+    Get.offAllNamed(Routes.home);
+    return false; // return true if the route to be popped
   }
 }

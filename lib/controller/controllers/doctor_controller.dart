@@ -31,10 +31,11 @@ class DoctorController extends GetxController {
 
   Future<List<Doctor?>?> getDoctors({arguments}) async{
     List<Doctor?> res = [];
-    if(arguments['hospital_id'] != ''){
+    print(arguments);
+    if(arguments.containsKey('hospital_id') && arguments['hospital_id'] != ''){
       res = await _provider.getDoctorsByHospital(arguments['hospital_id']);
     }
-    if(arguments['type'] == 'allDoctor'){
+    if(arguments.containsKey('type') && arguments['type'] == 'allDoctor'){
       res = await _provider.getAllDoctors();
     }
     print(res);

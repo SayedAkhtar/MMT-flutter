@@ -68,7 +68,7 @@ class _Language_pageState extends State<Language_page> {
                   width: MediaQuery.of(context).size.width * 0.05,
                 ),
                 Text(
-                  "Language preferred".tr,
+                  "Select your language".tr,
                   style: TextStyle(fontFamily: "Brandon", fontSize: 23),
                 ),
               ],

@@ -6,11 +6,12 @@ import 'package:mmt_/helper/Loaders.dart';
 import 'package:mmt_/models/doctor.dart';
 import 'package:mmt_/models/error_model.dart';
 import 'package:mmt_/models/search_query_result_model.dart';
+import 'package:mmt_/providers/base_provider.dart';
 import '../constants/api_constants.dart';
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/hospital_model.dart';
 
-class DoctorProvider extends GetConnect {
+class DoctorProvider extends BaseProvider {
   final _storage = Get.find<LocalStorageController>();
   final Map<String, String> _headers = {};
   String? _token;
@@ -26,9 +27,6 @@ class DoctorProvider extends GetConnect {
     List<Doctor?> _doctor = [];
     try{
       String uri = '/hospitals/$id/doctors';
-      if(httpClient.baseUrl == null){
-        uri = "https://2b51-2409-40d0-8-57c9-fcc6-ca2e-fded-ecf6.in.ngrok.io/api/client/$uri";
-      }
       Response response = await get(uri, contentType: 'application/json', headers: _headers);
       if (response.statusCode == 200) {
         List jsonString = await response.body["DATA"];
@@ -83,7 +81,8 @@ class DoctorProvider extends GetConnect {
         uri = "$uri${parameter}";
       }
       Response response = await get(uri, contentType: 'application/json', headers: _headers);
-      print(response.body);
+      var jsonString = await responseHandler(response);
+      print(jsonString);
       if (response.statusCode == 200) {
         List jsonString = await response.body["data"];
         jsonString.forEach((element) => _doctor.add(Doctor.fromJson(element)));

@@ -15,15 +15,15 @@ class InitialBinding implements Bindings{
   @override
   void dependencies() {
     Get.put(LocalStorageController());
-    Get.lazyPut<UserProvider>(() => UserProvider());
-    Get.lazyPut<UserController>(() => UserController());
-    Get.lazyPut<HomeProvider>(() => HomeProvider());
-    Get.lazyPut<HomeController>(() => HomeController());
-    Get.lazyPut<QueryProvider>(() => QueryProvider());
-    Get.lazyPut<QueryController>(() => QueryController());
-    Get.lazyPut<DoctorProvider>(() => DoctorProvider());
+    // Get.lazyPut<UserProvider>(() => UserProvider(), fenix: true);
+    Get.lazyPut<UserController>(() => UserController(), fenix: true);
+    // Get.lazyPut<HomeProvider>(() => HomeProvider());
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
+    // Get.lazyPut<QueryProvider>(() => QueryProvider());
+    Get.lazyPut<QueryController>(() => QueryController(), fenix: true);
+    // Get.lazyPut<DoctorProvider>(() => DoctorProvider());
     Get.lazyPut<DoctorController>(() => DoctorController());
-    Get.lazyPut<HospitalProvider>(() => HospitalProvider());
+    // Get.lazyPut<HospitalProvider>(() => HospitalProvider());
     Get.lazyPut<HospitalController>(() => HospitalController());
   }
 }
