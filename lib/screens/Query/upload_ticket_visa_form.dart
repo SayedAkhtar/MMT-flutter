@@ -9,11 +9,11 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/FirebaseFunctions.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/screens/Medical_visa/visa_end_page.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/screens/Medical_visa/visa_end_page.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/query_step_name.dart';

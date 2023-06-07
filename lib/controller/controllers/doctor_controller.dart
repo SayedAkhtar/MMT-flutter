@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:mmt_/locale/AppTranslation.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/models/hospital_model.dart';
-import 'package:mmt_/providers/doctor_provider.dart';
-import 'package:mmt_/providers/hospital_provider.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/locale/AppTranslation.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/models/hospital_model.dart';
+import 'package:MyMedTrip/providers/doctor_provider.dart';
+import 'package:MyMedTrip/providers/hospital_provider.dart';
+import 'package:MyMedTrip/routes.dart';
 
 class DoctorController extends GetxController {
   late DoctorProvider _provider;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 
 class ChangeLanguagePage extends StatelessWidget {
   const ChangeLanguagePage({Key? key}) : super(key: key);

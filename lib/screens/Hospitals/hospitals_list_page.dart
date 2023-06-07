@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/providers/hospital_provider.dart';
-import 'package:mmt_/screens/Hospitals/hospital_preview.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/providers/hospital_provider.dart';
+import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 import '../../controller/controllers/hospital_controller.dart';
 import '../../models/hospital_model.dart';

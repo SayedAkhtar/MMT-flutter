@@ -1,6 +1,6 @@
 {
-    "name": "mmt_",
-    "short_name": "mmt_",
+    "name": "MyMedTrip",
+    "short_name": "MyMedTrip",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",

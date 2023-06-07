@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';

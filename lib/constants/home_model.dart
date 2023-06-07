@@ -1,4 +1,4 @@
-import 'package:mmt_/models/faq_model.dart';
+import 'package:MyMedTrip/models/faq_model.dart';
 
 class Home {
   List<Hospitals>? hospitals;

@@ -5,14 +5,14 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/controller/controllers/doctor_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/locale/AppTranslation.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Hospitals/doctors_details.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/locale/AppTranslation.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 class Doctors_list_page extends StatefulWidget {
   const Doctors_list_page({super.key});

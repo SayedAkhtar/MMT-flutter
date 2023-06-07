@@ -5,9 +5,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
 
 class ReadBlogPage extends StatelessWidget {
   const ReadBlogPage( this.title,this.description, this.thumbnail, {super.key});

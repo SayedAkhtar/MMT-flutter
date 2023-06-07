@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/components/ImageWithLoader.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,16 +11,16 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/components/SmallIconButton.dart';
-import 'package:mmt_/components/TranslatedText.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Settings_page/add_family.dart';
-import 'package:mmt_/screens/Settings_page/medical_edit.dart';
-import 'package:mmt_/screens/Settings_page/profile_edit.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/SmallIconButton.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Settings_page/add_family.dart';
+import 'package:MyMedTrip/screens/Settings_page/medical_edit.dart';
+import 'package:MyMedTrip/screens/Settings_page/profile_edit.dart';
 
 import '../../constants/colors.dart';
 
@@ -71,18 +72,11 @@ class Profile_Page extends GetView<UserController> {
     }
     return Stack(children: [
       ClipOval(
-        child: Material(
-          color: Colors.transparent,
-          child: Ink.image(
-            image: image,
-            fit: BoxFit.cover,
-            width: 100,
-            height: 100,
-            child: InkWell(onTap: () {
-              // pickImageFromGallery();
-            }),
-          ),
-        ),
+        child: GetBuilder(
+          builder: (UserController controller) {
+            return SizedBox( width: 100, height:100, child: ImageWithLoader(imageUrl: controller.user!.image!,));
+            },
+        )
       ),
       Positioned(
         bottom: 0,
@@ -105,43 +99,34 @@ class Profile_Page extends GetView<UserController> {
                           final XFile? cameraImage = await _picker
                               .pickImage(source: ImageSource.camera);
                           if (cameraImage == null) return;
-                          // File imageFile = File(cameraImage.path);
+                          Get.back();
                           controller.updateProfileImage(controller.user!.id, cameraImage.path);
                         } catch (e) {
                           print(e.toString());
-                        } finally {
-                          Get.back();
                         }
                       },
                     ),
                     BottomSheetAction(
                       title: Text('Choose from Library'.tr),
                       onPressed: (_) async{
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
-                          dialogTitle: "Upload your profile picture",
-                          type: FileType.custom,
-                          allowedExtensions: [
-                            'jpeg',
-                            'jpg',
-                            'png'
-                          ],
-                        );
-
-                        if (result != null) {
+                        try {
+                          ImagePicker _picker = ImagePicker();
+                          final XFile? cameraImage = await _picker
+                              .pickImage(source: ImageSource.gallery);
+                          if (cameraImage == null) return;
                           Get.back();
-                          controller.updateProfileImage(controller.user!.id, result.files.single.path!);
-                        } else {
-                          // User canceled the picker
+                          controller.updateProfileImage(controller.user!.id, cameraImage.path);
+                        } catch (e) {
+                          print(e.toString());
                         }
                       },
                     ),
 
-                    BottomSheetAction(
-                      title: Text('Remove Photo'.tr,
-                          style: TextStyle(color: MYcolors.redcolor)),
-                      onPressed: (_) {},
-                    ),
+                    // BottomSheetAction(
+                    //   title: Text('Remove Photo'.tr,
+                    //       style: TextStyle(color: MYcolors.redcolor)),
+                    //   onPressed: (_) {},
+                    // ),
                   ],
                   cancelAction: CancelAction(
                       title: Text(

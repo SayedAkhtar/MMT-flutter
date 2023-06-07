@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/controller/controllers/query_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Query/generate_new_query.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/controller/controllers/query_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
 
 import '../../constants/colors.dart';
 import '../../models/query_screen_model.dart';

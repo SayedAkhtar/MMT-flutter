@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
 
 class AboutApp extends StatelessWidget {
   const AboutApp({Key? key}) : super(key: key);

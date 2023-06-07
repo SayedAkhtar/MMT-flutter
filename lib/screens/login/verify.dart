@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/controller/controllers/auth_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/screens/Settings_page/help_page.dart';
-import 'package:mmt_/screens/login/verify_confirm.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
+import 'package:MyMedTrip/screens/login/verify_confirm.dart';
 
 import '../../constants/colors.dart';
 

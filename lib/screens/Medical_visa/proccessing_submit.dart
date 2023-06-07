@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Medical_visa/pay_page.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Medical_visa/pay_page.dart';
 
 import '../../constants/colors.dart';
 

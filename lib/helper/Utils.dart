@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/routes.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../models/search_query_result_model.dart';
 
 class Utils {
   static void checkResponseVariableType(Map<String, dynamic> json){
@@ -144,4 +146,6 @@ class Utils {
   static String getFirebaseFileExt(String path){
     return (path.split('?')[0]).split('.').last;
   }
+
+  static String displayStringForOption(Result option) => option.name!;
 }

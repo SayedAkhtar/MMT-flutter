@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Debouncer.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Debouncer.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:get/get.dart';
 
 class CustomAutocomplete extends StatefulWidget  {

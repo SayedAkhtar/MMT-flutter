@@ -5,20 +5,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/providers/auth_provider.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/providers/auth_provider.dart';
+import 'package:MyMedTrip/routes.dart';
 
 import '../../models/user_model.dart';
 
 class AuthController extends GetxController {
-  //TODO: Implement AuthController
-
-  final registerFormKey = GlobalKey<FormState>();
-  final phoneLoginFormKey = GlobalKey<FormState>();
-  final emailLoginFormKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
@@ -52,6 +47,11 @@ class AuthController extends GetxController {
     if (!_provider.isDisposed) {
       _provider.dispose();
     }
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    oldPasswordController.dispose();
   }
 
   int get getCurrentLoginMethod => loginMethod;
@@ -63,14 +63,12 @@ class AuthController extends GetxController {
     return null;
   }
 
-  void register() async {
-    if (registerFormKey.currentState!.validate()) {
-      Map<String, dynamic> body = {
-        "username": nameController.text,
-        "password": passwordController.text,
-        "email": emailController.text,
-        "name": nameController.text,
-        "phone": phoneController.text,
+  void register(String name, String password, String phone, String gender, String countryCode) async {
+    Map<String, dynamic> body = {
+        "username": name,
+        "password": password,
+        "name": name,
+        "phone": phone,
         "gender": gender,
         "is_active": true,
         "role": 1,
@@ -78,10 +76,11 @@ class AuthController extends GetxController {
       };
       LocalUser? user = await _provider.register(body);
       if (user != null) {
+        _user.user = user;
+        update();
         _storageController.set(key: "token", value: user.token!);
         Get.toNamed(Routes.home);
       }
-    }
   }
 
   void login() async {
@@ -89,20 +88,6 @@ class AuthController extends GetxController {
       phoneLogin();
     }
   }
-
-  // void emailLogin() async {
-  //   if (emailLoginFormKey.currentState!.validate()) {
-  //     User? res = await _provider.login(
-  //         email: emailController.text, password: passwordController.text);
-  //     if (res != null) {
-  //       _user.user = res;
-  //       _storageController.set(key: "token", value: res.token!);
-  //       isLoggedIn.value = true;
-  //       update();
-  //       Get.offAllNamed(Routes.home);
-  //     }
-  //   }
-  // }
 
   void validateUserToken() async {
     if (_storageController.get('token') != null ||
@@ -124,34 +109,18 @@ class AuthController extends GetxController {
   }
 
   void phoneLogin() async {
-    if (phoneLoginFormKey.currentState!.validate()) {
-      String? language = _storageController.get('language');
+    String? language = _storageController.get('language');
       LocalUser? res = await _provider.login(
           phone: phoneController.text, password: passwordController.text, language: language);
       if (res != null) {
         _user.user = res;
         _storageController.set(key: "token", value: res.token!);
         isLoggedIn.value = true;
-        try {
-          final userCredential = await FirebaseAuth.instance.signInAnonymously();
-          // final fcmToken = await FirebaseMessaging.instance.getToken();
-          await _provider.updateFirebase(userCredential.user!.uid, "fcmToken!");
-          // print(fcmToken);
-        } on FirebaseAuthException catch (e) {
-          switch (e.code) {
-            case "operation-not-allowed":
-              print("Anonymous auth hasn't been enabled for this project.");
-              break;
-            default:
-              print("Unknown error.");
-          }
-        }
         phoneController.text = "";
         passwordController.text = "";
         update();
         Get.offAllNamed(Routes.home);
       }
-    }
   }
 
   void loginWithBiometric(String id) async{
@@ -163,9 +132,11 @@ class AuthController extends GetxController {
       isLoggedIn.value = true;
       try {
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
-        // final fcmToken = await FirebaseMessaging.instance.getToken();
-        await _provider.updateFirebase(userCredential.user!.uid, "fcmToken!");
-        print(userCredential.user!.uid);
+        if(Platform.isAndroid){
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          print(fcmToken);
+          // await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+        }
         // print(fcmToken);
       } on FirebaseAuthException catch (e) {
         switch (e.code) {

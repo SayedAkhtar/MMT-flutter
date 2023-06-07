@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({Key? key, required this.onPressed, required this.child, this.isActive}) : super(key: key);

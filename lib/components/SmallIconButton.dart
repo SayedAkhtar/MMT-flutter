@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 class SmallIconButton extends StatelessWidget {
   const SmallIconButton({Key? key, required this.onTap, required this.icon}) : super(key: key);

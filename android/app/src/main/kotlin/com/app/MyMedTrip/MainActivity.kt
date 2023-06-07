@@ -1,4 +1,4 @@
-package com.example.mmt_
+package com.app.MyMedTrip
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

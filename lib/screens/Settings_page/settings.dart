@@ -1,28 +1,30 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:MyMedTrip/components/ImageWithLoader.dart';
+import 'package:MyMedTrip/screens/Settings_page/change_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/components/FormLabel.dart';
-import 'package:mmt_/components/Heading.dart';
-import 'package:mmt_/components/SmallIconButton.dart';
-import 'package:mmt_/components/StyledTextFormField.dart';
-import 'package:mmt_/components/TranslatedText.dart';
-import 'package:mmt_/controller/controllers/auth_controller.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Settings_page/about_page.dart';
-import 'package:mmt_/screens/Settings_page/change_language_page.dart';
-import 'package:mmt_/screens/Settings_page/help_page.dart';
-import 'package:mmt_/screens/Settings_page/profile_page.dart';
-import 'package:mmt_/screens/login/sing_up.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/FormLabel.dart';
+import 'package:MyMedTrip/components/Heading.dart';
+import 'package:MyMedTrip/components/SmallIconButton.dart';
+import 'package:MyMedTrip/components/StyledTextFormField.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Settings_page/about_page.dart';
+import 'package:MyMedTrip/screens/Settings_page/change_language_page.dart';
+import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
+import 'package:MyMedTrip/screens/Settings_page/profile_page.dart';
+import 'package:MyMedTrip/screens/login/sing_up.dart';
 
 import '../../constants/colors.dart';
 
@@ -33,7 +35,6 @@ class User_Profile extends GetView<UserController> {
     final LocalAuthentication auth = LocalAuthentication();
     final AuthController _authController = Get.find<AuthController>();
     final LocalStorageController _storage = Get.find<LocalStorageController>();
-    print(controller.user?.image);
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Settings",
@@ -49,20 +50,29 @@ class User_Profile extends GetView<UserController> {
                     child: Column(
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: controller.user?.image != null && controller.user!.image!.isNotEmpty
-                              ? Image.network(
-                                  Utils.absoluteUri(controller.user?.image))
-                              : Image.asset("Images/PR.png"),
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: GetBuilder(
+                            builder: (UserController controller) {
+                              return ImageWithLoader(imageUrl: controller.user!.image!);
+                            }
+                          ),
                         ),
                         CustomSpacer.xs(),
-                        Text(
-                          controller.user?.name ?? "",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        GetBuilder(
+                          builder: (UserController controller) {
+                            return Text(
+                              controller.user?.name ?? "",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }
                         ),
                       ],
                     ),
@@ -124,31 +134,7 @@ class User_Profile extends GetView<UserController> {
                       ),
                     ),
                     _menuLinks(context, onTap: () {
-                      Get.defaultDialog(
-                          title: "Change Password",
-                        content: SizedBox(
-                          height: 200,
-                          child: Wrap(
-                            runSpacing: CustomSpacer.XS,
-                            children: [
-                            TranslatedText(text: "Old Password : "),
-                            StyledTextFormField(
-                              controller: controller.oldPasswordController,
-                              hintText: "",
-                            ),
-                            TranslatedText(text: "New Password : "),
-                            StyledTextFormField(
-                              controller: controller.passwordController,
-                              hintText: "",
-                            ),
-                            Spacer(),
-                            ElevatedButton(onPressed: (){
-                              print(controller.passwordController.text);
-                              controller.updatePassword(controller.user!.id, _authController.oldPasswordController.text, _authController.passwordController.text);
-                            }, child: Text('Submit'))
-                          ],),
-                        )
-                      );
+                      Get.to(const ChangePassword());
                     }, label: "Change Password"),
                     _menuLinks(context,
                         onTap: () {},

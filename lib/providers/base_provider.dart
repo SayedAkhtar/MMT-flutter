@@ -1,36 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/models/error_model.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/models/error_model.dart';
+import 'package:MyMedTrip/routes.dart';
 
 class BaseProvider extends GetConnect{
   late LocalStorageController storage;
+  late String? token;
   @override
   void onInit(){
-    print("CAlling this");
     storage = Get.find<LocalStorageController>();
-    final token = storage.get('token');
+    token = storage.get('token');
     httpClient.baseUrl = api_uri;
-    print(httpClient);
     httpClient.defaultContentType = "application/json";
     httpClient.timeout = const Duration(seconds: 8);
-
-    httpClient.addRequestModifier((request) {
+    httpClient.addRequestModifier((dynamic request) {
       request.headers['Authorization'] = "Bearer $token";
       return request;
     });
-
-
     super.onInit();
   }
 
   dynamic responseHandler(Response response) async {
     var logger = Logger();
-
-    logger.d(response.statusCode);
+    logger.d(token);
     logger.d(response.headers);
     switch (response.statusCode) {
       case 200:
@@ -57,11 +51,12 @@ class BaseProvider extends GetConnect{
       case 422:
         var responseJson = response.body;
         ErrorResponse error = ErrorResponse.fromJson(responseJson);
-        if(error.error!.replaceAll(RegExp('[^A-Za-z0-9]'), '') == 'Unauthenticated'){
+        if(error.error!.replaceAll(RegExp('[^A-Za-z0-9]'), '').contains('Unauthenticated')){
           storage.delete(key: "token");
           Get.offNamedUntil(Routes.login, (route) => false);
           throw Exception("Login token got expired. Please login again.");
         }
+        print("here");
         throw Exception("${error.error}");
       case 500:
       default:

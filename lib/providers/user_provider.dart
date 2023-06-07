@@ -1,22 +1,17 @@
 import 'package:get/get.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/error_model.dart';
-import 'package:mmt_/providers/base_provider.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/error_model.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
 
 import '../models/user_model.dart';
 
 class UserProvider extends BaseProvider {
   late String? _token;
-  final Map<String, String> _headers = {};
+  late Map<String, String> _headers;
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   @override
   void onInit() {
-    // httpClient.baseUrl = api_uri;
-    // _token = _storage.get('token');
-    // _headers['Authorization'] = "Bearer $_token";
-    // _headers['Accept'] = "application/json";
-    print("----- Initialized");
     super.onInit();
   }
 
@@ -26,31 +21,25 @@ class UserProvider extends BaseProvider {
   }
 
   Future<Response<LocalUser>> postUser(LocalUser user) async => await post('user', user);
+
   Future<Response> deleteUser(int id) async => await delete('user/$id');
 
   Future<LocalUser?> updateUserInfo(int id, Map<String, dynamic> postBody) async{
-    logg
-    // try {
-    //   Response response = await put('/users/$id', postBody,
-    //       contentType: 'application/json', headers: _headers);
-    //   var jsonBody = await responseHandler(response);
-    //   return LocalUser.fromJson(jsonBody);
-    // } catch (error) {
-    //   Loaders.errorDialog(error.toString(), title: "Error");
-    // }
-    return null;
-  }
-
-  Future<bool> updateUserAvatar(int id, FormData postBody) async{
-    Loaders.loadingDialog();
     try {
-      Response response = await post('/update-avatar/$id', postBody, headers: _headers);
+      Response response = await post('/users/$id', postBody,
+          contentType: 'application/json');
       var jsonBody = await responseHandler(response);
-      return true;
+      return LocalUser.fromJson(jsonBody);
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");
     }
-    return false;
+    return null;
+  }
+
+  Future updateUserAvatar(int id, FormData postBody) async{
+    Response response = await post('/update-avatar/$id', postBody);
+    var jsonResponse = await responseHandler(response);
+    return jsonResponse;
   }
 
   Future<bool> addFamily( Map<String, dynamic> postBody) async{
@@ -100,5 +89,21 @@ class UserProvider extends BaseProvider {
       Loaders.errorDialog(error.toString(), title: "Error");
     }
     return _families;
+  }
+
+  Future updateUserPassword({required String oldPassword, required String newPassword, required String confirmPassword}) async {
+    Map<String, dynamic> data = {
+      'old_password': oldPassword,
+      'password': newPassword,
+      'password_confirmation': confirmPassword
+    };
+    try{
+      Response response = await patch('/update-password', data);
+      var jsonString = await responseHandler(response);
+      return true;
+    }catch(error){
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
+    return false;
   }
 }

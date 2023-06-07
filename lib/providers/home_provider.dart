@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/constants/home_model.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/blog.dart';
-import 'package:mmt_/providers/base_provider.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/constants/home_model.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/blog.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
 
 class HomeProvider extends BaseProvider {
   late String? _token;
@@ -44,5 +44,17 @@ class HomeProvider extends BaseProvider {
       print(e.toString());
     }
     return blogs;
+  }
+
+  Future<bool> updateFirebase(String uid, String fcm) async{
+    try {
+      Loaders.loadingDialog();
+      Response? response = await post("/update-firebase", {'uid': uid, 'token': fcm},
+        contentType: "application/json",);
+      var jsonString = await responseHandler(response);
+    } catch (error) {
+      Loaders.errorDialog(error.toString());
+    } finally {}
+    return false;
   }
 }

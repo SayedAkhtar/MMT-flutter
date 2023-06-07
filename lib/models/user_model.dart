@@ -20,7 +20,7 @@ class LocalUser {
   String? createdAt;
   late int id;
   String? token;
-  int? biometric;
+  String? biometric;
 
   static const int TYPE_PATIENT = 1;
   static const int TYPE_DOCTOR = 4;

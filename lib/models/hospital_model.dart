@@ -1,5 +1,5 @@
-import 'package:mmt_/models/testimony_model.dart';
-import 'package:mmt_/models/treatment.dart';
+import 'package:MyMedTrip/models/testimony_model.dart';
+import 'package:MyMedTrip/models/treatment.dart';
 
 class Hospital {
   int? id;

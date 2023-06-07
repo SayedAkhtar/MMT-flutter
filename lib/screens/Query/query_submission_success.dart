@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/routes.dart';
 import 'package:get/get.dart';
 
 class QuerySubmissionSuccess extends StatefulWidget {

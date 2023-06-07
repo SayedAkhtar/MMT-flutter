@@ -8,11 +8,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/models/message_model.dart';
-import 'package:mmt_/models/user_model.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/models/message_model.dart';
+import 'package:MyMedTrip/models/user_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../constants/colors.dart';
@@ -32,13 +32,12 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       switchRender = true,
       enableAudio = true;
   late RtcEngine _engine;
-  ChannelProfileType _channelProfileType =
-      ChannelProfileType.channelProfileLiveBroadcasting;
+  final ChannelProfileType _channelProfileType = ChannelProfileType.channelProfileLiveBroadcasting;
 
   late FirebaseDatabase database;
   late DatabaseReference dbRef;
   late final storageRef;
-  ScrollController _messageScrollController = ScrollController();
+  final ScrollController _messageScrollController = ScrollController();
 
   int messageFrom = 1;
   String messageType = "image";
@@ -127,7 +126,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   }
 
   Future<void> _joinChannel() async {
-    print(argumentData['token']);
+    print(argumentData);
     await _engine.joinChannel(
       token: argumentData['token'],
       channelId: argumentData['channelName'],

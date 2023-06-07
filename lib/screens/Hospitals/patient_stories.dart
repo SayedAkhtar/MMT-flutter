@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/controller/controllers/hospital_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
 
 class Patient_page extends StatelessWidget {
   const Patient_page({super.key});

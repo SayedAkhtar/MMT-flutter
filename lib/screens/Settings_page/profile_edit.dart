@@ -3,13 +3,13 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/components/CustomAutocomplete.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/CustomAutocomplete.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:pattern_formatter/date_formatter.dart';
 
 class Profile_edit_page extends StatefulWidget {

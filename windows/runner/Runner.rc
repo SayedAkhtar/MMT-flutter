@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "mmt_" "\0"
+            VALUE "FileDescription", "MyMedTrip" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mmt_" "\0"
+            VALUE "InternalName", "MyMedTrip" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mmt_.exe" "\0"
-            VALUE "ProductName", "mmt_" "\0"
+            VALUE "OriginalFilename", "MyMedTrip.exe" "\0"
+            VALUE "ProductName", "MyMedTrip" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

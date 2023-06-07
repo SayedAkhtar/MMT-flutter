@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/models/error_model.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
-import 'package:mmt_/providers/base_provider.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/models/error_model.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
 import '../constants/api_constants.dart';
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/hospital_model.dart';
@@ -86,14 +86,6 @@ class DoctorProvider extends BaseProvider {
       if (response.statusCode == 200) {
         List jsonString = await response.body["data"];
         jsonString.forEach((element) => _doctor.add(Doctor.fromJson(element)));
-      }
-      if (response.statusCode! >= 400) {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-        if(error.error == "Unauthenticated"){
-          _storage.delete(key: "token");
-        }
       }
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");

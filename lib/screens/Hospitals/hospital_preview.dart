@@ -1,19 +1,20 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:MyMedTrip/components/ImageWithLoader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/controller/controllers/hospital_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/models/hospital_model.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Hospitals/availble_treatment.dart';
-import 'package:mmt_/screens/Hospitals/doctors_details.dart';
-import 'package:mmt_/screens/Hospitals/doctors_list.dart';
-import 'package:mmt_/screens/Hospitals/patient_stories.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/models/hospital_model.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Hospitals/availble_treatment.dart';
+import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
+import 'package:MyMedTrip/screens/Hospitals/doctors_list.dart';
+import 'package:MyMedTrip/screens/Hospitals/patient_stories.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 class Hospital_preview_page extends GetView<HospitalController> {
   const Hospital_preview_page({super.key});
@@ -39,10 +40,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
-              child: Image.network(
-                hospital.logo??'https://via.placeholder.com/640x480.png/00eeaa?text=No%20Image',
-                fit: BoxFit.fill,
-              ),
+              child: ImageWithLoader(imageUrl: hospital.logo!,),
             ),
           ),
           Positioned(

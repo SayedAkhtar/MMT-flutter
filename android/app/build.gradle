@@ -32,8 +32,10 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.app.MyMedTrip"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -50,7 +52,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.mmt_"
+        applicationId "com.app.MyMedTrip"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21
@@ -72,6 +74,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
 }
 
 flutter {

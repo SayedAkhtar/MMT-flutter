@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 import 'BackButton.dart';
 import 'SmallIconButton.dart';

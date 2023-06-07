@@ -2,15 +2,11 @@
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/login/login_fingerprint.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/routes.dart';
 
 class Language_page extends StatefulWidget {
   const Language_page({super.key});
@@ -25,7 +21,6 @@ class _Language_pageState extends State<Language_page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     selectedLanguage = _storage.get('language') ?? 'en';
   }

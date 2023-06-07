@@ -10,10 +10,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mmt_/components/NoNetwork.dart';
-import 'package:mmt_/controller/controllers/auth_controller.dart';
-import 'package:mmt_/controller/controllers/local_storage_controller.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/components/NoNetwork.dart';
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
+import 'package:MyMedTrip/routes.dart';
 
 class Loading_page extends StatefulWidget {
   const Loading_page({super.key});

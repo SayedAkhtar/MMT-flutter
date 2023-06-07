@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mmt_/components/TranslatedText.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
 
 class FormLabel extends StatelessWidget {
   const FormLabel(this.label, {Key? key}) : super(key: key);

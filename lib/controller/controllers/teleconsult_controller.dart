@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
-import 'package:mmt_/providers/doctor_provider.dart';
-import 'package:mmt_/providers/teleconsult_provider.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
+import 'package:MyMedTrip/providers/doctor_provider.dart';
+import 'package:MyMedTrip/providers/teleconsult_provider.dart';
+import 'package:MyMedTrip/routes.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../models/query_screen_model.dart';

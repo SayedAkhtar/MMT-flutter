@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mmt_/components/TranslatedText.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
 
 class Heading extends StatelessWidget {
   const Heading({Key? key, required this.heading}) : super(key: key);

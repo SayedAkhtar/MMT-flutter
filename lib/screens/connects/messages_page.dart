@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/screens/connects/chat_page.dart';
+import 'package:MyMedTrip/screens/connects/chat_page.dart';
 
 import '../../constants/colors.dart';
 

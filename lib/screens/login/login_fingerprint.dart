@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/screens/Settings_page/help_page.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
 
 class Login_fingerprint_page extends StatefulWidget {
   const Login_fingerprint_page({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mmt_/components/SmallIconButton.dart';
+import 'package:MyMedTrip/components/SmallIconButton.dart';
 import 'package:get/get.dart';
 
 class BackButton extends StatelessWidget {

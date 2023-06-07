@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mmt_/components/TranslatedText.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 class TextButtonWithIcon extends StatelessWidget {
   TextButtonWithIcon({

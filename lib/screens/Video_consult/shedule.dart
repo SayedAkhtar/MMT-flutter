@@ -6,15 +6,15 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/constants/razorpay_constants.dart';
-import 'package:mmt_/controller/controllers/teleconsult_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Video_consult/thankyou.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/constants/razorpay_constants.dart';
+import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Video_consult/thankyou.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Schedule_page extends StatefulWidget {

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/screens/Video_consult/doctor_call_chat.dart';
-import 'package:mmt_/screens/connects/chat_page.dart';
+import 'package:MyMedTrip/screens/Video_consult/doctor_call_chat.dart';
+import 'package:MyMedTrip/screens/connects/chat_page.dart';
 
 import '../../constants/colors.dart';
 

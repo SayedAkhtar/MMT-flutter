@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/home_model.dart';
-import 'package:mmt_/models/blog.dart';
-import 'package:mmt_/models/faq_model.dart';
-import 'package:mmt_/providers/home_provider.dart';
+import 'package:MyMedTrip/constants/home_model.dart';
+import 'package:MyMedTrip/models/blog.dart';
+import 'package:MyMedTrip/models/faq_model.dart';
+import 'package:MyMedTrip/providers/home_provider.dart';
 import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
@@ -41,7 +44,6 @@ class HomeController extends GetxController {
     stories = [];
     Home? data = await _provider.getHomeData();
     List<Blog> blogData = await _provider.fetchBlogData();
-    print(data);
     if(data != null){
       hospitals.addAll(data.hospitals!);
       doctors.addAll(data.doctors!);
@@ -55,6 +57,24 @@ class HomeController extends GetxController {
     // refresh();
   }
 
+  void refreshFirebaseCreds() async{
+    try {
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      if(Platform.isAndroid){
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        print(fcmToken);
+        await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+      }
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print("Unknown error.");
+      }
+    }
+  }
 
   void getBlogData() async{
 

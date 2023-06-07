@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/error_model.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
-import 'package:mmt_/providers/base_provider.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/error_model.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
 import '../constants/api_constants.dart';
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/hospital_model.dart';

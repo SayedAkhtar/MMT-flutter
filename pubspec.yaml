@@ -1,5 +1,5 @@
 name: MyMedTrip
-version: 1.0.0+1
+version: 1.0.0+2
 publish_to: none
 description: Amazon of medical tourism
 environment: 
@@ -45,6 +45,9 @@ dependencies:
   google_fonts: ^4.0.4
   webview_flutter: ^4.2.1
   flutter_launcher_icons: ^0.13.1
+  transparent_image: ^2.0.1
+  cached_network_image:
+  flutter_local_notifications: ^14.1.1
 
 dev_dependencies: 
   dart_code_metrics: ^5.7.2
@@ -75,19 +78,27 @@ flutter:
     - Images/CH.png
     - Images/load.jpg
     - Images/avatar-placeholder.jpeg
+    - Images/placeholder.png
     - assets/
     - assets/lottie/
     - assets/icons/
-  fonts: 
-    - family: Brandon
-      fonts: 
-        - asset: fonts/BrandonText-Bold.ttf
-    - family: BrandonReg
-      fonts: 
-        - asset: fonts/BrandonText-Regular.otf
-    - family: BrandonMed
-      fonts: 
-        - asset: fonts/BrandonText-Medium.otf
+  fonts:
+    - family: Urbanist
+      fonts:
+        - asset: assets/fonts/UrbanistRomanBold.ttf
+          weight: 700
+        - asset: assets/fonts/UrbanistSemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/UrbanistRomanMedium.ttf
+          weight: 500
+        - asset: assets/fonts/UrbanistRegular.ttf
+          weight: 400
+        - asset: assets/fonts/UrbanistRomanBlack.ttf
+          weight: 900
+    - family: Source Sans Pro
+      fonts:
+        - asset: assets/fonts/SourceSansProSemiBold.ttf
+          weight: 600
   uses-material-design: true
 
 flutter_launcher_icons:

@@ -1,52 +1,53 @@
+import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:mmt_/bindings/AuthBinding.dart';
-import 'package:mmt_/bindings/DoctorBinding.dart';
-import 'package:mmt_/bindings/HospitalBinding.dart';
-import 'package:mmt_/bindings/InitialBinding.dart';
-import 'package:mmt_/bindings/QueryBinding.dart';
-import 'package:mmt_/screens/Home_screens/faqs.dart';
-import 'package:mmt_/screens/Home_screens/home_bottom.dart';
-import 'package:mmt_/screens/Hospitals/availble_treatment.dart';
-import 'package:mmt_/screens/Hospitals/doctors_details.dart';
-import 'package:mmt_/screens/Hospitals/doctors_list.dart';
-import 'package:mmt_/screens/Hospitals/hospital_preview.dart';
-import 'package:mmt_/screens/Hospitals/hospitals_list_page.dart';
-import 'package:mmt_/screens/Hospitals/patient_stories.dart';
-import 'package:mmt_/screens/Medical_visa/doctor_reply.dart';
-import 'package:mmt_/screens/Medical_visa/document_preview.dart';
-import 'package:mmt_/screens/Medical_visa/document_visa.dart';
-import 'package:mmt_/screens/Medical_visa/pay_page.dart';
-import 'package:mmt_/screens/Medical_visa/processing_page.dart';
-import 'package:mmt_/screens/Medical_visa/terms_and_conditions.dart';
-import 'package:mmt_/screens/Medical_visa/upload_ticket_visa.dart';
-import 'package:mmt_/screens/Medical_visa/visa_end_page.dart';
-import 'package:mmt_/screens/Query/generate_new_query.dart';
-import 'package:mmt_/screens/Query/query.dart';
-import 'package:mmt_/screens/Settings_page/add_family.dart';
-import 'package:mmt_/screens/Settings_page/add_family_list.dart';
-import 'package:mmt_/screens/Settings_page/medical_edit.dart';
-import 'package:mmt_/screens/Settings_page/profile_edit.dart';
-import 'package:mmt_/screens/Settings_page/profile_page.dart';
-import 'package:mmt_/screens/Settings_page/settings.dart';
-import 'package:mmt_/screens/Video_consult/doctor_call.dart';
-import 'package:mmt_/screens/Video_consult/shedule.dart';
-import 'package:mmt_/screens/Video_consult/teleconsult.dart';
-import 'package:mmt_/screens/Video_consult/thankyou.dart';
-import 'package:mmt_/screens/connects/connect_homepage.dart';
-import 'package:mmt_/screens/connects/messages_page.dart';
-import 'package:mmt_/screens/connects/support_connect.dart';
-import 'package:mmt_/screens/connects/video_call_screen.dart';
-import 'package:mmt_/screens/login/complete_signup.dart';
-import 'package:mmt_/screens/Settings_page/help_page.dart';
-import 'package:mmt_/screens/login/language_page.dart';
-import 'package:mmt_/screens/login/login_fingerprint.dart';
-import 'package:mmt_/screens/auth/login.dart';
-import 'package:mmt_/screens/login/sing_up.dart';
-import 'package:mmt_/screens/login/verify.dart';
-import 'package:mmt_/screens/trending_blogs/read_blog.dart';
-import 'package:mmt_/screens/trending_blogs/trending_blog.dart';
-import 'package:mmt_/screens/update_screen/connect_coordinotor.dart';
-import 'package:mmt_/screens/update_screen/query_confirmed.dart';
+import 'package:MyMedTrip/bindings/AuthBinding.dart';
+import 'package:MyMedTrip/bindings/DoctorBinding.dart';
+import 'package:MyMedTrip/bindings/HospitalBinding.dart';
+import 'package:MyMedTrip/bindings/InitialBinding.dart';
+import 'package:MyMedTrip/bindings/QueryBinding.dart';
+import 'package:MyMedTrip/screens/Home_screens/faqs.dart';
+import 'package:MyMedTrip/screens/Home_screens/home_bottom.dart';
+import 'package:MyMedTrip/screens/Hospitals/availble_treatment.dart';
+import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
+import 'package:MyMedTrip/screens/Hospitals/doctors_list.dart';
+import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
+import 'package:MyMedTrip/screens/Hospitals/hospitals_list_page.dart';
+import 'package:MyMedTrip/screens/Hospitals/patient_stories.dart';
+import 'package:MyMedTrip/screens/Medical_visa/doctor_reply.dart';
+import 'package:MyMedTrip/screens/Medical_visa/document_preview.dart';
+import 'package:MyMedTrip/screens/Medical_visa/document_visa.dart';
+import 'package:MyMedTrip/screens/Medical_visa/pay_page.dart';
+import 'package:MyMedTrip/screens/Medical_visa/processing_page.dart';
+import 'package:MyMedTrip/screens/Medical_visa/terms_and_conditions.dart';
+import 'package:MyMedTrip/screens/Medical_visa/upload_ticket_visa.dart';
+import 'package:MyMedTrip/screens/Medical_visa/visa_end_page.dart';
+import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
+import 'package:MyMedTrip/screens/Query/query.dart';
+import 'package:MyMedTrip/screens/Settings_page/add_family.dart';
+import 'package:MyMedTrip/screens/Settings_page/add_family_list.dart';
+import 'package:MyMedTrip/screens/Settings_page/medical_edit.dart';
+import 'package:MyMedTrip/screens/Settings_page/profile_edit.dart';
+import 'package:MyMedTrip/screens/Settings_page/profile_page.dart';
+import 'package:MyMedTrip/screens/Settings_page/settings.dart';
+import 'package:MyMedTrip/screens/Video_consult/doctor_call.dart';
+import 'package:MyMedTrip/screens/Video_consult/shedule.dart';
+import 'package:MyMedTrip/screens/Video_consult/teleconsult.dart';
+import 'package:MyMedTrip/screens/Video_consult/thankyou.dart';
+import 'package:MyMedTrip/screens/connects/connect_homepage.dart';
+import 'package:MyMedTrip/screens/connects/messages_page.dart';
+import 'package:MyMedTrip/screens/connects/support_connect.dart';
+import 'package:MyMedTrip/screens/connects/video_call_screen.dart';
+import 'package:MyMedTrip/screens/login/complete_signup.dart';
+import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
+import 'package:MyMedTrip/screens/login/language_page.dart';
+import 'package:MyMedTrip/screens/login/login_fingerprint.dart';
+import 'package:MyMedTrip/screens/auth/login.dart';
+import 'package:MyMedTrip/screens/login/sing_up.dart';
+import 'package:MyMedTrip/screens/login/verify.dart';
+import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
+import 'package:MyMedTrip/screens/trending_blogs/trending_blog.dart';
+import 'package:MyMedTrip/screens/update_screen/connect_coordinotor.dart';
+import 'package:MyMedTrip/screens/update_screen/query_confirmed.dart';
 
 class Routes {
   static String languageSelector = '/language_selector';
@@ -107,7 +108,7 @@ final getPages = [
   ),
   GetPage(
       name: Routes.registerFirstStep,
-      page: () => const Singup_here_page()
+      page: () => const SignupHerePage()
   ),
   GetPage(
       name: Routes.registerSecondStep,
@@ -231,7 +232,7 @@ final getPages = [
   ),
   GetPage(
       name: Routes.hospitalPreview,
-      page: () => const Hospital_preview_page(),
+      page: () => const HospitalDetailsScreen(),
       binding: HospitalBinding(),
 
   ),

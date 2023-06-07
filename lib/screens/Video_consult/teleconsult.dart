@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/components/CustomAutocomplete.dart';
-import 'package:mmt_/components/CustomElevetedButton.dart';
-import 'package:mmt_/components/FormLabel.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/controller/controllers/teleconsult_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/screens/Video_consult/shedule.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/CustomAutocomplete.dart';
+import 'package:MyMedTrip/components/CustomElevetedButton.dart';
+import 'package:MyMedTrip/components/FormLabel.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/screens/Video_consult/shedule.dart';
+
+import '../../constants/api_constants.dart';
+import '../../helper/Utils.dart';
+import '../../models/search_query_result_model.dart';
 
 class TeLe_Consult_page extends StatefulWidget {
   const TeLe_Consult_page({super.key});
@@ -22,15 +26,39 @@ class TeLe_Consult_page extends StatefulWidget {
 }
 
 class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
-
+  late List<Result> specializations;
   late TeleconsultController controller;
+  Result? selectedOption;
   bool _doctorsFound = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = Get.put(TeleconsultController());
+    getAllSpecializations();
   }
+
+  void getAllSpecializations() async {
+    Response res = await GetConnect().get(
+        "$base_uri/ajax-search/specializations",
+        headers: {"Accepts": "application/json"});
+    if (res.isOk) {
+      var json = res.body['data'];
+      if (json.isNotEmpty) {
+        SearchQueryResult result = SearchQueryResult.fromJson(json);
+        if (result.list!.isNotEmpty) {
+          setState(() {
+            specializations = result.list!;
+          });
+        } else {
+          setState(() {
+            specializations = [];
+          });
+        }
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +77,78 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
               "Specializations",
             ),
             CustomSpacer.s(),
-            CustomAutocomplete(
-                searchTable: "specializations",
-                selectedId: controller.specializationId),
+            Autocomplete<Result>(
+              displayStringForOption: Utils.displayStringForOption,
+              optionsBuilder: (TextEditingValue textEditingValue) async {
+                if (textEditingValue.text.isEmpty) {
+                  return [];
+                }
+                return specializations.where((option) => option.name!
+                    .toLowerCase()
+                    .contains(textEditingValue.text.toLowerCase()));
+              },
+              fieldViewBuilder: (BuildContext context,
+                  TextEditingController fieldTextEditingController,
+                  FocusNode fieldFocusNode,
+                  VoidCallback onFieldSubmitted) {
+                if(selectedOption != null){
+                  fieldTextEditingController.text = selectedOption!.name!;
+                }
+                return TextFormField(
+                  controller: fieldTextEditingController,
+                  validator: (text) {
+                    return "This field is required";
+                  },
+                  decoration: InputDecoration(
+                    suffixIcon: const Icon(Icons.arrow_drop_down),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                  ),
+                  focusNode: fieldFocusNode,
+                );
+              },
+              optionsViewBuilder: (context, onSelected, options) => Align(
+                alignment: Alignment.topLeft,
+                child: Material(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(4.0)),
+                  ),
+                  child: SizedBox(
+                    height: 52.0 * options.length,
+                    width: MediaQuery.of(context).size.width -
+                        (CustomSpacer.S * 2), // <-- Right here !
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: options.length,
+                      shrinkWrap: false,
+                      itemBuilder: (BuildContext context, int index) {
+                        final String option = options.elementAt(index).name!;
+                        return InkWell(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            controller.specializationId.value = options.elementAt(index).id!;
+                            controller.getDoctors();
+                            setState((){
+                              selectedOption = options.elementAt(index);
+                            });
+
+                          },
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(option),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
             CustomSpacer.s(),
             Row(
               children: [
@@ -64,13 +161,15 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                 ),
                 CustomSpacer.s(),
                 Obx(
-                      () => controller.doctors.value.length > 0 ? Text(
-                        "( Found ${controller.doctors.value.length} doctor )",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 16,
-                        ),
-                      ):SizedBox(),
+                  () => controller.doctors.value.length > 0
+                      ? Text(
+                          "( Found ${controller.doctors.value.length} doctor )",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 16,
+                          ),
+                        )
+                      : SizedBox(),
                 ),
               ],
             ),
@@ -106,7 +205,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                             title: Text(
                               "${controller.doctors.value[index].name!}",
                               style: TextStyle(
-                                // fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
                                   color: MYcolors.blacklightcolors,
                                   fontFamily: "Brandon",
                                   fontSize: 18),
@@ -114,22 +213,31 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                             subtitle: Text(
                               "${controller.doctors.value[index].experience!} years \n${controller.doctors.value[index].specialization!}",
                               style: TextStyle(
-                                // fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
                                   color: MYcolors.blacklightcolors,
                                   fontFamily: "Brandon",
                                   fontSize: 14),
                             ),
-                            children:  controller.doctors.value[index].timeSlots!.map((DoctorTimeSlot e) =>ActionChip(
-                              backgroundColor: MYcolors.greenlightcolor,
-                              avatar: Icon(Icons.timer, color: Colors.white70,),
-                              labelStyle: TextStyle(
-                                  color: Colors.white70
-                              ),
-                              label: Text("${e.dayName}"),
-                              onPressed: (){
-                                controller.confirmAppointmentSlot(e, controller.doctors.value[index].price, controller.doctors.value[index].id!);
-                              },
-                            )).toList(),
+                            children: controller.doctors.value[index].timeSlots!
+                                .map((DoctorTimeSlot e) => ActionChip(
+                                      backgroundColor: MYcolors.greenlightcolor,
+                                      avatar: Icon(
+                                        Icons.timer,
+                                        color: Colors.white70,
+                                      ),
+                                      labelStyle:
+                                          TextStyle(color: Colors.white70),
+                                      label: Text("${e.dayName}"),
+                                      onPressed: () {
+                                        controller.confirmAppointmentSlot(
+                                            e,
+                                            controller
+                                                .doctors.value[index].price,
+                                            controller
+                                                .doctors.value[index].id!);
+                                      },
+                                    ))
+                                .toList(),
                           );
                         });
                   } else {
@@ -137,22 +245,6 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                   }
                 }),
               ),
-            ),
-            CustomElevatedButton(
-              onPressed: () {
-                controller.getDoctors();
-                // Get.to(Schedule_page());
-              },
-              child: Text(
-                _doctorsFound?"Proceed":"Search Doctor",
-                style: TextStyle(
-                    color: MYcolors.whitecolor,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
             ),
             Container(
               // alignment: Alignment.center,

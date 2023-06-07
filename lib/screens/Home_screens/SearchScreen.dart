@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomCardWithImage.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/controller/controllers/doctor_controller.dart';
-import 'package:mmt_/controller/controllers/hospital_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/models/doctor.dart';
-import 'package:mmt_/providers/base_provider.dart';
+import 'package:MyMedTrip/components/CustomCardWithImage.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
+import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/models/doctor.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);

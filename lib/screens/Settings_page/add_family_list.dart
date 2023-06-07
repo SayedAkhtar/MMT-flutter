@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/components/ImageWithLoader.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/components/ImageWithLoader.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/routes.dart';
 
 import '../../constants/colors.dart';
 

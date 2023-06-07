@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/constants/query_step_name.dart';
-import 'package:mmt_/controller/controllers/query_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/models/query_response_model.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/screens/Medical_visa/document_visa.dart';
-import 'package:mmt_/screens/Query/query_form.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/constants/query_step_name.dart';
+import 'package:MyMedTrip/controller/controllers/query_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/models/query_response_model.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Medical_visa/document_visa.dart';
+import 'package:MyMedTrip/screens/Query/query_form.dart';
 
 import '../../constants/colors.dart';
 

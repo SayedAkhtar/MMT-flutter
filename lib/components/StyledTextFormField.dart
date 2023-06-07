@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StyledTextFormField extends StatelessWidget {
-  const StyledTextFormField({Key? key, this.controller, this.initialValue, this.hintText}) : super(key: key);
+  const StyledTextFormField({Key? key, this.controller, this.initialValue, this.hintText, this.validator}) : super(key: key);
   final TextEditingController? controller;
   final String? initialValue;
   final String? hintText;
+  final validator;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       initialValue: controller != null ? controller!.text : (initialValue ?? ''),
+      validator: validator,
       onSaved: (value){},
       decoration: InputDecoration(
         contentPadding:

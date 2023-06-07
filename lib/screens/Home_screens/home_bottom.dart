@@ -5,12 +5,12 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/screens/Home_screens/home_page.dart';
-import 'package:mmt_/screens/Hospitals/hospital_preview.dart';
-import 'package:mmt_/screens/Query/query.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/screens/connects/connect_homepage.dart';
-import 'package:mmt_/screens/update_screen/query_confirmed.dart';
+import 'package:MyMedTrip/screens/Home_screens/home_page.dart';
+import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
+import 'package:MyMedTrip/screens/Query/query.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/screens/connects/connect_homepage.dart';
+import 'package:MyMedTrip/screens/update_screen/query_confirmed.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';
@@ -137,7 +137,7 @@ class _Home_screenState extends State<Home_screen> {
       case 4:
         return const Connect_Home_page();
       default:
-        return HomePage();
+        return const HomePage();
     }
   }
 }

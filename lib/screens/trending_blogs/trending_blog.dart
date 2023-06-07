@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/screens/trending_blogs/read_blog.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
 
 class Trending_blog_page extends StatefulWidget {
   const Trending_blog_page({super.key});

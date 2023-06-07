@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/api_constants.dart';
-import 'package:mmt_/constants/query_step_name.dart';
-import 'package:mmt_/helper/Loaders.dart';
-import 'package:mmt_/models/confirmed_query.dart';
-import 'package:mmt_/models/query_response_model.dart';
-import 'package:mmt_/models/query_screen_model.dart';
-import 'package:mmt_/models/search_query_result_model.dart';
-import 'package:mmt_/providers/base_provider.dart';
-import 'package:mmt_/routes.dart';
+import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/constants/query_step_name.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/confirmed_query.dart';
+import 'package:MyMedTrip/models/query_response_model.dart';
+import 'package:MyMedTrip/models/query_screen_model.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
+import 'package:MyMedTrip/providers/base_provider.dart';
+import 'package:MyMedTrip/routes.dart';
 
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/error_model.dart';

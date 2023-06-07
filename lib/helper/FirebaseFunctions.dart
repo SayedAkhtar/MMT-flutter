@@ -3,17 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:mmt_/helper/Loaders.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
 
 class FirebaseFunctions {
-  static Future<String?> uploadImage(File? imageFile) async {
+  static Future<String?> uploadImage(File? imageFile, {String? ref}) async {
     if (imageFile == null) return null;
-
+    String _ref = ref ?? 'query_docs';
     try {
       final storage = FirebaseStorage.instance;
       String ext = imageFile.path.split('.').last;
       final Reference ref =
-          storage.ref().child('query_docs/${DateTime.now()}.${ext}');
+          storage.ref().child('$_ref/${DateTime.now()}.${ext}');
       Get.defaultDialog(
           title: "Uploading",
           content: const CircularProgressIndicator());

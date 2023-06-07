@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/screens/Query/generate_new_query.dart';
+import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
 
 import '../../constants/colors.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/constants/colors.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 
 class FAQS_Page extends StatefulWidget {
   const FAQS_Page({super.key});

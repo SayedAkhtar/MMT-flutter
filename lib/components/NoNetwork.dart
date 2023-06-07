@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mmt_/controller/controllers/auth_controller.dart';
-import 'package:mmt_/screens/login/loading_page.dart';
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
+import 'package:MyMedTrip/screens/login/loading_page.dart';
 import 'package:get/get.dart';
 
 import '../controller/controllers/local_storage_controller.dart';

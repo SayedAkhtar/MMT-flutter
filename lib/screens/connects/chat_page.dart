@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:mmt_/components/CustomAppBar.dart';
-import 'package:mmt_/models/message_model.dart';
+import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:MyMedTrip/models/message_model.dart';
 
 import '../../constants/colors.dart';
 

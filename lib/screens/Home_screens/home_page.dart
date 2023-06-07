@@ -1,28 +1,30 @@
 import 'dart:convert';
 
+import 'package:MyMedTrip/components/CustomImageView.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mmt_/components/CustomCardWithImage.dart';
-import 'package:mmt_/components/HorizontalShimmer.dart';
-import 'package:mmt_/components/MarginBox.dart';
-import 'package:mmt_/components/TextButtonWithIcon.dart';
-import 'package:mmt_/constants/query_step_name.dart';
-import 'package:mmt_/controller/controllers/doctor_controller.dart';
-import 'package:mmt_/controller/controllers/home_controller.dart';
-import 'package:mmt_/controller/controllers/hospital_controller.dart';
-import 'package:mmt_/controller/controllers/query_controller.dart';
-import 'package:mmt_/controller/controllers/user_controller.dart';
-import 'package:mmt_/helper/CustomSpacer.dart';
-import 'package:mmt_/helper/Utils.dart';
-import 'package:mmt_/models/blog.dart';
-import 'package:mmt_/routes.dart';
-import 'package:mmt_/constants/colors.dart';
-import 'package:mmt_/screens/Home_screens/SearchScreen.dart';
-import 'package:mmt_/screens/Query/query_form.dart';
-import 'package:mmt_/screens/Video_consult/doctor_call.dart';
-import 'package:mmt_/screens/connects/support_connect.dart';
-import 'package:mmt_/screens/trending_blogs/read_blog.dart';
+import 'package:MyMedTrip/components/CustomCardWithImage.dart';
+import 'package:MyMedTrip/components/HorizontalShimmer.dart';
+import 'package:MyMedTrip/components/MarginBox.dart';
+import 'package:MyMedTrip/components/TextButtonWithIcon.dart';
+import 'package:MyMedTrip/constants/query_step_name.dart';
+import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
+import 'package:MyMedTrip/controller/controllers/home_controller.dart';
+import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
+import 'package:MyMedTrip/controller/controllers/query_controller.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/models/blog.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
+import 'package:MyMedTrip/screens/Query/query_form.dart';
+import 'package:MyMedTrip/screens/Video_consult/doctor_call.dart';
+import 'package:MyMedTrip/screens/connects/support_connect.dart';
+import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../components/Heading.dart';
@@ -58,10 +60,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffedf2f4),
+      backgroundColor: const Color(0xffedf2f4),
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: Color(0xff343a40),
+        backgroundColor: const Color(0xff343a40),
         leading: SizedBox(
           height: 100,
           child: TextButton(
@@ -106,23 +108,24 @@ class _HomePageState extends State<HomePage> {
               Obx(() {
                 if (!_homeController.isLoading.value) {
                   if (_homeController.banners.isEmpty) {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                   return SizedBox(
                     height: 150,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _homeController.banners.length,
-                        itemBuilder: (_, index) {
-                          return Container(
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(),
-                            child: Image.network(
-                              _homeController.banners[index],
-                              fit: BoxFit.cover,
+                    child: PageView(
+                      children: [
+                        for( var img in _homeController.banners)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CustomImageView(
+                              url: img,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.fill,
+                              radius: BorderRadius.circular(8.0),
                             ),
-                          );
-                        }),
+                          )
+                      ]
+                    )
                   );
                 }
                 return SizedBox();

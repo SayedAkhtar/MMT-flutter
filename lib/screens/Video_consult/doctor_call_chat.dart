@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 import '../../constants/colors.dart';
-import '../connects/video_call.dart';
+import '../connects/voice_call.dart';
 
 class Doctor_call_chat_page extends StatefulWidget {
   const Doctor_call_chat_page({super.key});
@@ -61,7 +61,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(Video_call_page());
+                      Get.to(CoordinatorCallPage());
                     },
                     child: Container(
                         padding: EdgeInsets.all(3),
