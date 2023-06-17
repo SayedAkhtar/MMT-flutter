@@ -115,7 +115,6 @@ class _Home_screenState extends State<Home_screen> {
               ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
         ),
         label: 'Connect'.tr,
-        // backgroundColor: MYcolors.blackcolor
       ),
     ],
     currentIndex: _selectedIndex,

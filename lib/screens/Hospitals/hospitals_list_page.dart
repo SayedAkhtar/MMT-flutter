@@ -1,5 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
+import 'package:MyMedTrip/components/CustomCardWithImage.dart';
+import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,9 +26,17 @@ class HospitalsListPage extends GetView<HospitalController> {
   Widget build(BuildContext context) {
     HospitalProvider provider = Get.put(HospitalProvider());
     return Scaffold(
-      appBar: CustomAppBar(
-        pageName: "All Hospitals",
-        showDivider: true,
+      appBar: CustomAppBarSecondary(
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        ),
+        leadingWidth: 64,
+        height: getVerticalSize(kToolbarHeight),
+        title: Text("All Hospitals", style: AppStyle.txtUrbanistRomanBold20),
+        centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.all(CustomSpacer.S),
@@ -35,82 +48,21 @@ class HospitalsListPage extends GetView<HospitalController> {
             }else if(snapshot.connectionState == ConnectionState.done){
               if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
                 List<Hospital?>? hospitals = snapshot.data;
-                return ListView.builder(
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, i) {
-                    return GestureDetector(
-                      onTap: () {
-                        controller.openHospitalDetails(
-                            hospitals[i]!.id!);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              width: MediaQuery.of(context).size.width * 0.35,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: hospitals?[i]?.logo != null?
-                                    NetworkImage(hospitals![i]!.logo!): NetworkImage(NO_IMAGE),
-                                  ),
-                                  color: MYcolors.whitecolor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      // color: Color.fromARGB(255, 189, 181, 181),
-                                      color: Colors.grey.withOpacity(0.5),
-                                      blurRadius: 2,
-                                      spreadRadius: 0,
-                                      offset: Offset(0, 1),
-                                    )
-                                  ]),
-                            ),
-                            Flexible(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${hospitals![i]!.name}",
-                                    style: TextStyle(
-                                      // fontWeight: FontWeight.bold,
-                                        color: MYcolors.blacklightcolors,
-                                        fontFamily: "Brandon",
-                                        fontSize: 18),
-                                    maxLines: 2,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.place,
-                                        color: MYcolors.bluecolor,
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          "${hospitals![i]!.address}",
-                                          style: TextStyle(
-                                            // fontWeight: FontWeight.bold,
-                                              color: MYcolors.blacklightcolors,
-                                              fontFamily: "Brandon",
-                                              fontSize: 18),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.fade,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
+                    return CustomCardWithImage(
+                  width: getHorizontalSize(160),
+                  onTap: () {
+                    Get.toNamed(Routes.hospitalPreview,
+                        arguments: {'id': hospitals[i]!.id});
                   },
+                  imageUri: hospitals![i]!.logo,
+                  title: hospitals[i]!.name!,
+                  // bodyText: hospitals[i]!.address,
+                );
+              }
                 );
               }
             }

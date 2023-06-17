@@ -9,6 +9,7 @@ import 'package:MyMedTrip/routes.dart';
 class DoctorController extends GetxController {
   late DoctorProvider _provider;
   Doctor? selectedDoctor;
+  RxBool gettingDetail = true.obs;
 
   @override
   void onInit() {
@@ -31,23 +32,22 @@ class DoctorController extends GetxController {
 
   Future<List<Doctor?>?> getDoctors({arguments}) async{
     List<Doctor?> res = [];
-    print(arguments);
     if(arguments.containsKey('hospital_id') && arguments['hospital_id'] != ''){
       res = await _provider.getDoctorsByHospital(arguments['hospital_id']);
     }
     if(arguments.containsKey('type') && arguments['type'] == 'allDoctor'){
       res = await _provider.getAllDoctors();
     }
-    print(res);
     return res;
   }
 
   void getDoctorById(id) async{
+    gettingDetail.value = true;
     Doctor? res = await _provider.getDoctorById(id);
     if(res != null){
       selectedDoctor = res;
+      gettingDetail.value = false;
     }
-    update();
   }
 
   void openDoctorsDetailsPage(id) async{

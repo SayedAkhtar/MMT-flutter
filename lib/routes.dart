@@ -1,4 +1,5 @@
 import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
+import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:MyMedTrip/bindings/AuthBinding.dart';
 import 'package:MyMedTrip/bindings/DoctorBinding.dart';
@@ -87,6 +88,7 @@ class Routes {
   static String patientTestimony = '/patient_testimony';
   static String doctors = '/doctors';
   static String doctorPreview = '/doctor_preview';
+  static String doctorPreviewNew = '/doctor_preview_new';
   static String teleconsultationSchedule = '/teleconsultation_schedule';
   static String teleconsultationPay = '/teleconsultation_pay';
   static String teleconsultationConfirm = '/teleconsultation_confirm';
@@ -252,6 +254,11 @@ final getPages = [
   GetPage(
       name: Routes.doctorPreview,
       page: () => const Doctors_Details_page(),
+      binding: DoctorBinding(),
+  ),
+  GetPage(
+      name: Routes.doctorPreviewNew,
+      page: () => DoctorDetailScreen(),
   ),
   GetPage(
       name: Routes.teleconsultationSchedule,

@@ -26,6 +26,7 @@ class BaseProvider extends GetConnect{
     var logger = Logger();
     logger.d(token);
     logger.d(response.headers);
+    logger.d(response.statusCode);
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -56,10 +57,11 @@ class BaseProvider extends GetConnect{
           Get.offNamedUntil(Routes.login, (route) => false);
           throw Exception("Login token got expired. Please login again.");
         }
-        print("here");
+        Logger().d(error.error);
         throw Exception("${error.error}");
       case 500:
       default:
+        logger.d(response.statusText);
         logger.d(response.body);
         if(Get.isDialogOpen!){
           Get.back();

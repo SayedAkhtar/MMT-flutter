@@ -14,16 +14,21 @@ class CustomCardWithImage extends StatelessWidget {
       this.bodyText,
       this.align,
       this.width,
-      this.icon})
+      this.icon, this.imagePadding, this.titleStyle, this.bodyStyle, this.bgColor, this.imageHeight})
       : super(key: key);
   final onTap;
   final String? imageUri;
+  final double? imageHeight;
   final String title;
   final String? bodyText;
   final double? width;
   final IconData? icon;
   final Widget? body;
   final TextAlign? align;
+  final EdgeInsetsGeometry? imagePadding;
+  final TextStyle? titleStyle;
+  final TextStyle? bodyStyle;
+  final Color? bgColor; 
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -40,10 +45,11 @@ class CustomCardWithImage extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: CustomImageView(
+                  // color: bgColor?? Colors.transparent,
                   url: imageUri,
                   fit: BoxFit.fitWidth,
-                  height: getVerticalSize(100),
-                  margin: const EdgeInsets.all(10),
+                  height: getVerticalSize(imageHeight?? 100),
+                  margin: imagePadding ?? const EdgeInsets.all(0),
                 )
               ),
               Flexible(
@@ -59,12 +65,15 @@ class CustomCardWithImage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Text(
+                      Flexible(
+                        flex: 2,
+                        child: Text(
                         title,
-                        style: AppStyle.txtUrbanistRomanBold20,
+                        style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
                         textAlign: align ?? TextAlign.start,
                         maxLines: 2,
-                      ),
+                        overflow: TextOverflow.ellipsis,
+                      )),
                       bodyText != null ? buildCardBody(icon) : const SizedBox(),
                       body ?? const SizedBox()
                     ],
@@ -79,7 +88,7 @@ class CustomCardWithImage extends StatelessWidget {
   }
 
   buildCardBody(IconData? icon) {
-    TextStyle style = AppStyle.txtUrbanistSemiBold14.copyWith(fontSize: 12);
+    TextStyle bstyle = bodyStyle ?? AppStyle.txtUrbanistSemiBold14.copyWith(fontSize: 12);
     if (icon != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,18 +105,19 @@ class CustomCardWithImage extends StatelessWidget {
               bodyText!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: style,
+              style: bstyle,
               textAlign: align ?? TextAlign.start,
             ),
           ),
         ],
       );
     } else {
-      return Expanded(
+      return Flexible(
+        flex: 1,
         child: Text(
           bodyText!,
           overflow: TextOverflow.ellipsis,
-          style: style,
+          style: bstyle,
           textAlign: align ?? TextAlign.start,
         ),
       );

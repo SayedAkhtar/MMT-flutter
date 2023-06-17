@@ -6,6 +6,7 @@ import 'package:MyMedTrip/models/hospital_model.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -28,7 +29,6 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
   late HospitalController controller;
   late Hospital hospital;
   bool isLoading = true;
-  late WebViewController iframeController;
   @override
   void initState() {
     controller = Get.put(HospitalController());
@@ -42,27 +42,6 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
       setState(() {
         hospital = d;
         isLoading = false;
-        iframeController = WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onProgress: (int progress) {
-                // Update loading bar.
-              },
-              onPageStarted: (String url) {},
-              onPageFinished: (String url) {},
-              onWebResourceError: (WebResourceError error) {},
-              onNavigationRequest: (NavigationRequest request) {
-                return NavigationDecision.prevent;
-                if (request.url.startsWith('https://www.youtube.com/')) {
-                  return NavigationDecision.prevent;
-                }
-                return NavigationDecision.navigate;
-              },
-            ),
-          )
-          ..loadRequest(Uri.parse('https://goo.gl/maps/xstuDAWMd9a3K1UR8'));
-        
       });
     }
   }
@@ -91,11 +70,6 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                           width: getHorizontalSize(428),
                           alignment: Alignment.center);
                     })),
-                // CustomImageView(
-                //     imagePath: "Images/hos.png",
-                //     height: getVerticalSize(300),
-                //     width: getHorizontalSize(428),
-                //     alignment: Alignment.center),
                 Align(
                     child: CustomAppBarSecondary(
                   height: getVerticalSize(50),
@@ -174,6 +148,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                           ],
                         ),
                       ),
+
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         padding: getPadding(top: 14),
@@ -184,16 +159,54 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                 for (var i = 0;
                                     i < hospital.doctors!.length;
                                     i++)
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 16),
-                                    child: CustomImageView(
-                                      url: hospital.doctors![i].image,
-                                      height: getVerticalSize(100),
-                                      width: getHorizontalSize(140),
-                                      radius: BorderRadius.circular(
-                                        getHorizontalSize(16),
-                                      ),
-                                      fit: BoxFit.cover,
+                                  GestureDetector(
+                                    onTap: () => {
+                                      Get.toNamed(Routes.doctorPreviewNew,
+                                          arguments: {
+                                            'id': hospital.doctors![i].id
+                                          })
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 16),
+                                      child: Stack(children: [
+                                        CustomImageView(
+                                          url: hospital.doctors![i].image,
+                                          height: getVerticalSize(100),
+                                          width: getHorizontalSize(140),
+                                          radius: BorderRadius.circular(
+                                            getHorizontalSize(16),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Container(
+                                          height: getVerticalSize(100),
+                                          width: getHorizontalSize(140),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black45.withAlpha(90),
+                                            borderRadius: BorderRadius.circular(
+                                              getHorizontalSize(16),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                hospital.doctors![i].name!,
+                                                style:
+                                                    AppStyle.txtUrbanistRegular14,
+                                              ),
+                                              Text(
+                                                hospital.doctors![i].specialization!.join(", "),
+                                                style:
+                                                    AppStyle.txtUrbanistRegular14,
+                                                    textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ]),
                                     ),
                                   )
                               ]),
@@ -330,16 +343,17 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                     textAlign: TextAlign.left,
                                     style: AppStyle.txtUrbanistRomanBold20)),
                             GestureDetector(
-                              onDoubleTap: (){
+                              onDoubleTap: () {
                                 launchUrl(Uri.parse(hospital.mapFrame!));
                               },
                               child: Container(
-                                  height: getVerticalSize(180),
-                                  width: getHorizontalSize(380),
-                                  margin: getMargin(top: 15, right: 15),
-                                  child: CustomImageView(
-                                    imagePath: 'assets/icons/map-placeholder.jpg',
-                                  ),),
+                                height: getVerticalSize(180),
+                                width: getHorizontalSize(380),
+                                margin: getMargin(top: 15, right: 15),
+                                child: CustomImageView(
+                                  imagePath: 'assets/icons/map-placeholder.jpg',
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -365,49 +379,6 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                               ),
                             ],
                           )),
-
-                      // Container(
-                      //   width: getHorizontalSize(370),
-                      //   margin: getMargin(top: 14, right: 33),
-                      //   child: RichText(
-                      //       maxLines: maxLines,
-                      //       overflow: TextOverflow.ellipsis,
-                      //       text: TextSpan(children: [
-                      //         TextSpan(
-                      //           text: "${hospital.description} ",
-                      //           style: TextStyle(
-                      //             color: Colors.black54,
-                      //             fontSize: getFontSize(16),
-                      //             fontFamily: 'Urbanist',
-                      //             fontWeight: FontWeight.w400,
-                      //             letterSpacing: getHorizontalSize(0.2),
-                      //           ),
-                      //         ),
-                      //       ]),
-                      //       textAlign: TextAlign.left),
-                      // ),
-                      // InkWell(
-                      //     onTap: () {
-                      //       if (maxLines == 3) {
-                      //         setState(() {
-                      //           maxLines = 1000;
-                      //         });
-                      //       } else {
-                      //         setState(() {
-                      //           maxLines = 3;
-                      //         });
-                      //       }
-                      //     },
-                      //     child: Text(
-                      //       'Read More',
-                      //       style: TextStyle(
-                      //         color: MYcolors.cyan600,
-                      //         fontSize: getFontSize(14),
-                      //         fontFamily: 'Urbanist',
-                      //         fontWeight: FontWeight.w400,
-                      //         letterSpacing: getHorizontalSize(0.2),
-                      //       ),
-                      //     )),
                       Visibility(
                           child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

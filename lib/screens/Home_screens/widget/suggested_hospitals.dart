@@ -37,6 +37,7 @@ class SuggestedHospitals extends StatelessWidget {
                   imageUri: data[index].logo,
                   title: data[index].name,
                   bodyText: data[index].address,
+                  imagePadding: const EdgeInsets.all(10),
                 );
               }),
         ),

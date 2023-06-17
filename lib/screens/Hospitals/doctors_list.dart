@@ -1,18 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
+import 'package:MyMedTrip/components/CustomCardWithImage.dart';
+import 'package:MyMedTrip/constants/colors.dart';
+import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/providers/doctor_provider.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/locale/AppTranslation.dart';
 import 'package:MyMedTrip/models/doctor.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
-import 'package:MyMedTrip/constants/colors.dart';
 
 class Doctors_list_page extends StatefulWidget {
   const Doctors_list_page({super.key});
@@ -22,109 +20,94 @@ class Doctors_list_page extends StatefulWidget {
 }
 
 class _Doctors_list_pageState extends State<Doctors_list_page> {
-  late DoctorController controller;
+  late DoctorProvider api;
   List<Doctor?>? _doctors = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    controller = Get.find<DoctorController>();
+    api = Get.put(DoctorProvider());
     var arguments = Get.arguments;
-    fetchDoctors(arguments);
   }
 
-  void fetchDoctors(arguments) async{
-    List<Doctor?>? res= await controller.getDoctors(arguments: arguments);
-    setState(() {
-      _doctors = res;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    if(_doctors!.length > 0){
-      return SafeArea(
-          child: Scaffold(
-            appBar: CustomAppBar(pageName: "Doctors List", showDivider: true,),
-            body: ListView.builder(
-              itemCount: _doctors?.length,
-              itemBuilder: (context, i){
-                Doctor? _doctor = _doctors![i];
-                return GestureDetector(
-                  onTap: () {
-                    controller.selectedDoctor = _doctor;
-                    Get.toNamed(Routes.doctorPreview);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(CustomSpacer.S),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: NetworkImage(_doctor!.image!),
-                              ),
-                              color: MYcolors.whitecolor,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  // color: Color.fromARGB(255, 189, 181, 181),
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 2,
-                                  spreadRadius: 0,
-                                  offset: Offset(0, 1),
-                                )
-                              ]
-                          ),
-                        ),
-                        CustomSpacer.s(),
-                        Flexible(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${_doctor.name}",
-                                style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                    color: MYcolors.blacklightcolors,
-                                    fontFamily: "Brandon",
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                "${_doctor.experience} years",
-                                style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                    color: MYcolors.blacklightcolors,
-                                    fontFamily: "Brandon",
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                "${_doctor.specialization}",
-                                softWrap: true,
-                                style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                    color: MYcolors.blacklightcolors,
-                                    fontFamily: "Brandon",
-                                    fontSize: 18),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            )
-          ));
-    }
     return Scaffold(
-      body: Center(child: CircularProgressIndicator(),),
+      appBar: CustomAppBarSecondary(
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        ),
+        leadingWidth: 64,
+        height: getVerticalSize(kToolbarHeight),
+        title: Text("Doctors List", style: AppStyle.txtUrbanistRomanBold20),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(CustomSpacer.S),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(CustomSpacer.S),
+              margin: const EdgeInsets.only(bottom: CustomSpacer.S),
+              decoration: BoxDecoration(
+                  color: MYcolors.whitecolor,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      blurRadius: 2,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 1),
+                    )
+                  ]),
+              height: CustomSpacer.M * 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Search for Doctors'.tr),
+                  CustomSpacer.s(),
+                  const Icon(Icons.search_rounded),
+                ],
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: api.getAllDoctors(),
+                builder: (_, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return Center(child: CircularProgressIndicator(),);
+                  }else if(snapshot.connectionState == ConnectionState.done){
+                    if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
+                      List<Doctor?>? data = snapshot.data;
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (_, i) {
+                          return CustomCardWithImage(
+                        width: getHorizontalSize(160),
+                        onTap: () {
+                          Get.toNamed(Routes.hospitalPreview,
+                              arguments: {'id': data![i]!.id});
+                        },
+                        imageUri: data![i]!.image!,
+                        title: data[i]!.name!,
+                        // bodyText: hospitals[i]!.address,
+                      );
+                    }
+                      );
+                    }
+                  }
+                  return Center(child: Text("No Hospitals to show"),);
+                }
+              ),
+            ),
+          ],
+        ),
+      ),
     );
-
   }
 }

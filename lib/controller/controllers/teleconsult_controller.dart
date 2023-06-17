@@ -19,7 +19,7 @@ class TeleconsultController extends GetxController {
 
   // ----- Generate Query Page Variables ---- //
   RxInt specializationId = 0.obs;
-  RxInt? doctorId =0.obs;
+  RxInt? doctorId = 0.obs;
   RxString preferredCountry = "India".obs;
   RxList<Doctor> doctors = <Doctor>[].obs;
   RxBool isSearchingDoctor = false.obs;
@@ -41,24 +41,27 @@ class TeleconsultController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    if(!_provider.isDisposed){
+    if (!_provider.isDisposed) {
       _provider.dispose();
     }
   }
 
-  void getDoctors() async{
+  void getDoctors() async {
     isSearchingDoctor.value = true;
     List<Doctor> _doctors = [];
-    var res = await _doctorProvider.getAllDoctors(parameter: "?specialization_id=${specializationId.value}");
+    var res = await _doctorProvider.getAllDoctors(
+        parameter: "?specialization_id=${specializationId.value}");
     for (var element in res) {
-      _doctors.add(element);
+      if (element != null) {
+        _doctors.add(element);
+      }
     }
     doctors.value = _doctors;
     isSearchingDoctor.value = false;
     doctors.refresh();
   }
 
-  void confirmAppointmentSlot(DoctorTimeSlot slot, int price, int doctorId){
+  void confirmAppointmentSlot(DoctorTimeSlot slot, int price, int doctorId) {
     selectedSlot = slot;
     consultationFees = price;
     selectedConsultationDoctor = doctorId;
@@ -66,24 +69,26 @@ class TeleconsultController extends GetxController {
     Get.toNamed(Routes.teleconsultationPay);
   }
 
-  void getAllConsultations() async{
+  void getAllConsultations() async {
     List res = await _provider.getConsultationList();
     consultationList = res;
     consultationsLoaded = true;
     update();
   }
 
-  void handleSuccesfulPaymentResponse(PaymentSuccessResponse response) async{
+  void handleSuccesfulPaymentResponse(PaymentSuccessResponse response) async {
     var data = {
       'doctor_id': selectedConsultationDoctor,
       "scheduled_at": selectedSlot.timestamp,
-      'r_payment_id' : response.paymentId,
-      'response': {'orderID': response.orderId, 'signatureId': response.signature}.toString(),
-      'amount' : 190,
+      'r_payment_id': response.paymentId,
+      'response': {
+        'orderID': response.orderId,
+        'signatureId': response.signature
+      }.toString(),
+      'amount': 190,
     };
     Loaders.loadingDialog();
     bool created = await _provider.storeConsultationRequest(data);
     Get.toNamed(Routes.teleconsultationConfirm);
   }
-
 }

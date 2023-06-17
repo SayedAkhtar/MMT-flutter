@@ -18,8 +18,7 @@ class SuggestedDoctors extends StatelessWidget {
         RowHeader(
             heading: "Suggested Doctors",
             action: () {
-              Get.toNamed(Routes.hospitals,
-                  arguments: {'type': 'allDoctor'});
+              Get.toNamed(Routes.doctors, arguments: {'type': 'allDoctor'});
             }),
         SizedBox(
           height: getVerticalSize(240),
@@ -28,10 +27,11 @@ class SuggestedDoctors extends StatelessWidget {
               itemCount: data.length,
               itemBuilder: (_, index) {
                 return CustomCardWithImage(
-                  width: getHorizontalSize(160), 
+                  width: getHorizontalSize(160),
                   onTap: () {
-                    Get.to(const DoctorDetailScreen());
-                    print("Doctor Details");
+                    Get.toNamed(Routes.doctorPreviewNew, arguments: {
+                      'id': data[index].id,
+                    });
                   },
                   imageUri: data[index].avatar,
                   title: data[index].name!,

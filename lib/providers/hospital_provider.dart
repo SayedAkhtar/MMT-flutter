@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:MyMedTrip/models/treatment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
@@ -49,6 +50,20 @@ class HospitalProvider extends BaseProvider {
       Loaders.errorDialog(error.toString(), title: "Error");
     }
     return null;
+  }
+  Future<List<Treatment?>> getAllTreatments() async {
+    List<Treatment?> treatment = [];
+    try {
+      Response response = await get('/treatments',
+          contentType: 'application/json');
+      var jsonString = await responseHandler(response);
+      jsonString.forEach((element) {
+        treatment.add(Treatment.fromJson(element));
+      });
+    } catch (error) {
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
+    return treatment;
   }
   // Future<Result> ajaxSearch(term) async{
   //

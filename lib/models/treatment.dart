@@ -9,11 +9,6 @@ class Treatment {
   String? successRate;
   String? covered;
   String? notCovered;
-  bool? isActive;
-  String? createdAt;
-  String? updatedAt;
-  int? addedBy;
-  int? updatedBy;
 
   Treatment(
       {this.id,
@@ -25,12 +20,7 @@ class Treatment {
       this.recoveryTime,
       this.successRate,
       this.covered,
-      this.notCovered,
-      this.isActive,
-      this.createdAt,
-      this.updatedAt,
-      this.addedBy,
-      this.updatedBy});
+      this.notCovered});
 
   Treatment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,11 +33,6 @@ class Treatment {
     successRate = json['success_rate'];
     covered = json['covered'];
     notCovered = json['not_covered'];
-    isActive = json['is_active'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    addedBy = json['added_by'];
-    updatedBy = json['updated_by'];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,11 +47,6 @@ class Treatment {
     data['success_rate'] = successRate;
     data['covered'] = covered;
     data['not_covered'] = notCovered;
-    data['is_active'] = isActive;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
-    data['added_by'] = addedBy;
-    data['updated_by'] = updatedBy;
     return data;
   }
 }

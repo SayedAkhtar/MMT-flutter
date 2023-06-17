@@ -36,8 +36,8 @@ class Hospital {
     logo = json['logo'];
     isActive = json['is_active'];
     mapFrame = json['map_frame'];
+    treatment = <Treatment>[];
     if (json['treatments'] != null) {
-      treatment = <Treatment>[];
       json['treatments'].forEach((v) {
         treatment!.add(Treatment.fromJson(v));
       });
@@ -48,14 +48,14 @@ class Hospital {
         testimony!.add(Testimony.fromJson(v));
       });
     }
+    doctors = <Doctor>[];
     if (json['doctors'] != null) {
-      doctors = <Doctor>[];
       json['doctors'].forEach((v) {
         doctors!.add(Doctor.fromJson(v));
       });
     }
+    banners = <String>[];
     if (json['banner'] != null) {
-      banners = <String>[];
       json['banner'].forEach((v) {
         banners!.add(v.toString());
       });

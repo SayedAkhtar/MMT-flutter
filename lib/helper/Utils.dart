@@ -11,18 +11,18 @@ import 'package:path_provider/path_provider.dart';
 import '../models/search_query_result_model.dart';
 
 class Utils {
-  static void checkResponseVariableType(Map<String, dynamic> json){
+  static void checkResponseVariableType(Map<String, dynamic> json) {
     json.forEach((key, value) {
-      print( "$key : ${value.runtimeType}");
+      print("$key : ${value.runtimeType}");
     });
   }
 
-  static String absoluteUri(uri){
+  static String absoluteUri(uri) {
     bool isAbsolute = Uri.tryParse(uri)?.hasAbsolutePath ?? false;
     return isAbsolute ? uri : '$base_uri/$uri';
   }
 
-  static Image networkImageWithLoader(imageUri){
+  static Image networkImageWithLoader(imageUri) {
     return Image.network(
       imageUri,
       fit: BoxFit.fill,
@@ -37,7 +37,7 @@ class Utils {
           child: CircularProgressIndicator(
             value: loadingProgress.expectedTotalBytes != null
                 ? loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!
+                    loadingProgress.expectedTotalBytes!
                 : null,
           ),
         );
@@ -45,8 +45,8 @@ class Utils {
     );
   }
 
-  static String getMonthShortName(int month){
-    switch(month){
+  static String getMonthShortName(int month) {
+    switch (month) {
       case 1:
         return 'Jan';
       case 2:
@@ -76,46 +76,46 @@ class Utils {
     }
   }
 
-  static String formatDate(DateTime? date){
-    if(date == null)return '';
+  static String formatDate(DateTime? date) {
+    if (date == null) return '';
     return DateFormat('dd/MM/yyyy').format(date);
   }
-  static String formatDateWithTime(DateTime date){
+
+  static String formatDateWithTime(DateTime date) {
     return DateFormat('dd/MM/yyyy hh:mm a').format(date);
   }
 
-  static DateTime formatStringToDateTime(String date){
+  static DateTime formatStringToDateTime(String date) {
     return DateFormat('dd/MM/yyyy').parse(date);
   }
 
   static Future<File?> saveFileToDevice(String filename, String url) async {
     HttpClient client = HttpClient();
-    try{
-      if(await Permission.storage.request().isGranted){
+    try {
+      if (await Permission.storage.request().isGranted) {
         var request = await client.getUrl(Uri.parse(url));
         var response = await request.close();
         print(response);
         var bytes = await consolidateHttpClientResponseBytes(response);
         String dir = '/storage/emulated/0/Download';
-        if(Platform.isIOS){
+        if (Platform.isIOS) {
           Directory? downloadsDir = await getTemporaryDirectory();
-            dir = downloadsDir.path;
+          dir = downloadsDir.path;
         }
         print(dir);
-        if(dir != null){
+        if (dir != null) {
           File file = new File('$dir/$filename');
           print(file);
           await file.writeAsBytes(bytes);
           return file;
         }
-      }else{
-        Get.snackbar("Error","File save permissions denied" );
+      } else {
+        Get.snackbar("Error", "File save permissions denied");
         // Loaders.errorDialog("File save permissions denined");
         print("Permissions not granted");
       }
-
-    }catch(ex){
-      Get.snackbar("Error",ex.toString() );
+    } catch (ex) {
+      Get.snackbar("Error", ex.toString());
       print(ex);
     }
     return null;
@@ -143,9 +143,20 @@ class Utils {
     return false; // return true if the route to be popped
   }
 
-  static String getFirebaseFileExt(String path){
+  static String getFirebaseFileExt(String path) {
     return (path.split('?')[0]).split('.').last;
   }
 
   static String displayStringForOption(Result option) => option.name!;
+
+  static String getExcerptFromDescription(String description) {
+    if (description.length > 100) {
+      return '${Utils.stripHtmlIfNeeded(description).substring(0, 100)}...';
+    }
+    return description;
+  }
+
+  static String stripHtmlIfNeeded(String text) {
+    return Bidi.stripHtmlIfNeeded(text);
+  }
 }

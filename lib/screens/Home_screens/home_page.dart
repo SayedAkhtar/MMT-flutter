@@ -5,6 +5,7 @@ import 'package:MyMedTrip/models/faq_model.dart';
 import 'package:MyMedTrip/providers/home_provider.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_doctors.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_hospitals.dart';
+import 'package:MyMedTrip/screens/treatments/list.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   List<Stories> stories = [];
   List blogs = [];
   bool isLoading = true;
+  bool blogLoading = true;
 
   @override
   void initState() {
@@ -75,6 +77,7 @@ class _HomePageState extends State<HomePage> {
     List<Blog> blogData = await homeProvider.fetchBlogData();
     setState(() {
       blogs = blogData;
+      blogLoading = false;
     });
   }
 
@@ -254,36 +257,41 @@ class _HomePageState extends State<HomePage> {
                           ]),
                         ),
                       ),
-                      Container(
-                        width: (MediaQuery.of(context).size.width - 48) / 2,
-                        height: getVerticalSize(200),
-                        padding: getPadding(all: CustomSpacer.XS),
-                        decoration: BoxDecoration(
-                            color: const Color(0xFF599749),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                blurRadius: 2,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 2),
-                              )
-                            ]),
-                        child: Column(children: [
-                          Text("Popular Treatments".tr,
-                              style: AppStyle.txtUrbanistRomanBold16.copyWith(
-                                  fontSize: 16, color: MYcolors.whitecolor),
-                              textAlign: TextAlign.center),
-                          Text("Click here to read about the treatments",
-                              style: AppStyle.txtUrbanistRegular14
-                                  .copyWith(color: MYcolors.whitecolor),
-                              textAlign: TextAlign.center),
-                          const Spacer(),
-                          CustomImageView(
-                            imagePath: "assets/icons/treatments.png",
-                            height: getVerticalSize(98),
-                          )
-                        ]),
+                      InkWell(
+                        onTap: (){
+                          Get.to(() => const TreatmentsList());
+                        },
+                        child: Container(
+                          width: (MediaQuery.of(context).size.width - 48) / 2,
+                          height: getVerticalSize(200),
+                          padding: getPadding(all: CustomSpacer.XS),
+                          decoration: BoxDecoration(
+                              color: const Color(0xFF599749),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  blurRadius: 2,
+                                  spreadRadius: 0,
+                                  offset: const Offset(0, 2),
+                                )
+                              ]),
+                          child: Column(children: [
+                            Text("Popular Treatments".tr,
+                                style: AppStyle.txtUrbanistRomanBold16.copyWith(
+                                    fontSize: 16, color: MYcolors.whitecolor),
+                                textAlign: TextAlign.center),
+                            Text("Click here to read about the treatments",
+                                style: AppStyle.txtUrbanistRegular14
+                                    .copyWith(color: MYcolors.whitecolor),
+                                textAlign: TextAlign.center),
+                            const Spacer(),
+                            CustomImageView(
+                              imagePath: "assets/icons/treatments.png",
+                              height: getVerticalSize(98),
+                            )
+                          ]),
+                        ),
                       ),
                       CustomSpacer.s(),
                       GestureDetector(
@@ -418,149 +426,152 @@ class _HomePageState extends State<HomePage> {
                       // _rowHeader(context, "Our latest blog", () {
                       //   _homeController.getBlogData();
                       // }),
-                      SizedBox(
-                        height: 380,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: blogs.length,
-                            itemBuilder: (_, index) {
-                              Blog currBlog = blogs[index];
-                              RegExp exp = RegExp(r"<[^>]*>",
-                                  multiLine: true, caseSensitive: true);
-                              return GestureDetector(
-                                onTap: () {
-                                  Get.to(() => ReadBlogPage(currBlog.title!,
-                                      currBlog.content!, currBlog.thumbnail!));
-                                },
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width - 40,
-                                  child: Card(
-                                    clipBehavior: Clip.hardEdge,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: SizedBox(
-                                            child: CustomImageView(
-                                              url: currBlog.thumbnail!,
-                                              fit: BoxFit.fill,
-                                              height: getVerticalSize(150),
+                      Visibility(
+                        visible: blogs.isNotEmpty,
+                        child: SizedBox(
+                          height: 380,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: blogs.length,
+                              itemBuilder: (_, index) {
+                                Blog currBlog = blogs[index];
+                                RegExp exp = RegExp(r"<[^>]*>",
+                                    multiLine: true, caseSensitive: true);
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => ReadBlogPage(currBlog.title!,
+                                        currBlog.content!, currBlog.thumbnail!));
+                                  },
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width - 40,
+                                    child: Card(
+                                      clipBehavior: Clip.hardEdge,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: SizedBox(
+                                              child: CustomImageView(
+                                                url: currBlog.thumbnail!,
+                                                fit: BoxFit.fill,
+                                                height: getVerticalSize(150),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: CustomSpacer.XS,
-                                                    left: CustomSpacer.XS),
-                                                decoration: BoxDecoration(
-                                                    color: MYcolors.bluecolor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey
-                                                            .withOpacity(0.5),
-                                                        blurRadius: 2,
-                                                        spreadRadius: 0,
-                                                        offset:
-                                                            const Offset(0, 1),
-                                                      )
-                                                    ]),
-                                                alignment: Alignment.center,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.20,
+                                          Row(
+                                            children: [
+                                              Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: CustomSpacer.XS,
+                                                      left: CustomSpacer.XS),
+                                                  decoration: BoxDecoration(
+                                                      color: MYcolors.bluecolor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey
+                                                              .withOpacity(0.5),
+                                                          blurRadius: 2,
+                                                          spreadRadius: 0,
+                                                          offset:
+                                                              const Offset(0, 1),
+                                                        )
+                                                      ]),
+                                                  alignment: Alignment.center,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.20,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        "${currBlog.getFormattedDate().day}",
+                                                        style: AppStyle
+                                                            .txtUrbanistRomanBold32
+                                                            .copyWith(
+                                                                color:
+                                                                    Colors.white),
+                                                      ),
+                                                      Text(
+                                                        Utils.getMonthShortName(
+                                                            currBlog
+                                                                .getFormattedDate()
+                                                                .month),
+                                                        style: AppStyle
+                                                            .txtUrbanistRomanBold20
+                                                            .copyWith(
+                                                                color:
+                                                                    Colors.white),
+                                                      ),
+                                                    ],
+                                                  )),
+                                              Expanded(
                                                 child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      "${currBlog.getFormattedDate().day}",
-                                                      style: AppStyle
-                                                          .txtUrbanistRomanBold32
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.white),
-                                                    ),
-                                                    Text(
-                                                      Utils.getMonthShortName(
-                                                          currBlog
-                                                              .getFormattedDate()
-                                                              .month),
-                                                      style: AppStyle
-                                                          .txtUrbanistRomanBold20
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.white),
-                                                    ),
-                                                  ],
-                                                )),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${currBlog.title}",
-                                                    maxLines: 3,
-                                                    style: AppStyle
-                                                        .txtUrbanistRomanBold20
-                                                        .copyWith(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                  ),
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      "${currBlog.excerpt?.replaceAll(exp, '')}",
+                                                      "${currBlog.title}",
                                                       maxLines: 3,
                                                       style: AppStyle
-                                                          .txtUrbanistRegular18
+                                                          .txtUrbanistRomanBold20
                                                           .copyWith(
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              right: CustomSpacer.XS),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              Get.to(() => ReadBlogPage(
-                                                  currBlog.title!,
-                                                  currBlog.content!,
-                                                  currBlog.thumbnail!));
-                                            },
-                                            child: Text(
-                                              'Explore'.tr,
-                                              style: AppStyle
-                                                  .txtUrbanistRomanBold18Cyan60001,
-                                            ),
+                                                    Container(
+                                                      alignment: Alignment.center,
+                                                      child: Text(
+                                                        "${currBlog.excerpt?.replaceAll(exp, '')}",
+                                                        maxLines: 3,
+                                                        style: AppStyle
+                                                            .txtUrbanistRegular18
+                                                            .copyWith(
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                right: CustomSpacer.XS),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Get.to(() => ReadBlogPage(
+                                                    currBlog.title!,
+                                                    currBlog.content!,
+                                                    currBlog.thumbnail!));
+                                              },
+                                              child: Text(
+                                                'Explore'.tr,
+                                                style: AppStyle
+                                                    .txtUrbanistRomanBold18Cyan60001,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                       Text(
                         "Not convinced ?\nCheck out some of our Patient's stories."

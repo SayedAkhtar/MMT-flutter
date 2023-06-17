@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 class Doctor {
   int? id;
@@ -21,23 +22,25 @@ class Doctor {
 
   Doctor(
       {this.id,
-        this.name,
-        this.phone,
-        this.email,
-        this.image,
-        this.startOfService,
-        this.awards,
-        this.description,
-        this.designation,
-        this.qualification,
-        this.specialization,
-        this.faq,
-        this.timeSlots,
-        this.price = 0,
-        this.experience,
-        this.hospitals, this.blogs});
+      this.name,
+      this.phone,
+      this.email,
+      this.image,
+      this.startOfService,
+      this.awards,
+      this.description,
+      this.designation,
+      this.qualification,
+      this.specialization,
+      this.faq,
+      this.timeSlots,
+      this.price = 0,
+      this.experience,
+      this.hospitals,
+      this.blogs});
 
   Doctor.fromJson(Map<String, dynamic> json) {
+    Logger().i(json);
     id = json['id'];
     name = json['name'];
     phone = json['phone'];
@@ -51,14 +54,20 @@ class Doctor {
     specialization = json['specialization'].cast<String>();
     price = json['price'];
     experience = json['experience'];
-    json['hospitals'].forEach((v){
-      hospitals = [];
-      hospitals?.add(DoctorHospital.fromJson(v));
-    });
-    timeSlots = [];
-    json['time_slots'].forEach((v){
-      timeSlots?.add(DoctorTimeSlot.fromJson(v));
-    });
+    hospitals = [];
+    if (json['hospitals'] != null) {
+      json['hospitals'].forEach((v) {
+        hospitals?.add(DoctorHospital.fromJson(v));
+      });
+    }
+
+    if (json['time_slots'] != null) {
+      timeSlots = [];
+      json['time_slots'].forEach((v) {
+        timeSlots?.add(DoctorTimeSlot.fromJson(v));
+      });
+    }
+
     if(json['faq'] != null){
       faq = [];
       json['faq'].forEach((v){
@@ -91,26 +100,27 @@ class Doctor {
     return data;
   }
 }
-class DoctorHospital{
+
+class DoctorHospital {
   int? id;
   String? name;
   DoctorHospital({this.id, this.name});
-  DoctorHospital.fromJson(Map<String, dynamic> json){
+  DoctorHospital.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     return data;
   }
 }
 
-class DoctorTimeSlot{
+class DoctorTimeSlot {
   String? dayName;
   int? timestamp;
-  DoctorTimeSlot.fromJson(Map<String, dynamic> json){
+  DoctorTimeSlot.fromJson(Map<String, dynamic> json) {
     dayName = json['name'];
     timestamp = json['utc'];
   }
