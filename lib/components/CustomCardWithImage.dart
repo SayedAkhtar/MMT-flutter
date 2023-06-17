@@ -1,3 +1,6 @@
+import 'package:MyMedTrip/components/CustomImageView.dart';
+import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +13,14 @@ class CustomCardWithImage extends StatelessWidget {
       required this.title,
       this.bodyText,
       this.align,
+      this.width,
       this.icon})
       : super(key: key);
   final onTap;
-  final String imageUri, title;
+  final String? imageUri;
+  final String title;
   final String? bodyText;
+  final double? width;
   final IconData? icon;
   final Widget? body;
   final TextAlign? align;
@@ -26,35 +32,24 @@ class CustomCardWithImage extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Container(
-          constraints: const BoxConstraints.expand(height: 310, width: 180),
+        child: SizedBox(
+          width: width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 flex: 2,
-                child: Image.network(imageUri, fit: BoxFit.fill, width: 180,
-                    loadingBuilder: (BuildContext ctx, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      ),
-                    );
-                  }
-                },
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                  return const Center(child: Text('No image to display'));
-                }),
+                child: CustomImageView(
+                  url: imageUri,
+                  fit: BoxFit.fitWidth,
+                  height: getVerticalSize(100),
+                  margin: const EdgeInsets.all(10),
+                )
               ),
               Flexible(
                 flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 6),
+                  padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
                   constraints:
                       const BoxConstraints.expand( width: 180),
                   child: Column(
@@ -66,11 +61,11 @@ class CustomCardWithImage extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 16.0),
+                        style: AppStyle.txtUrbanistRomanBold20,
                         textAlign: align ?? TextAlign.start,
+                        maxLines: 2,
                       ),
-                      bodyText != null ? buildCardBody(icon) : SizedBox(),
+                      bodyText != null ? buildCardBody(icon) : const SizedBox(),
                       body ?? const SizedBox()
                     ],
                   ),
@@ -84,41 +79,36 @@ class CustomCardWithImage extends StatelessWidget {
   }
 
   buildCardBody(IconData? icon) {
+    TextStyle style = AppStyle.txtUrbanistSemiBold14.copyWith(fontSize: 12);
     if (icon != null) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 2.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              icon,
-              size: 16,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Expanded(
+            child: Text(
+              bodyText!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: style,
+              textAlign: align ?? TextAlign.start,
             ),
-            const SizedBox(
-              width: 5,
-            ),
-            Expanded(
-              child: Text(
-                bodyText!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12),
-                textAlign: align ?? TextAlign.start,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       return Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 6.0),
-          child: Text(
-            bodyText!,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12),
-            textAlign: align ?? TextAlign.start,
-          ),
+        child: Text(
+          bodyText!,
+          overflow: TextOverflow.ellipsis,
+          style: style,
+          textAlign: align ?? TextAlign.start,
         ),
       );
     }

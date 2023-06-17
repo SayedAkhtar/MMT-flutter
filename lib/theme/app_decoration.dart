@@ -38,7 +38,7 @@ class AppDecoration {
         blurRadius: getHorizontalSize(
           2,
         ),
-        offset: Offset(
+        offset: const Offset(
           0,
           4,
         ),

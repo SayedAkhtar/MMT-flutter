@@ -1,24 +1,22 @@
+import 'package:intl/intl.dart';
+
 class Doctor {
   int? id;
   String? name;
   String? phone;
   String? email;
   String? image;
-  String? startOfService;
-  String? awards;
+  DateTime? startOfService;
+  List<String>? awards;
   String? description;
-  String? designation;
-  String? qualification;
-  String? faq;
+  List<String>? designation;
+  List<String>? qualification;
+  List<Map<String, dynamic>>? faq;
   List<DoctorTimeSlot>? timeSlots;
-  String? specialization;
+  List<String>? specialization;
   int? experience;
-  bool? isActive;
-  String? createdAt;
-  String? updatedAt;
-  int? addedBy;
-  Null? updatedBy;
   List<DoctorHospital>? hospitals;
+  List<Map<String, dynamic>>? blogs;
   int price = 0;
 
   Doctor(
@@ -37,12 +35,7 @@ class Doctor {
         this.timeSlots,
         this.price = 0,
         this.experience,
-        this.hospitals,
-        this.isActive,
-        this.createdAt,
-        this.updatedAt,
-        this.addedBy,
-        this.updatedBy});
+        this.hospitals, this.blogs});
 
   Doctor.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -50,50 +43,51 @@ class Doctor {
     phone = json['phone'];
     email = json['email'];
     image = json['image'];
-    startOfService = json['start_of_service'];
-    awards = json['awards'];
+    startOfService = DateFormat('yyyy-MM-dd').parse(json['start_of_service']);
+    awards = json['awards'].cast<String>();
     description = json['description'];
-    designation = json['designation'];
-    qualification = json['qualification'];
-    specialization = json['specialization'];
-    faq = json['faq'];
+    designation = json['designation'].cast<String>();
+    qualification = json['qualification'].cast<String>();
+    specialization = json['specialization'].cast<String>();
     price = json['price'];
     experience = json['experience'];
-    isActive = json['is_active'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    addedBy = json['added_by'];
-    updatedBy = json['updated_by'];
     json['hospitals'].forEach((v){
       hospitals = [];
-      hospitals?.add(new DoctorHospital.fromJson(v));
+      hospitals?.add(DoctorHospital.fromJson(v));
     });
     timeSlots = [];
     json['time_slots'].forEach((v){
-      timeSlots?.add(new DoctorTimeSlot.fromJson(v));
+      timeSlots?.add(DoctorTimeSlot.fromJson(v));
     });
+    if(json['faq'] != null){
+      faq = [];
+      json['faq'].forEach((v){
+        faq?.add(v);
+      });
+    }
+    if(json['blogs'] != null){
+      blogs = [];
+      json['blogs'].forEach((v){
+        blogs?.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['start_of_service'] = this.startOfService;
-    data['awards'] = this.awards;
-    data['description'] = this.description;
-    data['designation'] = this.designation;
-    data['qualification'] = this.qualification;
-    data['specialization'] = this.specialization;
-    data['faq'] = this.faq;
-    data['time_slots'] = this.timeSlots;
-    data['is_active'] = this.isActive;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['added_by'] = this.addedBy;
-    data['updated_by'] = this.updatedBy;
-    data['price'] = this.price;
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['start_of_service'] = startOfService;
+    data['awards'] = awards;
+    data['description'] = description;
+    data['designation'] = designation;
+    data['qualification'] = qualification;
+    data['specialization'] = specialization;
+    data['faq'] = faq;
+    data['time_slots'] = timeSlots;
+    data['price'] = price;
     return data;
   }
 }
@@ -106,9 +100,9 @@ class DoctorHospital{
     name = json['name'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

@@ -7,16 +7,18 @@ class TextButtonWithIcon extends StatelessWidget {
   TextButtonWithIcon({
     Key? key,
     required this.onPressed,
-    required this.icon,
+    this.icon,
     required this.text,
     this.iconAtStart = false,
     this.style,
+    this.textStyle,
   }) : super(key: key);
   final VoidCallback onPressed;
-  final IconData icon;
+  final IconData? icon;
   final String text;
   bool iconAtStart;
   ButtonStyle? style;
+  TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,14 @@ class TextButtonWithIcon extends StatelessWidget {
           textDirection: iconAtStart ? TextDirection.ltr : TextDirection.rtl,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            icon != null?
             Icon(
               icon,
               color: MYcolors.blackcolor,
-            ),
+            ):const SizedBox(),
             TranslatedText(
               text: text,
-              style: const TextStyle(color: MYcolors.blackcolor),
+              style: textStyle ?? const TextStyle(color: MYcolors.blackcolor),
             )
           ],
         ));

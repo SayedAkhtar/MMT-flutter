@@ -36,7 +36,6 @@ dependencies:
   firebase_auth: ^4.5.0
   firebase_database: ^10.1.2
   firebase_messaging: ^14.5.0
-  flutter_file_view: ^2.2.1
   firebase_storage: ^11.1.2
   shimmer: ^2.0.0
   youtube_player_flutter: ^8.1.2

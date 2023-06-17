@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/models/doctor.dart';
 import 'package:MyMedTrip/models/testimony_model.dart';
 import 'package:MyMedTrip/models/treatment.dart';
 
@@ -7,18 +8,25 @@ class Hospital {
   String? address;
   String? description;
   String? logo;
+  String? mapFrame;
   bool? isActive;
+  List<String>? banners;
   List<Treatment>? treatment;
   List<Testimony>? testimony;
+  List<Doctor>? doctors;
+  List<Map<String, dynamic>>? blogs;
   Hospital(
       {this.id,
       this.name,
       this.address,
       this.description,
+      this.mapFrame,
       this.logo,
+      this.banners,
         this.treatment,
         this.testimony,
-      this.isActive});
+        this.doctors,
+      this.isActive, this.blogs });
 
   Hospital.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -27,6 +35,7 @@ class Hospital {
     description = json['description'];
     logo = json['logo'];
     isActive = json['is_active'];
+    mapFrame = json['map_frame'];
     if (json['treatments'] != null) {
       treatment = <Treatment>[];
       json['treatments'].forEach((v) {
@@ -37,6 +46,24 @@ class Hospital {
       testimony = <Testimony>[];
       json['testimonies'].forEach((v) {
         testimony!.add(Testimony.fromJson(v));
+      });
+    }
+    if (json['doctors'] != null) {
+      doctors = <Doctor>[];
+      json['doctors'].forEach((v) {
+        doctors!.add(Doctor.fromJson(v));
+      });
+    }
+    if (json['banner'] != null) {
+      banners = <String>[];
+      json['banner'].forEach((v) {
+        banners!.add(v.toString());
+      });
+    }
+    blogs = [];
+    if(json['blogs'] != null){
+      json['blogs'].forEach((v){
+        blogs?.add(v);
       });
     }
   }

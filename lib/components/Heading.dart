@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 
@@ -8,7 +9,7 @@ class Heading extends StatelessWidget {
   Widget build(BuildContext context) {
     return TranslatedText(
       text: heading,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+      style: AppStyle.txtUrbanistRomanBold24,
     );
   }
 }

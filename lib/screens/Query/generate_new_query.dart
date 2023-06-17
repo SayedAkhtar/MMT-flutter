@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
+import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -41,9 +45,17 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-    pageName: "Generate a query",
-    showDivider: true,
+      appBar: CustomAppBarSecondary(
+        leading: IconButton(
+          onPressed: () {
+            Get.offAllNamed(Routes.home);
+          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        ),
+        leadingWidth: 64,
+        height: getVerticalSize(kToolbarHeight),
+        title: Text("Generate New Query", style: AppStyle.txtUrbanistRomanBold20),
+        centerTitle: true,
       ),
       body: Padding(
     padding: const EdgeInsets.fromLTRB(
@@ -179,7 +191,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           files.add(File(element.path!));
                                         });
                                         List<String>? filesPaths = await FirebaseFunctions.uploadMultipleFiles(files);
-                                        controller.passportPath = filesPaths!;
+                                        controller.medicalVisaPath = filesPaths!;
                                         controller.update();
                                       } else {
                                         // User canceled the picker
@@ -226,10 +238,9 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                     return Image.asset(
                                         'assets/icons/pdf_file.png');
                                   }
-                                  return Image.file(
-                                      File(controller.medicalVisaPath[0]));
+                                  return Image.network(controller.medicalVisaPath[0]);
                                 }
-                                return Icon(Icons.add);
+                                return const Icon(Icons.add);
                               })),
                         ),
                         CustomSpacer.s(),
@@ -334,7 +345,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                             height: 100,
                             width: 100,
                             child: controller.passportPath != ""
-                                ? Image.file(File(controller.passportPath[0]))
+                                ? Image.network(controller.passportPath[0])
                                 : Icon(Icons.add),
                           ),
                         ),

@@ -27,8 +27,8 @@ class HospitalController extends GetxController {
   }
 
   Future<Hospital?> getHospitalById(id) async{
-    openHospitalID = id;
-    Hospital? res = await _provider.getHospitalById(openHospitalID);
+    // openHospitalID = id;
+    Hospital? res = await _provider.getHospitalById(id);
     return res;
   }
 

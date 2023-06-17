@@ -21,44 +21,24 @@ class HospitalProvider extends BaseProvider {
     super.onInit();
   }
 
-  Future<Hospital?> getHospitalById(id) async{
-    _headers['Authorization'] = "Bearer $_token";
-    _headers['Accept'] = "application/json";
-    try{
-      if(id== null || id == ''){
-        return null;
-      }
+  Future<Hospital?> getHospitalById(id) async {
+    try {
       String uri = '/hospitals/$id';
-      Response response = await get(uri, contentType: 'application/json', headers: _headers);
-      if(response == null){
-        Loaders.responseNull();
-      }
-      if (response.statusCode == 200) {
-        var jsonString = await response.body["DATA"];
-        Hospital data = Hospital.fromJson(jsonString);
-        return data;
-      }
-      if (response.statusCode! >= 400) {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-        if(error.error == "Unauthenticated"){
-          _storage.delete(key: "token");
-        }
-      }
+      Response response = await get(uri, contentType: 'application/json');
+      var jsonString = await responseHandler(response);
+      return Hospital.fromJson(jsonString);
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");
       throw const HttpException("Could not process request");
     }
-    return null;
   }
 
   Future<List<Hospital?>?> getAllHospitals() async {
-    List<Hospital?> hospitals= [];
+    List<Hospital?> hospitals = [];
     try {
       Response response = await get('/hospitals',
           contentType: 'application/json', headers: _headers);
-      var jsonString = await responseHandler(response);;
+      var jsonString = await responseHandler(response);
       jsonString.forEach((element) {
         hospitals.add(Hospital.fromJson(element));
       });

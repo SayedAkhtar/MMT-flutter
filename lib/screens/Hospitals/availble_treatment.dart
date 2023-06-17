@@ -54,7 +54,7 @@ class Available_Treatment extends GetView<HospitalController> {
                             width: MediaQuery.of(context).size.width * 0.01,
                           ),
                           Text(
-                            "${controller.selectedHospital!.treatment![i].price}",
+                            "${controller.selectedHospital!.treatment![i].minPrice} - ${controller.selectedHospital!.treatment![i].maxPrice}",
                             style: TextStyle(
                               fontFamily: "BrandonMed",
                               fontSize: 15,

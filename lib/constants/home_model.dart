@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/models/faq_model.dart';
 
 class Home {
@@ -60,7 +61,7 @@ class Hospitals {
   String name = "";
   String address = "";
   String? description;
-  String logo = "https://via.placeholder.com/640x480.png/00eeaa?text=No%20Thumbnail";
+  String logo = NO_IMAGE;
 
   Hospitals(
       {this.id,
@@ -74,7 +75,7 @@ class Hospitals {
     name = json['name'];
     address = json['address'];
     description = json['description'];
-    logo = json['logo'] ?? "https://via.placeholder.com/640x480.png/00eeaa?text=No%20Thumbnail";
+    logo = json['logo'] ?? NO_IMAGE;
   }
 
   Map<String, dynamic> toJson() {

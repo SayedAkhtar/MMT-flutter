@@ -46,7 +46,7 @@ class CustomImageView extends StatelessWidget {
     this.radius,
     this.margin,
     this.border,
-    this.placeHolder = 'assets/images/image_not_found.png',
+    this.placeHolder = 'assets/icons/placeholder.png',
   });
 
   @override
@@ -148,6 +148,6 @@ class CustomImageView extends StatelessWidget {
         color: color,
       );
     }
-    return SizedBox();
+    return const SizedBox();
   }
 }
