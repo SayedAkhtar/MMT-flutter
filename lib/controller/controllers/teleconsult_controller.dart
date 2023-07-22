@@ -50,7 +50,7 @@ class TeleconsultController extends GetxController {
     isSearchingDoctor.value = true;
     List<Doctor> _doctors = [];
     var res = await _doctorProvider.getAllDoctors(
-        parameter: "?specialization_id=${specializationId.value}");
+        parameter: "?specialization_id=${specializationId.value}&video_consultation=true");
     for (var element in res) {
       if (element != null) {
         _doctors.add(element);

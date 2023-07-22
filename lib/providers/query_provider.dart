@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -32,19 +33,9 @@ class QueryProvider extends BaseProvider {
     try {
       Response response = await get('/queries',
           contentType: 'application/json', headers: _headers);
-      if (response.statusCode == 200) {
-        var jsonString = await response.body["DATA"];
-        QueryScreen data = QueryScreen.fromJson(jsonString);
-        return data;
-      }
-      if (response.statusCode! >= 400) {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-        if (error.error == "Unauthenticated") {
-          _storage.delete(key: "token");
-        }
-      }
+      var jsonString = await responseHandler(response);
+      QueryScreen data = QueryScreen.fromJson(jsonString);
+      return data;
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");
     }
@@ -72,6 +63,9 @@ class QueryProvider extends BaseProvider {
       Response response = await get('/queries/${queryId}/${QueryStep.queryConfirmed}',
           contentType: 'application/json', headers: _headers);
       var jsonString = await responseHandler(response);
+      if(jsonString is List && jsonString.isEmpty){
+        return;
+      }
       return ConfirmedQuery.fromJson(jsonString);
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");

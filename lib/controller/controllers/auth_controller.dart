@@ -14,16 +14,19 @@ import 'package:MyMedTrip/routes.dart';
 import '../../models/user_model.dart';
 
 class AuthController extends GetxController {
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final oldPasswordController = TextEditingController();
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController oldPasswordController;
+  late TextEditingController newPasswordController;
   String countryCode = "";
-  final gender = "male".obs;
+  RxString gender = "male".obs;
   int loginMethod = 0;
-  var isLoggedIn = false.obs;
+  RxBool isLoggedIn = false.obs;
   bool showLoginPassword = false;
+  RxBool showNewLoginPassword = false.obs;
+  String otpType = 'register'; //TYPE : 'register' | 'forgot_password'
 
   late AuthProvider _provider;
   final UserController _user = Get.find<UserController>();
@@ -34,11 +37,21 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     _provider = Get.put(AuthProvider());
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    oldPasswordController = TextEditingController();
+    newPasswordController = TextEditingController();
   }
 
   @override
   void onReady() {
     super.onReady();
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
+    oldPasswordController = TextEditingController();
+    newPasswordController = TextEditingController();
   }
 
   @override
@@ -52,6 +65,8 @@ class AuthController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     oldPasswordController.dispose();
+    newPasswordController.dispose();
+    showNewLoginPassword.close();
   }
 
   int get getCurrentLoginMethod => loginMethod;
@@ -69,17 +84,17 @@ class AuthController extends GetxController {
         "password": password,
         "name": name,
         "phone": phone,
-        "gender": gender,
-        "is_active": true,
+        "gender": gender.toLowerCase(),
+        "is_active": false,
         "role": 1,
         'country_code': countryCode
       };
       LocalUser? user = await _provider.register(body);
       if (user != null) {
-        _user.user = user;
+        phoneController.text = phone;
+        otpType = "register";
         update();
-        _storageController.set(key: "token", value: user.token!);
-        Get.toNamed(Routes.home);
+        Get.toNamed(Routes.otpVerify);
       }
   }
 
@@ -176,10 +191,27 @@ class AuthController extends GetxController {
   }
 
   void verifyOtp({required String otp}) async {
-    bool res = await _provider.validateOtp(otp, phoneController.text);
-    if (res) {
+    LocalUser? res = await _provider.validateOtp(otp, phoneController.text, otpType, password: otpType == 'forgot_password' ?newPasswordController.text: '');
+    if (res != null) {
       Loaders.successDialog("Phone number verified successfully");
-      Get.toNamed(Routes.home);
+      if(otpType == "register"){
+        _user.user = res;
+        update();
+        _storageController.set(key: "token", value: res.token!);
+        Get.toNamed(Routes.home);
+      }
+      if(otpType == "forgot_password") {
+        Get.toNamed(Routes.login);
+      }
+    }
+  }
+
+  void resetPassword() async {
+    _storageController.delete(key: "token");
+    bool res = await _provider.resetPassword(
+        phone: phoneController.text, password: passwordController.text);
+    if(res){
+      Get.toNamed(Routes.otpVerify);
     }
   }
 }

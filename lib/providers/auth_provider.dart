@@ -16,6 +16,7 @@ class AuthProvider extends BaseProvider {
   @override
   void onInit() {
     httpClient.baseUrl = api_uri;
+    allowAutoSignedCert = true;
     super.onInit();
   }
 
@@ -29,7 +30,8 @@ class AuthProvider extends BaseProvider {
       LocalUser user = LocalUser.fromJson(jsonString);
       return user;
     } catch (error) {
-      Get.defaultDialog(title: "Error", content: Text(error.toString()));
+      Loaders.errorDialog(error.toString());
+      // Get.defaultDialog(title: "Error", content: Text(error.toString()));
     }
     return null;
   }
@@ -78,7 +80,9 @@ class AuthProvider extends BaseProvider {
   Future<bool> logout() async {
     try {
       Response res = await post('/logout', '', contentType: 'application/json');
-      await responseHandler(res);
+      storage.delete(key: "token");
+      // await responseHandler(res);
+      return true;
     } catch (error) {
       Loaders.errorDialog(error.toString());
     }
@@ -86,58 +90,28 @@ class AuthProvider extends BaseProvider {
   }
 
   Future<bool> resendOtp() async {
-    var token = _storage.get("token");
-    _headers['Authorization'] = "Bearer $token";
-    _headers['Accept'] = "application/json";
-    _headers['X-Requested-With'] = 'XMLHttpRequest';
     try {
-      Response response = await post("/validate-token", {},
-          contentType: "application/json", headers: _headers);
-      if (response.statusCode == 200) {
-        return true;
-      }
-      if (response.statusCode! < 300) {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-      } else {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-      }
+      Response response = await post("/resend-otp", {},
+          contentType: "application/json");
+      var jsonString = await responseHandler(response);
+      return true;
     } catch (error) {
       Loaders.errorDialog(error.toString());
     } finally {}
     return false;
   }
 
-  Future<bool> validateOtp(String otp, String phone) async {
-    var token = _storage.get("token");
-    _headers['Authorization'] = "Bearer $token";
-    _headers['Accept'] = "application/json";
-    _headers['X-Requested-With'] = 'XMLHttpRequest';
+  Future<LocalUser?> validateOtp(String otp, String phone, String type, {String? password }) async {
     try {
       Loaders.loadingDialog();
       Response? response = await post(
-          "/check-otp", {'otp': otp, 'phone': phone},
-          contentType: "application/json", headers: _headers);
-      if (response.statusCode == 200) {
-        Loaders.closeLoaders();
-        return true;
-      }
-      if (response.statusCode! < 300) {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-      } else {
-        var jsonString = await response.body;
-        ErrorResponse error = ErrorResponse.fromJson(jsonString);
-        Loaders.errorDialog(error.error!, title: error.message!);
-      }
+          "/check-otp", {'otp': otp, 'phone': phone, 'type': type, 'password': password});
+      var jsonString = await responseHandler(response);
+      return LocalUser.fromJson(jsonString);
     } catch (error) {
       Loaders.errorDialog(error.toString());
     } finally {}
-    return false;
+    return null;
   }
 
   Future<bool> updateFirebase(String uid, String fcm) async {
@@ -172,5 +146,23 @@ class AuthProvider extends BaseProvider {
       Loaders.errorDialog(error.toString());
     } finally {}
     return null;
+  }
+
+  Future<bool> resetPassword(
+      {required String phone,
+        required String password}) async {
+    Map<String, dynamic> body = {
+      "phone": phone
+    };
+    try {
+      Loaders.loadingDialog();
+      print(body);
+      Response? response = await post("/forgot-password", body);
+      var jsonString = await responseHandler(response);
+      return true;
+    } catch (error) {
+      Loaders.errorDialog(error.toString());
+    } finally {}
+    return false;
   }
 }

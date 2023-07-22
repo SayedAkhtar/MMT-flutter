@@ -54,9 +54,9 @@ class Accommodation {
 }
 
 class Cab {
-  Null? name;
-  Null? number;
-  Null? type;
+  String? name;
+  String? number;
+  String? type;
 
   Cab({this.name, this.number, this.type});
 

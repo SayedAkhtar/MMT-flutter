@@ -1,5 +1,5 @@
 name: MyMedTrip
-version: 1.0.0+2
+version: 1.0.0+10
 publish_to: none
 description: Amazon of medical tourism
 environment: 
@@ -38,15 +38,13 @@ dependencies:
   firebase_messaging: ^14.5.0
   firebase_storage: ^11.1.2
   shimmer: ^2.0.0
-  youtube_player_flutter: ^8.1.2
   local_auth: ^2.1.6
   image_picker: ^0.8.7+5
-  google_fonts: ^4.0.4
-  webview_flutter: ^4.2.1
   flutter_launcher_icons: ^0.13.1
-  transparent_image: ^2.0.1
   cached_network_image:
   flutter_local_notifications: ^14.1.1
+  select_dialog: ^2.0.0
+  flutter_callkit_incoming: ^2.0.0+1
 
 dev_dependencies: 
   dart_code_metrics: ^5.7.2
@@ -55,7 +53,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter: 
-  assets: 
+  assets:
     - Images/mr.png
     - Images/PR.png
     - Images/Is.png
@@ -81,6 +79,7 @@ flutter:
     - assets/
     - assets/lottie/
     - assets/icons/
+    - shorebird.yaml
   fonts:
     - family: Urbanist
       fonts:

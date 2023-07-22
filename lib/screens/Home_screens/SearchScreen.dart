@@ -22,8 +22,6 @@ class _SearchScreenState extends State<SearchScreen> {
   late TextEditingController searchFieldController;
   late FocusNode searchNode;
   late BaseProvider provider;
-  late DoctorController doctorController;
-  late HospitalController hospitalController;
   final searchResults = [];
   bool isSearching = false;
 
@@ -34,8 +32,6 @@ class _SearchScreenState extends State<SearchScreen> {
     provider = Get.put(BaseProvider());
     searchNode = FocusNode();
     searchNode.requestFocus();
-    doctorController = Get.find<DoctorController>();
-    hospitalController = Get.find<HospitalController>();
   }
 
   @override

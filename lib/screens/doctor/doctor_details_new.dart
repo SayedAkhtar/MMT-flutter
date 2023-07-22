@@ -4,7 +4,6 @@ import 'package:MyMedTrip/components/CheckDisplay.dart';
 import 'package:MyMedTrip/components/ShimmerLoader.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
-import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/doctor.dart';
@@ -12,8 +11,6 @@ import 'package:MyMedTrip/providers/doctor_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -84,52 +81,49 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ),
                   Padding(
                     padding: getPadding(left: CustomSpacer.S),
-                    child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: getSize(210),
-                            child: Flexible(
-                              child: Text(doctor!.name!,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: getSize(210),
+                          child: Text(doctor!.name!,
+                              overflow: TextOverflow.clip,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              style: AppStyle.txtUrbanistRomanBold24),
+                        ),
+                        Container(
+                          padding: getPadding(top: 9),
+                          width: getSize(210),
+                          child: Text(doctor!.designation!.join(", "),
+                              maxLines: 3,
+                              textAlign: TextAlign.left,
+                              style: AppStyle.txtUrbanistRegular18),
+                        ),
+                        Padding(
+                          padding: getPadding(top: 7),
+                          child: Row(children: [
+                            CustomImageView(
+                                imagePath: "assets/icons/experience-sm.png",
+                                height: getSize(26),
+                                margin: getMargin(bottom: 1)),
+                            Container(
+                              width: getSize(170),
+                              padding: getPadding(left: 4, top: 3),
+                              child: Text("${doctor!.experience!} years",
+                                  overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
-                                  style: AppStyle.txtUrbanistRomanBold24),
+                                  style: AppStyle.txtUrbanistRegular14
+                                      .copyWith(color: Colors.black87)),
                             ),
-                          ),
-                          Container(
-                            padding: getPadding(top: 9),
+                          ]),
+                        ),
+                        doctor!.hospitals!.isNotEmpty?
+                        CheckDisplay(
+                          display: doctor!.hospitals!.isNotEmpty,
+                          child: SizedBox(
                             width: getSize(210),
-                            child: Flexible(
-                              child: Text(doctor!.designation!.join(", "),
-                                  maxLines: 3,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle.txtUrbanistRegular18),
-                            ),
-                          ),
-                          Padding(
-                            padding: getPadding(top: 7),
-                            child: Row(children: [
-                              CustomImageView(
-                                  imagePath: "assets/icons/experience-sm.png",
-                                  height: getSize(26),
-                                  margin: getMargin(bottom: 1)),
-                              Container(
-                                width: getSize(180),
-                                padding: getPadding(left: 4, top: 3),
-                                child: Text("${doctor!.experience!} years",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: AppStyle.txtUrbanistRegular14
-                                        .copyWith(color: Colors.black87)),
-                              ),
-                            ]),
-                          ),
-                          doctor!.hospitals!.isNotEmpty?
-                          CheckDisplay(
-                            display: doctor!.hospitals!.isNotEmpty,
                             child: Padding(
                               padding: getPadding(top: 7),
                               child: Row(children: [
@@ -137,20 +131,19 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                     imagePath: "assets/icons/location-sm.png",
                                     height: getSize(26),
                                     margin: getMargin(bottom: 1)),
-                                Container(
-                                    padding: getPadding(left: 4),
-                                    width: getSize(180),
-                                    child: Text(
-                                        "${doctor!.hospitals!.first.name}",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtUrbanistRegular14
-                                            .copyWith(color: Colors.black87)))
+                                Expanded(
+                                  child: Text(
+                                      "${doctor!.hospitals!.first.name}",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: AppStyle.txtUrbanistRegular14
+                                          .copyWith(color: Colors.black87)),
+                                )
                               ]),
                             ),
-                          ):SizedBox(),
-                        ],
-                      ),
+                          ),
+                        ):SizedBox(),
+                      ],
                     ),
                   ),
                 ]),
@@ -172,14 +165,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                 color: MYcolors.gray90001,
                                 fontSize: getFontSize(18),
                                 fontFamily: 'Raleway',
-                                fontWeight: FontWeight.w400)),
-                        // TextSpan(
-                        //     text: "Read more",
-                        //     style: TextStyle(
-                        //         color: MYcolors.bluecolor,
-                        //         fontSize: getFontSize(12),
-                        //         fontFamily: 'Urbanist',
-                        //         fontWeight: FontWeight.w500))
+                                fontWeight: FontWeight.w400))
                       ]),
                       textAlign: TextAlign.left),
                 ),

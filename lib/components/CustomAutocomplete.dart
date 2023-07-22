@@ -6,15 +6,19 @@ import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Debouncer.dart';
 import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+
+import '../helper/Utils.dart';
 
 class CustomAutocomplete extends StatefulWidget  {
-  CustomAutocomplete({super.key, required this.searchTable, this.selectedId, this.onSelected, this.initialValue, this.hintText, this.isRequired = false});
+  CustomAutocomplete({super.key, required this.searchTable, this.selectedId, this.onSelected, this.initialValue, this.hintText, this.isRequired = false, this.patientId});
   final String searchTable;
   RxInt? selectedId;
   Function? onSelected;
   String? initialValue;
   String? hintText;
   bool isRequired;
+  int? patientId;
   static String _displayStringForOption(Result option) => option.name!;
 
   @override
@@ -26,6 +30,8 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
   List<Result> searchResult =[];
   final debouncer = Debouncer(milliseconds: 500);
   bool isSearching = false;
+  Result? selectedOption;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -48,14 +54,13 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
         isSearching = true;
       });
       debouncer.run(() async {
-        Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=${term}", headers: {"Accepts": "application/json"});
+        print("$base_uri/ajax-search/${widget.searchTable}?term=${term}&?patient_id=${widget.patientId}");
+        Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=${term}&?patient_id=${widget.patientId}", headers: {"Accepts": "application/json"});
         if(res.isOk){
           var json = res.body['data'];
           if(json.isNotEmpty) {
             SearchQueryResult result = SearchQueryResult.fromJson(json);
-            print(result);
             if (result.list!.isNotEmpty) {
-              print(result.list!.first.name);
               setState(() {
                 searchResult = result.list!;
               });
@@ -71,7 +76,7 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
   }
 
   Future firstSearch() async{
-    Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}", headers: {"Accepts": "application/json"});
+    Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?patient_id=${widget.patientId}", headers: {"Accepts": "application/json"});
     if(res.isOk){
       var json = res.body['data'];
       if(json.isNotEmpty) {
@@ -91,11 +96,11 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      super.initState();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   super.initState();
+    // });
     return Autocomplete<Result>(
-      displayStringForOption: CustomAutocomplete._displayStringForOption,
+        displayStringForOption: Utils.displayStringForOption,
       optionsBuilder: (TextEditingValue textEditingValue) async {
         if (textEditingValue.text.isEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
@@ -105,22 +110,68 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
         if(textEditingValue.text.length > 2){
           await search(textEditingValue.text);
         }
-        print(isSearching);
         if(isSearching){
-          print(searchResult);
           if(searchResult.isEmpty){
             return [Result(id: 0, name: "No Result")];
           }
           return [Result(id: 0, name: "Searching....")];
         }
+        return searchResult.where((option) => option.name!
+            .toLowerCase()
+            .contains(textEditingValue.text.toLowerCase()));
         return searchResult;
       },
+        optionsViewBuilder: (context, onSelected, options) => Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            shape: const RoundedRectangleBorder(
+              borderRadius:
+              BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            ),
+            child: SizedBox(
+              height: 52.0 * searchResult.length,
+              width: MediaQuery.of(context).size.width -
+                  (CustomSpacer.S * 2), // <-- Right here !
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: options.length,
+                shrinkWrap: false,
+                itemBuilder: (BuildContext context, int index) {
+                  final String option = options.elementAt(index).name!;
+                  return InkWell(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      widget.selectedId?.value = options.elementAt(index).id!;
+                      if(widget.onSelected != null){
+                        widget.onSelected!(options.elementAt(index));
+                      }
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        setState((){
+                          selectedOption = options.elementAt(index);
+                        });
+                      });
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(option),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
       fieldViewBuilder: (BuildContext context,
           TextEditingController fieldTextEditingController,
           FocusNode fieldFocusNode,
           VoidCallback onFieldSubmitted) {
         if(widget.initialValue != null){
           fieldTextEditingController.text = widget.initialValue!;
+        }
+        if(selectedOption != null){
+          fieldTextEditingController.text = selectedOption!.name!;
         }
         return TextFormField(
           controller: fieldTextEditingController,
@@ -140,13 +191,13 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
           focusNode: fieldFocusNode,
         );
       },
-      onSelected: (result){
-        widget.selectedId?.value = result.id!;
-        if(widget.onSelected != null){
-          widget.onSelected!(result);
-        }
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
+      // onSelected: (result){
+      //   widget.selectedId?.value = result.id!;
+      //   if(widget.onSelected != null){
+      //     widget.onSelected!(result);
+      //   }
+      //   FocusManager.instance.primaryFocus?.unfocus();
+      // },
     );
   }
 }

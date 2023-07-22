@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
-
-import 'package:MyMedTrip/components/ImageWithLoader.dart';
+import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,9 +17,6 @@ import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Settings_page/add_family.dart';
-import 'package:MyMedTrip/screens/Settings_page/medical_edit.dart';
-import 'package:MyMedTrip/screens/Settings_page/profile_edit.dart';
 
 import '../../constants/colors.dart';
 
@@ -29,7 +25,7 @@ class Profile_Page extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-
+    controller.updateUserInfo(controller.user!.id);
     final PageController pageController = PageController();
     return Scaffold(
       appBar: CustomAppBar(
@@ -74,7 +70,7 @@ class Profile_Page extends GetView<UserController> {
       ClipOval(
         child: GetBuilder(
           builder: (UserController controller) {
-            return SizedBox( width: 100, height:100, child: ImageWithLoader(imageUrl: controller.user!.image!,));
+            return SizedBox( width: 100, height:100, child: CustomImageView(url: controller.user!.image!,));
             },
         )
       ),
@@ -242,7 +238,7 @@ class Profile_Page extends GetView<UserController> {
                       children: [
                         _profileKeyText("Country"),
                         Text(":"),
-                        _profileValueText(controller.user?.country),
+                        _profileValueText(controller.user?.treatmentCountry),
                       ]
                   ),
                   TableRow(

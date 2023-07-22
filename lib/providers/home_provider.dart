@@ -33,7 +33,7 @@ class HomeProvider extends BaseProvider {
   Future<dynamic> fetchBlogData() async{
     List<Blog> blogs= [];
     try{
-      Response res = await GetConnect().get('https://mymedtrip.com/wp-json/wp/v2/posts');
+      Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts');
       if(res.status.code == 200){
         List<dynamic> json = res.body;
         for (var element in json) {

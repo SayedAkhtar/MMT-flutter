@@ -69,9 +69,6 @@ class _SignupHerePageState extends State<SignupHerePage> {
                           if (val!.isEmpty) {
                             return 'Mobile number is required';
                           }
-                          if (val.length < 6 && val.length > 10) {
-                            return "Please enter a valid phone number";
-                          }
                           return null;
                         },
                         // textAlignVertical: TextAlignVertical.center,

@@ -7,7 +7,7 @@ class LocalUser {
   String? phoneNo;
   String? name;
   String? gender;
-  String? country;
+  int? country;
   DateTime? dob;
   String? image;
   String? speciality;
@@ -20,7 +20,7 @@ class LocalUser {
   String? createdAt;
   late int id;
   String? token;
-  String? biometric;
+  dynamic biometric;
 
   static const int TYPE_PATIENT = 1;
   static const int TYPE_DOCTOR = 4;
@@ -47,6 +47,11 @@ class LocalUser {
       this.token});
 
   LocalUser.fromJson(Map<String, dynamic> json) {
+    json.entries.forEach((element) {
+      print(element.key);
+      print(element.value.runtimeType);
+    });
+
     username = json['username'];
     password = json['password'];
     email = json['email'];
@@ -56,7 +61,12 @@ class LocalUser {
     gender = json['gender'];
     country = json['country'];
     dob = json['dob'] != null ? DateTime.parse(json['dob']): null;
-    treatmentCountry = json["patient_details"] != null ? json["patient_details"]['treatment_country'] : '';
+    if(json["patient_details"] != null){
+      treatmentCountry = json["patient_details"]['treatment_country'] != null ? json["patient_details"]['treatment_country'] : '';
+    }
+    else if(json["treatment_country"]){
+      treatmentCountry = json["treatment_country"];
+    }
     isActive = json['is_active'];
     userType = json['user_type'];
     addedBy = json['added_by'];

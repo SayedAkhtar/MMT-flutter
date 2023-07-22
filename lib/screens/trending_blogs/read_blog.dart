@@ -17,15 +17,14 @@ class ReadBlogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String htmlData = '<h1>${title}</h1><br/> <img src="$thumbnail" /> $description';
-    return SafeArea(
-        child: Scaffold(
-          appBar: CustomAppBar(pageName: "Blog Detail",showDivider: true,),
+    return Scaffold(
+      appBar: CustomAppBar(pageName: "Blog Detail",showDivider: true,),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: CustomSpacer.S),
-        child: SingleChildScrollView(
-          child: Html(data: htmlData)
-        ),
+    padding: const EdgeInsets.symmetric(horizontal: CustomSpacer.S),
+    child: SingleChildScrollView(
+      child: Html(data: htmlData)
+    ),
       ),
-    ));
+    );
   }
 }

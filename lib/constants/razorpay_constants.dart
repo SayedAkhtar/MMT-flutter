@@ -1,28 +1,26 @@
 class RazorpayConstants {
+  final String _liveKey = 'rzp_live_2dDJqgy3o8syGA';
   final String _key = 'rzp_test_iJghHFoheTmkHd';
-  final int _amount = 122828;
   final _options = {
-    'key': 'rzp_test_iJghHFoheTmkHd',
-    'amount': 122828,
-    'name': 'MYMedicalTourism',
+    'key': 'rzp_live_2dDJqgy3o8syGA',
+    'amount': 15,
+    'name': 'MyMedTrip',
     'description': 'Payment for query confirmation',
+    'currency': 'USD',
     'prefill': {
       'contact': '8888888888',
-      'email': 'test@razorpay.com'
+      'email': 'hello@mymedtrip.com'
     }
   };
   static getOptionsForQueryConfirmation(){
     return RazorpayConstants()._options;
   }
 
-  static getQueryOrderAmount(){
-    return RazorpayConstants()._amount;
-  }
-
   static getOptionsForTeleconsultation({required int amount, String? description}){
     var currentOption = RazorpayConstants()._options;
     currentOption['amount'] = amount;
     currentOption['description'] = description??'Payment for Teleconsultation confirmation';
+    currentOption['currency'] = "USD";
     return currentOption;
   }
 }

@@ -2,20 +2,23 @@ import 'dart:io';
 
 import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/user_model.dart';
 import 'package:MyMedTrip/providers/user_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:logger/logger.dart';
+
+import '../../models/user_family_model.dart';
 
 class UserController extends GetxController {
   late UserProvider _provider;
   LocalUser? user;
-  List<LocalUser> familiesList = [];
+  List<UserFamily> familiesList = [];
+  RxBool loading = true.obs;
+  RxBool familiesLoading = false.obs;
 
   final passwordController = TextEditingController();
   final oldPasswordController = TextEditingController();
@@ -33,9 +36,6 @@ class UserController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    if (!_provider.isDisposed) {
-      _provider.dispose();
-    }
     oldPasswordController.dispose();
     passwordController.dispose();
   }
@@ -47,7 +47,7 @@ class UserController extends GetxController {
       "phone": user?.phoneNo,
       "gender": user?.gender,
       "specialization_id": user?.speciality,
-      "treatment_country": user?.treatmentCountry,
+      "country": user?.treatmentCountry,
     };
     Loaders.loadingDialog();
     LocalUser? res = await _provider.updateUserInfo(id, postBody);
@@ -69,23 +69,14 @@ class UserController extends GetxController {
     form.fields.add(MapEntry("avatar", imgPath));
     form.fields.add(MapEntry("gender", user!.gender!));
     var res = await _provider.updateUserAvatar(id, form);
-    print(res);
     user!.image = res['avatar'];
     update();
   }
 
-  void addFamily(userId, LocalUser family) async {
-    Map<String, dynamic> postBody = {
-      "name": family.name,
-      "dob": Utils.formatDate(family.dob),
-      "phone": family.phoneNo,
-      "gender": family.gender,
-      "relationship": family.relationWithPatient,
-      "speciality": family.speciality,
-      "treatment_country": family.treatmentCountry,
-      'patient_id': userId,
-    };
-
+  void addFamily(userId, UserFamily family) async {
+    Map<String, dynamic> postBody = family.toJson();
+    print(postBody);
+    Loaders.loadingDialog();
     bool res = await _provider.addFamily(postBody);
     if (res) {
       Loaders.successDialog("Successfully added family", title: "Success");
@@ -95,8 +86,26 @@ class UserController extends GetxController {
   }
 
   void listFamily() async {
-    List<LocalUser> res = await _provider.listFamilies();
+    List<UserFamily> res = await _provider.listFamilies();
     familiesList = res;
+    loading.value = false;
+    update();
+  }
+
+  void deleteFamily(id) async {
+    loading.value = true;
+    Loaders.loadingDialog();
+    bool res = await _provider.deleteFamilyMember(id);
+    if(res){
+      List<UserFamily> _newList = [];
+      familiesList.forEach((element) {
+        if(element.id != id){
+          _newList.add(element);
+        }
+      });
+      familiesList = _newList;
+    }
+    Get.back();
     update();
   }
 
@@ -128,4 +137,13 @@ class UserController extends GetxController {
     }
     update();
   }
+
+  void updateUserInfo(id) async{
+    LocalUser? res = await _provider.getUser(id);
+    if(res != null){
+      user = res;
+    }
+    update();
+  }
+
 }

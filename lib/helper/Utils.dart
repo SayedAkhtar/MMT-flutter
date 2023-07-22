@@ -157,6 +157,6 @@ class Utils {
   }
 
   static String stripHtmlIfNeeded(String text) {
-    return Bidi.stripHtmlIfNeeded(text);
+    return (Bidi.stripHtmlIfNeeded(text)).trim();
   }
 }

@@ -3,13 +3,11 @@ import 'package:MyMedTrip/components/ShimmerLoader.dart';
 import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/hospital_model.dart';
+import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
-import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../components/CustomImageView.dart';
 import '../../constants/size_utils.dart';
@@ -26,18 +24,23 @@ class HospitalDetailsScreen extends StatefulWidget {
 class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
   dynamic arguments = Get.arguments;
   int maxLines = 3;
-  late HospitalController controller;
+  late HospitalProvider _provider;
   late Hospital hospital;
   bool isLoading = true;
   @override
   void initState() {
-    controller = Get.put(HospitalController());
+    _provider = Get.put(HospitalProvider());
     fetchData();
     super.initState();
   }
 
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   fetchData() async {
-    Hospital? d = await controller.getHospitalById(arguments['id']);
+    Hospital? d = await _provider.getHospitalById(arguments['id']);
     if (d != null) {
       setState(() {
         hospital = d;
@@ -51,6 +54,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
     if (isLoading) {
       return const ShimmerLoader();
     }
+    print(hospital.banners!.isEmpty);
     return Scaffold(
       body: SizedBox(
         width: double.maxFinite,
@@ -66,16 +70,18 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                     children: List.generate(hospital.banners!.length, (index) {
                       return CustomImageView(
                           url: hospital.banners![index],
-                          height: getVerticalSize(300),
-                          width: getHorizontalSize(428),
-                          alignment: Alignment.center);
+                          // height: getVerticalSize(300),
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.fitHeight,
+                          alignment: Alignment.center
+                      );
                     })),
                 Align(
                     child: CustomAppBarSecondary(
                   height: getVerticalSize(50),
                   leadingWidth: 52,
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back, color: Colors.grey,),
                     onPressed: () {
                       Get.back();
                     },

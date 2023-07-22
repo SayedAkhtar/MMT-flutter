@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/query_step_name.dart';
@@ -50,14 +51,15 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
                 if(!controller.isLoaded.value){
                   return CircularProgressIndicator();
                 }
-                return RichText(
-                  text: TextSpan(
-                    text: "${con.stepData['doctor']}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: MYcolors.blackcolor),
-                  ),
+                return Html(
+                  data: con.stepData['doctor'],
+                  // text: TextSpan(
+                  //   text: "${con.stepData['doctor']}",
+                  //   style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 15,
+                  //       color: MYcolors.blackcolor),
+                  // ),
                 );
               }
             ),
@@ -178,7 +180,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
                           image: AssetImage('assets/icons/pdf_file.png'),
                         fit: BoxFit.scaleDown,
                         onError: (_, stackTrace){
-                            print(_);
+                            print(stackTrace);
                         }
                       ),
                     ),
@@ -198,7 +200,9 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
-              minimumSize: Size(double.infinity, 40)),
+              minimumSize: Size(double.infinity, 40),
+            backgroundColor: MYcolors.bluecolor
+          ),
           child: Text(
             "Apply for Medical Visa".tr,
             style: TextStyle(

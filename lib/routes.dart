@@ -235,7 +235,7 @@ final getPages = [
   GetPage(
       name: Routes.hospitalPreview,
       page: () => const HospitalDetailsScreen(),
-      binding: HospitalBinding(),
+      // binding: HospitalBinding(),
 
   ),
   GetPage(

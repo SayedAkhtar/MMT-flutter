@@ -11,11 +11,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String pageName;
   bool? showDivider = false;
   bool showBack = true;
+  VoidCallback? backFunction;
   CustomAppBar({
     this.height = kToolbarHeight,
     required this.pageName,
     this.showDivider,
     this.showBack = true,
+    this.backFunction,
   });
 
   @override
@@ -34,8 +36,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           children: [
             showBack?SmallIconButton(
-                onTap: () {
-                  Get.back();
+                onTap: backFunction?? () {
+                  Get.back(closeOverlays: true);
                 },
                 icon: Icons.arrow_back_ios_new_outlined
             ):SizedBox(),

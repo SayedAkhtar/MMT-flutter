@@ -1,5 +1,5 @@
-// const String base_uri = "https://admin.mymedtrip.com";
-const String base_uri = "http://localhost:8000";
+const String base_uri = "https://admin.mymedtrip.com";
+// const String base_uri = "http://localhost:8000";
 const String api_uri = "$base_uri/api/client";
 const String REGISTER_PATH = "$api_uri/register";
 const String LOGIN_PATH = "$api_uri/login";

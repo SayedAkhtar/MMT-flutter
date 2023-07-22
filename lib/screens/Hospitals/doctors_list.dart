@@ -22,13 +22,48 @@ class Doctors_list_page extends StatefulWidget {
 class _Doctors_list_pageState extends State<Doctors_list_page> {
   late DoctorProvider api;
   List<Doctor?>? _doctors = [];
+  ScrollController lazyScrollController = ScrollController();
+  int currentPage = 0;
+  bool loading = true;
+  bool loadingMore = false;
+  bool moreAvailable = true;
   @override
   void initState() {
     super.initState();
     api = Get.put(DoctorProvider());
     var arguments = Get.arguments;
+    fetchInitialDoctors();
+    lazyScrollController.addListener(() {
+      if(lazyScrollController.position.pixels == lazyScrollController.positions.last.maxScrollExtent){
+        paginate();
+      }
+    });
   }
 
+  void fetchInitialDoctors() async {
+    List<Doctor?> res = await api.getAllDoctors();
+    setState(() {
+      _doctors?.addAll(res);
+      loading = false;
+    });
+  }
+
+  void paginate()async{
+    setState(() {
+      loadingMore = true;
+    });
+    if(moreAvailable){
+      List<Doctor?> res = await api.getAllDoctors(parameter: "?skip=${((currentPage+1) * 10)}");
+      setState(() {
+        if(res.isEmpty){
+            moreAvailable = false;
+        }
+        currentPage = currentPage+1;
+        _doctors?.addAll(res);
+        loadingMore = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,37 +109,68 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                 ],
               ),
             ),
-            Expanded(
-              child: FutureBuilder(
-                future: api.getAllDoctors(),
-                builder: (_, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting){
-                    return Center(child: CircularProgressIndicator(),);
-                  }else if(snapshot.connectionState == ConnectionState.done){
-                    if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
-                      List<Doctor?>? data = snapshot.data;
-                      return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (_, i) {
-                          return CustomCardWithImage(
+            // Expanded(
+            //   child: FutureBuilder(
+            //     future: api.getAllDoctors(),
+            //     builder: (_, snapshot) {
+            //       if(snapshot.connectionState == ConnectionState.waiting){
+            //         return Center(child: CircularProgressIndicator(),);
+            //       }else if(snapshot.connectionState == ConnectionState.done){
+            //         if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
+            //           List<Doctor?>? data = snapshot.data;
+            //             for (var element in data!){
+            //               _doctors?.add(element);
+            //             }
+            //           return GridView.builder(
+            //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            //             itemCount: _doctors!.length,
+            //             itemBuilder: (_, i) {
+            //               return CustomCardWithImage(
+            //             width: getHorizontalSize(160),
+            //             onTap: () {
+            //               Get.toNamed(Routes.doctorPreviewNew,
+            //                   arguments: {'id': _doctors?[i]!.id});
+            //             },
+            //             imageUri: _doctors?[i]!.image!,
+            //             title: _doctors![i]!.name!,
+            //             // bodyText: hospitals[i]!.address,
+            //           );
+            //         }
+            //           );
+            //         }
+            //       }
+            //       return Center(child: Text("No Doctors to show"),);
+            //     }
+            //   ),
+            // ),
+            Builder(builder: (builder){
+              if(loading){
+                return Expanded(child: Center(child: CircularProgressIndicator(),));
+              }
+              return Expanded(
+                child: GridView.builder(
+                    controller: lazyScrollController,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount: _doctors!.length,
+                    itemBuilder: (_, i) {
+                      return CustomCardWithImage(
                         width: getHorizontalSize(160),
                         onTap: () {
-                          Get.toNamed(Routes.hospitalPreview,
-                              arguments: {'id': data![i]!.id});
+                          Get.toNamed(Routes.doctorPreviewNew,
+                              arguments: {'id': _doctors?[i]!.id});
                         },
-                        imageUri: data![i]!.image!,
-                        title: data[i]!.name!,
+                        imageUri: _doctors?[i]!.image!,
+                        title: _doctors![i]!.name!,
                         // bodyText: hospitals[i]!.address,
                       );
-                    }
-                      );
-                    }
-                  }
-                  return Center(child: Text("No Hospitals to show"),);
-                }
-              ),
-            ),
+                    }),
+              );
+            }),
+            loadingMore ?
+            SizedBox(
+              child: Center(child: CircularProgressIndicator(),),
+            ):SizedBox(),
           ],
         ),
       ),

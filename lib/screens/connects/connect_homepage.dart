@@ -25,7 +25,12 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
   @override
   void initState() {
     // TODO: implement initState
-    _controller = Get.put(TeleconsultController());
+    bool isRegistered = Get.isRegistered<TeleconsultController>();
+    if(!isRegistered){
+      _controller = Get.put(TeleconsultController());
+    }else{
+      _controller = Get.find<TeleconsultController>();
+    }
     _controller.getAllConsultations();
     super.initState();
   }

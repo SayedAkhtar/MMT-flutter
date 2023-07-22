@@ -1,3 +1,5 @@
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,9 +62,15 @@ class _Query_pageState extends State<Query_page> {
                       }),
                 );
               }
-              if(_controller.emptyScreen){
-                return const Center(
-                  child: Text("No queries opened yet. \nStart with clicking on Generate Query button to begin creating a new query."),
+              if (_controller.emptyScreen) {
+                return Expanded(
+                  child: Center(
+                    child: Text(
+                      "No queries opened yet. \nStart with clicking on Generate Query button to begin creating a new query.",
+                      style: AppStyle.txtSourceSansProSemiBold18,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 );
               }
               return const SizedBox(
@@ -77,13 +85,17 @@ class _Query_pageState extends State<Query_page> {
             ElevatedButton(
               onPressed: () {
                 Get.toNamed(Routes.startQuery);
-                // Get.to(Generate_New_Query());
               },
               style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ))),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color?>(
+                  MYcolors.bluecolor
+                )
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,
@@ -114,18 +126,20 @@ class _Query_pageState extends State<Query_page> {
       required QueryController controller}) {
     ActiveQuery currQuery = controller.queryScreen.activeQuery![selectedIndex];
     // String stepTitle = controller.queryScreen.activeQuery![selectedIndex].type! == QueryType.medicalVisa ? "MMT Admin's ":"";
-    List<Color> color = (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa)
-        ? [MYcolors.greenlightcolor, MYcolors.bluecolor]
-        : [Color(0xffe29578), Color(0xffe26d5c)];
+    List<Color> color =
+        (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa)
+            ? [MYcolors.greenlightcolor, MYcolors.bluecolor]
+            : [Color(0xffe29578), Color(0xffe26d5c)];
     return GestureDetector(
       onTap: () {
-        if(currQuery.isConfirmed!){
+        if (currQuery.isConfirmed!) {
           controller.selectedQuery = id;
           controller.selectedIndex = selectedIndex;
           Get.toNamed(Routes.confirmedQuery);
           return;
         }
-        if (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa) {
+        if (currQuery.currentStep! > 1 ||
+            currQuery.type == QueryType.medicalVisa) {
           controller.navigateToQueryForm(id, selectedIndex, response);
         } else {
           Get.showSnackbar(const GetSnackBar(
@@ -163,7 +177,6 @@ class _Query_pageState extends State<Query_page> {
             Text(
               date,
               style: const TextStyle(
-                  fontFamily: "Brandon",
                   fontSize: 15,
                   color: MYcolors.whitecolor),
             ),
@@ -176,7 +189,6 @@ class _Query_pageState extends State<Query_page> {
                   Text(
                     stepName,
                     style: const TextStyle(
-                        fontFamily: "Brandon",
                         fontSize: 15,
                         color: MYcolors.greycolor),
                   ),
@@ -186,7 +198,6 @@ class _Query_pageState extends State<Query_page> {
                       stepNote,
                       maxLines: 4,
                       style: const TextStyle(
-                          fontFamily: "Brandon",
                           fontSize: 15,
                           color: MYcolors.whitecolor,
                           overflow: TextOverflow.ellipsis),
@@ -200,24 +211,22 @@ class _Query_pageState extends State<Query_page> {
                   Text(
                     stepName,
                     style: const TextStyle(
-                        fontFamily: "Brandon",
                         fontSize: 15,
                         color: MYcolors.greycolor),
                   ),
                   const Text(
-                    "Response :-",
+                    "Response :-\n",
                     style: TextStyle(
-                        fontFamily: "Brandon",
                         fontSize: 15,
+                        fontWeight: FontWeight.w600,
                         color: MYcolors.whitecolor),
                   ),
                   SizedBox(
                     height: 150 - (16 * 2) - CustomSpacer.XS - 16,
                     child: Text(
-                      response,
+                      Utils.stripHtmlIfNeeded(response),
                       maxLines: 4,
                       style: const TextStyle(
-                          fontFamily: "Brandon",
                           fontSize: 15,
                           color: MYcolors.whitecolor,
                           overflow: TextOverflow.ellipsis),

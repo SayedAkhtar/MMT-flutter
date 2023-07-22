@@ -1,5 +1,6 @@
 import 'package:MyMedTrip/components/CustomButton.dart';
 import 'package:MyMedTrip/components/CustomImageView.dart';
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +60,7 @@ class LoginPage extends GetView<AuthController> {
                           alignment: Alignment.center,
                           child: IntlPhoneField(
                             style: AppStyle.txtUrbanistRegular16WhiteA700,
+                            controller: controller.phoneController,
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.call),
                               contentPadding: const EdgeInsets.only(
@@ -70,7 +72,7 @@ class LoginPage extends GetView<AuthController> {
                               counterText: "",
                             ),
                             onChanged: (phone) {
-                              controller.phoneController.text = phone.number;
+                              // controller.phoneController.text = phone.number;
                             },
                             initialCountryCode: "IN",
                             showCountryFlag: false,
@@ -112,7 +114,77 @@ class LoginPage extends GetView<AuthController> {
                     ),
                   ),
                   CustomButton(
-                    onTap: () {},
+                    onTap: () {
+                      Get.defaultDialog(
+                        title: "Reset Password",
+                        contentPadding: const EdgeInsets.all(CustomSpacer.S),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: IntlPhoneField(
+                                style: AppStyle.txtUrbanistRegular16WhiteA700,
+                                controller: controller.phoneController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.call),
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
+                                  hintText: "Phone",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  counterText: "",
+                                ),
+                                onChanged: (phone) {
+                                  // controller.phoneController.text = phone.completeNumber;
+                                },
+                                onCountryChanged: (country){
+                                  // controller.phoneController.text = country.dialCode + controller.phoneController.text;
+                                },
+                                initialCountryCode: "IN",
+                                showCountryFlag: false,
+                                showDropdownIcon: false,
+                              ),
+                            ),
+                            CustomSpacer.s(),
+                            Obx(
+                              () => TextFormField(
+                                controller: controller.newPasswordController,
+                                keyboardType: TextInputType.visiblePassword,
+                                obscureText: !controller.showNewLoginPassword.value,
+                                obscuringCharacter: '*',
+                                style: AppStyle.txtUrbanistRegular16WhiteA700,
+                                decoration: InputDecoration(
+                                  hintText: "New Password",
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
+                                  suffixIcon: IconButton(
+                                    icon: controller.showNewLoginPassword.value
+                                        ? const Icon(Icons.visibility)
+                                        : const Icon(Icons.visibility_off),
+                                    onPressed: () {
+                                      controller.showNewLoginPassword.value =
+                                      !controller.showNewLoginPassword.value;
+                                    },
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ),
+                            CustomSpacer.s(),
+                            CustomButton(
+                              onTap: () {
+                                controller.resetPassword();
+                              },
+                              text: "Send Reset Request",
+                              padding: ButtonPadding.PaddingAll8,
+                            ),
+                          ],
+                        )
+                      );
+                    },
                     text: "Forgot password?",
                     alignment: Alignment.bottomRight,
                     variant: ButtonVariant.OnlyText,

@@ -41,8 +41,8 @@ class QueryController extends GetxController {
   RxInt patientFaminlyId = 0.obs;
   RxString briefHistory = "".obs;
   RxString preferredCountry = "India".obs;
-  List<String> medicalVisaPath = [''];
-  List<String> passportPath = [''];
+  List<String> medicalVisaPath = [];
+  List<String> passportPath = [];
   int queryType = 1;
   final generateQueryForm = GlobalKey<FormState>().obs;
 
@@ -71,7 +71,6 @@ class QueryController extends GetxController {
     QueryScreen? res =await _provider.getQueryScreenData();
     if(res != null){
       queryScreen = res;
-      print(queryScreen.activeQuery![0].toJson());
       isLoaded.value = true;
     }else{
       emptyScreen = true;
@@ -140,7 +139,7 @@ class QueryController extends GetxController {
       'query_id': selectedQuery,
       'r_payment_id' : response.paymentId,
       'response': {'orderID': response.orderId, 'signatureId': response.signature}.toString(),
-      'amount' : RazorpayConstants.getQueryOrderAmount()
+      'amount' : 15*100
     };
     bool res = await _provider.updateTransactionForUser(data);
     if(res){
@@ -160,10 +159,8 @@ class QueryController extends GetxController {
     currentStep.value = queryScreen.activeQuery![selectedIndex].currentStep!;
     queryType = queryScreen.activeQuery![selectedIndex].type!;
     this.selectedIndex = selectedIndex;
-    print(id);
-    print(selectedIndex);
-    print(currentStep.value);
-    Get.to(() => QueryForm());
+
+    Get.to(() => const QueryForm());
     // Get.toNamed(Routes.activeQueryDoctorReply);
   }
 

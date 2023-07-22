@@ -1,15 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:MyMedTrip/components/CustomCardWithImage.dart';
+import 'package:MyMedTrip/components/CustomImageView.dart';
+import 'package:MyMedTrip/components/TranslatedText.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/components/ImageWithLoader.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/routes.dart';
 
 import '../../constants/colors.dart';
@@ -19,105 +19,147 @@ class Add_Family_List_page extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    if(controller.familiesList.isEmpty){
-      controller.listFamily();
-    }
+    controller.listFamily();
     return Scaffold(
+      // backgroundColor: Color(0xFFedeff5),
       appBar: CustomAppBar(
-    pageName: "Friends and Families",
-    showDivider: true,
+        pageName: "Friends and Families",
+        showDivider: true,
+        backFunction: () {
+          Get.toNamed(Routes.setting);
+        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {
           controller.listFamily();
+          controller.loading.value = true;
+          controller.update();
         },
-        child: Column(
-    children: [
-        GetBuilder<UserController>(
-          builder: (ctrl) {
-            return Flexible(
-              child: ListView.builder(
-                  itemCount: controller.familiesList.length,
-                  itemBuilder: (ctx, index) {
-                    return GestureDetector(
-                      onTap: () {
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: CustomSpacer.S),
+          child: Column(
+            children: [
+              GetBuilder<UserController>(builder: (ctrl) {
+                if (controller.loading.isTrue) {
+                  return Expanded(
+                      child: Center(
+                    child: CircularProgressIndicator(),
+                  ));
+                }
 
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 120,
-                            width: 140,
-                            margin: EdgeInsets.symmetric(horizontal: CustomSpacer.S, vertical: CustomSpacer.XS),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(controller.familiesList[index].image!),
+                if (ctrl.familiesList.isEmpty) {
+                  return Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height - 56,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child:
+                                  TranslatedText(text: 'No families added yet')),
+                        )
+                      ],
+                    ),
+                  );
+                }
+                return Flexible(
+                  flex: 1,
+                  child: ListView.builder(
+                      itemCount: controller.familiesList.length,
+                      // separatorBuilder: (context, index) => SizedBox(height: 10,),
+                      itemBuilder: (ctx, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            tileColor: Colors.white,
+                            style: ListTileStyle.drawer,
+                            title: Text(
+                              controller.familiesList[index].name!,
+                              style: AppStyle.txtUrbanistRomanBold24,
+                            ),
+                            subtitle: Row(children: [
+                              Visibility(
+                                visible: controller.familiesList[index]
+                                        .relationWithPatient !=
+                                    null,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                        controller.familiesList[index]
+                                                .relationWithPatient ??
+                                            '',
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis)),
+                                    Text(' | '),
+                                  ],
                                 ),
-                                color: MYcolors.whitecolor,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    // color: Color.fromARGB(255, 189, 181, 181),
-                                    color: Colors.grey.withOpacity(0.5),
-                                    blurRadius: 2,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 1),
-                                  )
-                                ]
+                              ),
+                              Text(controller.familiesList[index].phoneNo!),
+                              Visibility(
+                                visible:
+                                    controller.familiesList[index].speciality !=
+                                        null,
+                                child: Row(
+                                  children: [
+                                    Text(' | '),
+                                    Text(
+                                      controller
+                                              .familiesList[index].speciality ??
+                                          '',
+                                      style: TextStyle(
+                                          overflow: TextOverflow.ellipsis),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.remove_circle_outline,
+                                color: Colors.redAccent,
+                              ),
+                              onPressed: () {
+                                controller.deleteFamily(
+                                    controller.familiesList[index].id);
+                                controller.listFamily();
+                              },
                             ),
                           ),
-                          RichText(
-                              text: TextSpan(
-                                  text: controller.familiesList[index].name,
-                                style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                    color: MYcolors.blacklightcolors,
-                                    fontFamily: "Brandon",
-                                    fontSize: 18),
-                                children: [
-                                  TextSpan(text: '\n'),
-                                  TextSpan(
-                                    text: controller.familiesList[index].phoneNo
-                                  )
-                                ]
-                              ),
-
-                          ),
-
-                        ],
+                        );
+                      }),
+                );
+              }),
+              SafeArea(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.toNamed(Routes.addFamily);
+                  },
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
                       ),
-                    );
-                  }),
-            );
-          }
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-              horizontal: CustomSpacer.S, vertical: CustomSpacer.XS),
-          child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: MYcolors.greycolor,
-                padding: EdgeInsets.symmetric(
-                    vertical: CustomSpacer.S, horizontal: CustomSpacer.S),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                      backgroundColor: MaterialStateProperty.all<Color?>(
+                          MYcolors.bluecolor)),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    width: double.infinity,
+                    child: Text(
+                      "Add  Friends and family".tr,
+                      style: TextStyle(
+                        color: MYcolors.whitecolor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ),
-              onPressed: () {
-                Get.toNamed(Routes.addFamily);
-              },
-              child: Text(
-                "Add  Friends and family".tr,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    // fontFamily: "Brandon",
-                    fontSize: 20,
-                    color: MYcolors.blackcolor),
-              )),
-        )
-    ],
+            ],
+          ),
         ),
       ),
     );

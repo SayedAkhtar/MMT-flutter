@@ -15,23 +15,20 @@ class HospitalProvider extends BaseProvider {
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   final Map<String, String> _headers = {};
   String? _token;
-  @override
-  void onInit() {
-    httpClient.baseUrl = api_uri;
-    _token = _storage.get('token');
-    super.onInit();
-  }
 
   Future<Hospital?> getHospitalById(id) async {
     try {
       String uri = '/hospitals/$id';
+      print("object");
       Response response = await get(uri, contentType: 'application/json');
+      print(response.statusCode);
       var jsonString = await responseHandler(response);
       return Hospital.fromJson(jsonString);
     } catch (error) {
-      Loaders.errorDialog(error.toString(), title: "Error");
-      throw const HttpException("Could not process request");
+      print(error.toString());
+      // Loaders.errorDialog(error.toString(), title: "Error");
     }
+    return null;
   }
 
   Future<List<Hospital?>?> getAllHospitals() async {

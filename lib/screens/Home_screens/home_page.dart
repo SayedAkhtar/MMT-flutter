@@ -86,7 +86,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          setState(() {
+            isLoading = true;
+          });
           fetchHomeData();
+          fetchBlogData();
         },
         child: SafeArea(
           child: SingleChildScrollView(
@@ -130,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => {Get.toNamed(Routes.profile)},
+                        onTap: () => {Get.toNamed(Routes.setting)},
                         child: CircleAvatar(
                           backgroundImage: const AssetImage("Images/PR.png"),
                           foregroundImage: _userController.user!.image != null

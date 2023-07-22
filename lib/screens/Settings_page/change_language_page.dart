@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class ChangeLanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LocalStorageController _storage = Get.find<LocalStorageController>();
+    final provider = Get.put(UserProvider());
     return SafeArea(child: Scaffold(
       appBar: CustomAppBar(pageName: "Change app language", showDivider: true,),
       body: ListView(
@@ -23,7 +25,8 @@ class ChangeLanguagePage extends StatelessWidget {
             leading: SvgPicture.asset("assets/icons/us.svg", width: 40,),
             title: Text("English".tr),
             trailing: _storage.get('language') == "en" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
-            onTap: (){
+            onTap: () async{
+              await provider.updateUserLanguage(language: "en");
               selectLanguage("en", _storage);
             },
           ),
@@ -31,7 +34,8 @@ class ChangeLanguagePage extends StatelessWidget {
             leading: SvgPicture.asset("assets/icons/sa.svg", width: 40,),
             title: Text("Arabic".tr),
             trailing: _storage.get('language') == "ar" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
-            onTap: (){
+            onTap: () async {
+              await provider.updateUserLanguage(language: "ar");
               selectLanguage("ar", _storage);
             },
           ),
@@ -39,15 +43,17 @@ class ChangeLanguagePage extends StatelessWidget {
             leading: SvgPicture.asset("assets/icons/ru.svg", width: 40,),
             title: Text("Russian".tr),
             trailing: _storage.get('language') == "ru" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
-            onTap: (){
+            onTap: () async {
+              await provider.updateUserLanguage(language: "ru");
               selectLanguage("ru", _storage);
             },
           ),
           ListTile(
             leading: SvgPicture.asset("assets/icons/in.svg", width: 40,),
-            title: Text("Hindi".tr),
+            title: Text("Bangla".tr),
             trailing: _storage.get('language') == "bn" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
-            onTap: (){
+            onTap: () async {
+              await provider.updateUserLanguage(language: "bn");
               selectLanguage("bn", _storage);
             },
           ),

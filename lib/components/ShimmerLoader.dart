@@ -1,13 +1,16 @@
+import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerLoader extends StatelessWidget {
-  const ShimmerLoader({super.key});
+  const ShimmerLoader({super.key, this.showNav = true});
+  final bool showNav;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: CustomAppBar(pageName: '',showBack: showNav,),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SafeArea(

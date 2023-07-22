@@ -21,9 +21,6 @@ class HospitalController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    if (!_provider.isDisposed) {
-      _provider.dispose();
-    }
   }
 
   Future<Hospital?> getHospitalById(id) async{

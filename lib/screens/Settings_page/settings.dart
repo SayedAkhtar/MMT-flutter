@@ -1,30 +1,20 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:MyMedTrip/components/ImageWithLoader.dart';
+import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:MyMedTrip/screens/Settings_page/change_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/components/FormLabel.dart';
-import 'package:MyMedTrip/components/Heading.dart';
-import 'package:MyMedTrip/components/SmallIconButton.dart';
-import 'package:MyMedTrip/components/StyledTextFormField.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Settings_page/about_page.dart';
 import 'package:MyMedTrip/screens/Settings_page/change_language_page.dart';
-import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
-import 'package:MyMedTrip/screens/Settings_page/profile_page.dart';
-import 'package:MyMedTrip/screens/login/sing_up.dart';
 
 import '../../constants/colors.dart';
 
@@ -38,6 +28,9 @@ class User_Profile extends GetView<UserController> {
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Settings",
+        backFunction: (){
+          Get.toNamed(Routes.home);
+        },
       ),
       body: SafeArea(
         child: Padding(
@@ -58,7 +51,7 @@ class User_Profile extends GetView<UserController> {
                           clipBehavior: Clip.hardEdge,
                           child: GetBuilder(
                             builder: (UserController controller) {
-                              return ImageWithLoader(imageUrl: controller.user!.image!);
+                              return CustomImageView(url: controller.user!.image);
                             }
                           ),
                         ),

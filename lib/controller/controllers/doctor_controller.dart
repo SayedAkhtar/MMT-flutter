@@ -11,6 +11,8 @@ class DoctorController extends GetxController {
   Doctor? selectedDoctor;
   RxBool gettingDetail = true.obs;
 
+  RxList<Doctor> doctors = <Doctor>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -57,6 +59,16 @@ class DoctorController extends GetxController {
       update();
       Get.toNamed(Routes.doctorPreview);
     }
+  }
+
+  void doctorSearchPage({String? parameter}) async{
+    List<Doctor?> doctors = await _provider.getAllDoctors();
+    if(doctors.isNotEmpty){
+      for (var element in doctors) {
+        doctors.add(element!);
+      }
+    }
+
   }
 
   // Future<List<Doctor>>

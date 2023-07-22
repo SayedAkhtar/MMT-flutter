@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,10 +12,12 @@ import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/doctor.dart';
 import 'package:MyMedTrip/screens/Video_consult/shedule.dart';
+import 'package:select_dialog/select_dialog.dart';
 
 import '../../constants/api_constants.dart';
 import '../../helper/Utils.dart';
 import '../../models/search_query_result_model.dart';
+import '../../theme/app_style.dart';
 
 class TeLe_Consult_page extends StatefulWidget {
   const TeLe_Consult_page({super.key});
@@ -59,11 +60,9 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(
         pageName: "Video Consulting",
         showDivider: true,
@@ -77,78 +76,108 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
               "Specializations",
             ),
             CustomSpacer.s(),
-            Autocomplete<Result>(
-              displayStringForOption: Utils.displayStringForOption,
-              optionsBuilder: (TextEditingValue textEditingValue) async {
-                if (textEditingValue.text.isEmpty) {
-                  return [];
-                }
-                return specializations.where((option) => option.name!
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase()));
-              },
-              fieldViewBuilder: (BuildContext context,
-                  TextEditingController fieldTextEditingController,
-                  FocusNode fieldFocusNode,
-                  VoidCallback onFieldSubmitted) {
-                if(selectedOption != null){
-                  fieldTextEditingController.text = selectedOption!.name!;
-                }
-                return TextFormField(
-                  controller: fieldTextEditingController,
-                  validator: (text) {
-                    return "This field is required";
-                  },
-                  decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.arrow_drop_down),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
-                  ),
-                  focusNode: fieldFocusNode,
-                );
-              },
-              optionsViewBuilder: (context, onSelected, options) => Align(
-                alignment: Alignment.topLeft,
-                child: Material(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(4.0)),
-                  ),
-                  child: SizedBox(
-                    height: 52.0 * options.length,
-                    width: MediaQuery.of(context).size.width -
-                        (CustomSpacer.S * 2), // <-- Right here !
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: options.length,
-                      shrinkWrap: false,
-                      itemBuilder: (BuildContext context, int index) {
-                        final String option = options.elementAt(index).name!;
-                        return InkWell(
-                          onTap: () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            controller.specializationId.value = options.elementAt(index).id!;
-                            controller.getDoctors();
-                            setState((){
-                              selectedOption = options.elementAt(index);
-                            });
-
-                          },
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(option),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+            DropdownButtonFormField<Result>(
+                isExpanded: true,
+                value: selectedOption,
+                style: AppStyle.txtUrbanistRegular16WhiteA700,
+                elevation: 16,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                  // prefixIcon: Icon(Icons.call),
+                  hintText: "Select Specialization".tr,
+                  // hintStyle: TextStyle(fontSize: 13),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
                 ),
-              ),
-            ),
+                onChanged: (Result? value) {
+                  // This is called when the user selects an item.
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  controller.specializationId.value = value!.id!;
+                  controller.getDoctors();
+                  setState(() {
+                    selectedOption = value;
+                  });
+                },
+                items: specializations
+                    .map<DropdownMenuItem<Result>>((Result value) {
+                  return DropdownMenuItem<Result>(
+                    value: value,
+                    child: Text(value.name!),
+                  );
+                }).toList()),
+            // Autocomplete<Result>(
+            //   displayStringForOption: Utils.displayStringForOption,
+            //   optionsBuilder: (TextEditingValue textEditingValue) async {
+            //     if (textEditingValue.text.isEmpty) {
+            //       return [];
+            //     }
+            //     return specializations.where((option) => option.name!
+            //         .toLowerCase()
+            //         .contains(textEditingValue.text.toLowerCase()));
+            //   },
+            //   fieldViewBuilder: (BuildContext context,
+            //       TextEditingController fieldTextEditingController,
+            //       FocusNode fieldFocusNode,
+            //       VoidCallback onFieldSubmitted) {
+            //     if(selectedOption != null){
+            //       fieldTextEditingController.text = selectedOption!.name!;
+            //     }
+            //     return TextFormField(
+            //       controller: fieldTextEditingController,
+            //       validator: (text) {
+            //         return "This field is required";
+            //       },
+            //       decoration: InputDecoration(
+            //         suffixIcon: const Icon(Icons.arrow_drop_down),
+            //         border: OutlineInputBorder(
+            //             borderRadius: BorderRadius.circular(8)),
+            //         contentPadding: const EdgeInsets.symmetric(
+            //             vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+            //       ),
+            //       focusNode: fieldFocusNode,
+            //     );
+            //   },
+            //   optionsViewBuilder: (context, onSelected, options) => Align(
+            //     alignment: Alignment.topLeft,
+            //     child: Material(
+            //       shape: const RoundedRectangleBorder(
+            //         borderRadius:
+            //             BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            //       ),
+            //       child: SizedBox(
+            //         height: 52.0 * options.length,
+            //         width: MediaQuery.of(context).size.width -
+            //             (CustomSpacer.S * 2), // <-- Right here !
+            //         child: ListView.builder(
+            //           padding: EdgeInsets.zero,
+            //           itemCount: options.length,
+            //           shrinkWrap: false,
+            //           itemBuilder: (BuildContext context, int index) {
+            //             final String option = options.elementAt(index).name!;
+            //             return InkWell(
+            //               onTap: () {
+            //                 FocusManager.instance.primaryFocus?.unfocus();
+            //                 controller.specializationId.value = options.elementAt(index).id!;
+            //                 controller.getDoctors();
+            //                 setState((){
+            //                   selectedOption = options.elementAt(index);
+            //                 });
+            //
+            //               },
+            //               child: Card(
+            //                 child: Padding(
+            //                   padding: const EdgeInsets.all(16.0),
+            //                   child: Text(option),
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             CustomSpacer.s(),
             Row(
               children: [
@@ -177,6 +206,15 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
               child: Container(
                 child: Obx(() {
                   if (!controller.isSearchingDoctor.value) {
+                    if (controller.doctors.value.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No doctors available \nfor consultation",
+                          style: AppStyle.txtUrbanistRomanBold24RedA200,
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
                     return ListView.builder(
                         itemCount: controller.doctors.value.length,
                         itemBuilder: (context, index) {
@@ -261,6 +299,6 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
           ],
         ),
       ),
-    ));
+    );
   }
 }

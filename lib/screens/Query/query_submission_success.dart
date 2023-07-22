@@ -31,8 +31,7 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
         padding: const EdgeInsets.all(CustomSpacer.S),
         child: Column(
           children: [
-            SizedBox(
-              height: 400,
+            Expanded(
               child: Lottie.asset(
                 'assets/lottie/form_submitted.json',
                 fit: BoxFit.fill,
@@ -47,7 +46,7 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
                 },
               ),
             ),
-            CustomSpacer.m(),
+            CustomSpacer.l(),
             const Text(
                 "Your query has been submitted successfully and in under review.\nOn successfully verification you will see the query listed on all queries page with Doctor's Response.",
               textAlign: TextAlign.center,
@@ -63,7 +62,9 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
-                      ))),
+                      )),
+                backgroundColor: MaterialStateProperty.all<Color?>(MYcolors.bluecolor)
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,

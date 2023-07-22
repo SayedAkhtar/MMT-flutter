@@ -1,15 +1,13 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:MyMedTrip/firebase_options.dart';
 import 'package:MyMedTrip/locale/AppTranslation.dart';
 import 'package:MyMedTrip/routes.dart';
@@ -120,7 +118,8 @@ void main() async {
     title: "My Medical Trip",
     getPages: getPages,
     theme: ThemeData(
-        fontFamily: GoogleFonts.poppins().fontFamily,
-        primaryTextTheme: GoogleFonts.poppinsTextTheme()),
+      fontFamily: AppStyle.txtUrbanistRegular16.fontFamily,
+      fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!]
+    ),
   ));
 }

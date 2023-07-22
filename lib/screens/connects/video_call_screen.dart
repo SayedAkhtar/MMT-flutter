@@ -13,6 +13,7 @@ import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/message_model.dart';
 import 'package:MyMedTrip/models/user_model.dart';
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../constants/colors.dart';
@@ -226,9 +227,19 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                   ),
                   CustomSpacer.s(),
                   ElevatedButton(
-                    onPressed: () {
-                      print(_localUserJoined);
-                      _localUserJoined ? disposeAgora() : _joinChannel();
+                    onPressed: () async{
+                      if(!_localUserJoined){
+                        await _joinChannel();
+                      }else{
+                        await _engine.leaveChannel(
+                          options: LeaveChannelOptions(
+                            stopAllEffect: true,
+                            stopAudioMixing: true,
+                            stopMicrophoneRecording: true
+                          )
+                        );
+                      }
+                      // _localUserJoined ? disposeAgora() : _joinChannel();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _localUserJoined? Colors.redAccent: Colors.green,
@@ -511,11 +522,14 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
+                          var t = await dbRef.get();
+                          print(t);
                           await dbRef.push().set({
                             "from": LocalUser.TYPE_PATIENT,
                             "type": Message.TEXT,
                             "message": messageController.text,
                           });
+
                           _messageScrollController.animateTo(
                               _messageScrollController.position.maxScrollExtent,
                               duration: const Duration(milliseconds: 500),

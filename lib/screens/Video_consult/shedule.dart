@@ -104,7 +104,7 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
         SafeArea(
           child: ElevatedButton(
             onPressed: () {
-              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount: 190));
+              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount: 15* 100));
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

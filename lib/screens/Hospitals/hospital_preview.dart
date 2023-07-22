@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:MyMedTrip/components/ImageWithLoader.dart';
+import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -40,7 +40,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width,
-              child: ImageWithLoader(imageUrl: hospital.logo!,),
+              child: CustomImageView(url: hospital.logo!,),
             ),
           ),
           Positioned(
