@@ -13,7 +13,7 @@ class Doctor {
   List<String>? designation;
   List<String>? qualification;
   List<Map<String, dynamic>>? faq;
-  List<DoctorTimeSlot>? timeSlots;
+  Map<String,List<DoctorTimeSlot>>? timeSlots;
   List<String>? specialization;
   int? experience;
   List<DoctorHospital>? hospitals;
@@ -40,7 +40,7 @@ class Doctor {
       this.blogs});
 
   Doctor.fromJson(Map<String, dynamic> json) {
-    Logger().i(json);
+    // Logger().i(json);
     id = json['id'];
     name = json['name'];
     phone = json['phone'];
@@ -62,10 +62,15 @@ class Doctor {
     }
 
     if (json['time_slots'] != null) {
-      timeSlots = [];
-      json['time_slots'].forEach((v) {
-        timeSlots?.add(DoctorTimeSlot.fromJson(v));
+      timeSlots = {};
+      json['time_slots'].forEach((String k,values) {
+        List<DoctorTimeSlot> temp = [];
+        values.forEach((data){
+          temp.add(DoctorTimeSlot.fromJson(data));
+        });
+        timeSlots?[k] = temp;
       });
+      timeSlots = timeSlots;
     }
 
     if(json['faq'] != null){
@@ -118,10 +123,11 @@ class DoctorHospital {
 }
 
 class DoctorTimeSlot {
-  String? dayName;
+  String? time;
   int? timestamp;
+  Map<String, dynamic>? slotsDayWiseMap;
   DoctorTimeSlot.fromJson(Map<String, dynamic> json) {
-    dayName = json['name'];
+    time = json['time'];
     timestamp = json['utc'];
   }
 }

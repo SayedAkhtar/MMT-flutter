@@ -59,14 +59,14 @@ class UserController extends GetxController {
     }
   }
 
-  void updateProfileImage(id, path) async {
-    String? imgPath =
-        await FirebaseFunctions.uploadImage(File(path), ref: 'user_avatar');
+  void updateProfileImage(id, path, {String? name}) async {
+    MultipartFile? imgPath = MultipartFile(File(path), filename: DateTime.now().millisecond.toString());
+        // await FirebaseFunctions.uploadImage(File(path), ref: 'user_avatar');
     if (imgPath == null) {
       return;
     }
     FormData form = FormData({});
-    form.fields.add(MapEntry("avatar", imgPath));
+    form.files.add(MapEntry("avatar", imgPath));
     form.fields.add(MapEntry("gender", user!.gender!));
     var res = await _provider.updateUserAvatar(id, form);
     user!.image = res['avatar'];

@@ -49,8 +49,8 @@ class ChangeLanguagePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: SvgPicture.asset("assets/icons/in.svg", width: 40,),
-            title: Text("Bangla".tr),
+            leading: SvgPicture.asset("assets/icons/bn.svg", width: 40,),
+            title: Text("Bengali".tr),
             trailing: _storage.get('language') == "bn" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
             onTap: () async {
               await provider.updateUserLanguage(language: "bn");

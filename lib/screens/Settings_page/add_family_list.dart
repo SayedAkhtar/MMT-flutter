@@ -19,7 +19,6 @@ class Add_Family_List_page extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.listFamily();
     return Scaffold(
       // backgroundColor: Color(0xFFedeff5),
       appBar: CustomAppBar(
@@ -39,7 +38,11 @@ class Add_Family_List_page extends GetView<UserController> {
           padding: EdgeInsets.symmetric(horizontal: CustomSpacer.S),
           child: Column(
             children: [
-              GetBuilder<UserController>(builder: (ctrl) {
+              GetBuilder<UserController>(
+                initState: (ctrl){
+                  controller.listFamily();
+                },
+                  builder: (ctrl) {
                 if (controller.loading.isTrue) {
                   return Expanded(
                       child: Center(

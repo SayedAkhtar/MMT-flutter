@@ -31,11 +31,11 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
   Widget build(BuildContext context) {
     print(controller.selectedDoctor!.timeSlots);
     List timeSlots = [];
-    if(controller.selectedDoctor!.timeSlots!.isNotEmpty){
-      controller.selectedDoctor!.timeSlots!.forEach((element) {
-        timeSlots.add(element.dayName);
-      });
-    }
+    // if(controller.selectedDoctor!.timeSlots!.isNotEmpty){
+    //   controller.selectedDoctor!.timeSlots!.forEach((element) {
+    //     timeSlots.add(element.dayName);
+    //   });
+    // }
     return Scaffold(
       appBar: CustomAppBar(pageName: "Doctor Details", showDivider: true,),
       body: SizedBox(

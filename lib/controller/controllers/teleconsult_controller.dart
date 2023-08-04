@@ -46,11 +46,26 @@ class TeleconsultController extends GetxController {
     }
   }
 
-  void getDoctors() async {
+  void getDoctors({int? page}) async {
     isSearchingDoctor.value = true;
     List<Doctor> _doctors = [];
     var res = await _doctorProvider.getAllDoctors(
-        parameter: "?specialization_id=${specializationId.value}&video_consultation=true");
+        parameter: "?specialization_id=${specializationId.value}&video_consultation=true&page=${page??0}");
+    for (var element in res) {
+      if (element != null) {
+        _doctors.add(element);
+      }
+    }
+    doctors.value = _doctors;
+    isSearchingDoctor.value = false;
+    doctors.refresh();
+  }
+
+  void getPopularDoctors({int? page}) async {
+    isSearchingDoctor.value = true;
+    List<Doctor> _doctors = [];
+    var res = await _doctorProvider.getAllDoctors(
+        parameter: "?popular=true&video_consultation=true&page=${page??0}");
     for (var element in res) {
       if (element != null) {
         _doctors.add(element);

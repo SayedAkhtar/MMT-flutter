@@ -29,7 +29,7 @@ class AuthController extends GetxController {
   String otpType = 'register'; //TYPE : 'register' | 'forgot_password'
 
   late AuthProvider _provider;
-  final UserController _user = Get.find<UserController>();
+  late UserController _user;
   final LocalStorageController _storageController =
       Get.find<LocalStorageController>();
 
@@ -37,6 +37,7 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     _provider = Get.put(AuthProvider());
+    _user = Get.put(UserController());
     nameController = TextEditingController();
     phoneController = TextEditingController();
     emailController = TextEditingController();

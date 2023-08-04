@@ -26,6 +26,12 @@ class BaseProvider extends GetConnect implements GetxService{
     super.onInit();
   }
 
+  @override void onReady() {
+    // TODO: implement onReady
+    super.onReady();
+
+  }
+
   dynamic responseHandler(Response response) async {
     var logger = Logger();
     logger.d(token);
@@ -35,7 +41,17 @@ class BaseProvider extends GetConnect implements GetxService{
       case 200:
       case 201:
       case 202:
-        var responseJson = await response.body['DATA'];
+        var responseJson;
+        if(response.body['data'] != null){
+          responseJson = await response.body['data'];
+        }
+        else if(response.body['DATA'] != null){
+          responseJson = await response.body['DATA'];
+        }
+        else{
+          throw Exception("Invalid request body");
+        }
+
         return responseJson;
       case 300:
       case 301:

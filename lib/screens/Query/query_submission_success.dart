@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:MyMedTrip/constants/colors.dart';
@@ -47,12 +48,29 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
               ),
             ),
             CustomSpacer.l(),
-            const Text(
-                "Your query has been submitted successfully and in under review.\nOn successfully verification you will see the query listed on all queries page with Doctor's Response.",
+            RichText(
+              text: TextSpan(
+                text: "Thank you for your query. ",
+                children: [
+                  const TextSpan(
+                    text: "Your query has been received successfully and is currently under review. "
+                  ),
+                  const TextSpan(
+                      text: "Please access the "
+                  ),
+                  TextSpan(
+                      text: '"Query"',
+                    style: AppStyle.txtRobotoRegular20.copyWith(fontWeight: FontWeight.w600)
+                  ),
+                  const TextSpan(
+                      text: " tab to view the response once the review process is complete."
+                  ),
+                ],
+                style: AppStyle.txtRobotoRegular20,
+              ),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16.0),
             ),
-            Spacer(),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 Get.toNamed(Routes.home);
@@ -61,15 +79,15 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      )),
-                backgroundColor: MaterialStateProperty.all<Color?>(MYcolors.bluecolor)
-              ),
+                    borderRadius: BorderRadius.circular(100),
+                  )),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color?>(MYcolors.bluecolor)),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,
                 child: const Text(
-                  "Go to Home",
+                  "Return back to Home",
                   style: TextStyle(
                     color: MYcolors.whitecolor,
                     fontSize: 18,

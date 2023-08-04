@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 
 class FirebaseFunctions {
-  static Future<String?> uploadImage(File? imageFile, {String? ref}) async {
+  static Future<String?> uploadImage(File? imageFile, {String? ref, String? title} ) async {
     if (imageFile == null) return null;
     String _ref = ref ?? 'query_docs';
     try {
@@ -36,11 +36,11 @@ class FirebaseFunctions {
     return null;
   }
 
-  static Future<List<String>?> uploadMultipleFiles(List<File?> files) async {
+  static Future<List<String>?> uploadMultipleFiles(List<File?> files, {String? ref, String? title}) async {
     try {
       final storage = FirebaseStorage.instance;
       Get.defaultDialog(
-          title: "Uploading",
+          title: title ?? "Uploading",
           content: const CircularProgressIndicator());
       List<String> filePaths = [];
       for (File? file in files) {

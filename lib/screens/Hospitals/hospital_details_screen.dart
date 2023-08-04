@@ -59,9 +59,10 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
       body: SizedBox(
         width: double.maxFinite,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          SizedBox(
+          Container(
             height: getVerticalSize(300),
             width: double.maxFinite,
+            color: Colors.white,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -127,31 +128,34 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                               ),
                             )
                           ])),
-                      Padding(
-                        padding: getPadding(top: 41, right: CustomSpacer.S),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Doctors",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: AppStyle.txtUrbanistRomanBold20),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Padding(
-                                padding: getPadding(bottom: 4),
-                                child: Text(
-                                  "See All",
+                      Visibility(
+                        visible: hospital.doctors!.isEmpty,
+                        child: Padding(
+                          padding: getPadding(top: 41, right: CustomSpacer.S),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Doctors",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
-                                  style: AppStyle.txtUrbanistRomanBold16Blue
-                                      .copyWith(
-                                    letterSpacing: getHorizontalSize(0.2),
+                                  style: AppStyle.txtUrbanistRomanBold20),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: getPadding(bottom: 4),
+                                  child: Text(
+                                    "See All",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyle.txtUrbanistRomanBold16Blue
+                                        .copyWith(
+                                      letterSpacing: getHorizontalSize(0.2),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
 

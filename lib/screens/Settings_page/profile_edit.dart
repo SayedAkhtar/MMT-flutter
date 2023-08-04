@@ -56,8 +56,9 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
     pageName: 'Personal Information',
     showDivider: false,
       ),
-      body: GetBuilder<UserController>(builder: (controller) {
-    countryPreference = controller.user?.treatmentCountry ?? '';
+      body: GetBuilder<UserController>(
+          builder: (controller) {
+    // countryPreference = controller.user?.treatmentCountry ?? '';
     print(controller.user!.country);
     return Form(
       key: _personalInformationKey,
@@ -84,6 +85,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
             TextFormField(
               initialValue: Utils.formatDate(controller.user?.dob),
               inputFormatters: [DateInputFormatter()],
+
               keyboardType: TextInputType.datetime,
               onSaved: (value) {
                 controller.user?.dob = Utils.formatStringToDateTime(value!);
@@ -91,7 +93,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(
                     left: 15, bottom: 11, top: 11, right: 15),
-                hintText: "Date of birth".tr,
+                hintText: "dd/mm/yyyy".tr,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
@@ -151,10 +153,9 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                 SelectDialog.showModal<String>(
                     context,
                     label: "Select Country",
-                    selectedValue: countryPreference,
+                    selectedValue: controller.user!.treatmentCountry,
                     items: List.generate(countryName.length, (index) => countryName[index]),
                     onChange: (String selected) {
-                      countryPreference = selected;
                       controller.user!.treatmentCountry = countryPreference;
                     },
                   );
@@ -165,7 +166,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
-                child: Text(controller.user!.treatmentCountry!=null? controller.user!.treatmentCountry! : "", style: const TextStyle(fontSize: 16.0),),
+                child: Text(controller.user!.treatmentCountry!=null? controller.user!.treatmentCountry! : "Select Country", style: const TextStyle(fontSize: 16.0),),
               ),
             ),
             SizedBox(

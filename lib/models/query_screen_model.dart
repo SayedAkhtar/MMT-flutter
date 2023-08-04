@@ -35,6 +35,7 @@ class QueryScreen {
 
 class ActiveQuery {
   int? id;
+  String? queryHash;
   String? name;
   String? specialization;
   String? doctorResponse;
@@ -49,6 +50,7 @@ class ActiveQuery {
 
   ActiveQuery(
       {this.id,
+        this.queryHash,
       this.name,
       this.specialization,
       this.doctorResponse,
@@ -63,6 +65,7 @@ class ActiveQuery {
 
   ActiveQuery.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    queryHash = json['query_hash'];
     name = json['name'] ?? '';
     specialization = json['specialization'];
     doctorResponse = json['doctor_response'];

@@ -16,6 +16,7 @@ import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Query/query_form.dart';
 import 'package:MyMedTrip/screens/Query/query_submission_success.dart';
+import 'package:logger/logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../models/query_screen_model.dart';
@@ -87,12 +88,17 @@ class QueryController extends GetxController {
     responseData["country"] = preferredCountry.value;
     responseData["medical_report"] = medicalVisaPath;
     responseData["passport"] = passportPath;
+    formData["patient_family_id"] = patientFaminlyId.value;
     formData['response'] = responseData;
 
-    print(formData);
-
+    Logger().i(formData);
     bool res = await _provider.postQueryGenerationData(formData);
     if(res){
+      briefHistory.value = "";
+      preferredCountry.value = "";
+      passportPath = [];
+      medicalVisaPath = [];
+      patientFaminlyId.value = 0;
       Get.offNamed(Routes.startQuery);
       Get.to(QuerySubmissionSuccess());
     }

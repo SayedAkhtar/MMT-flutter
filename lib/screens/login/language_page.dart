@@ -124,7 +124,7 @@ class _Language_pageState extends State<Language_page> {
                     color: selectedLanguage == 'bn' ? MYcolors.greylightcolor : MYcolors.greycolor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("हिंदी"),
+                  child: Text("বাংলা"),
                 ),
               )
             ],

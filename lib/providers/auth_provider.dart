@@ -17,6 +17,7 @@ class AuthProvider extends BaseProvider {
   void onInit() {
     httpClient.baseUrl = api_uri;
     allowAutoSignedCert = true;
+
     super.onInit();
   }
 

@@ -30,7 +30,7 @@ class Loaders {
       Get.defaultDialog(title:"Error", content: Column(
         children: [
           Text(error),
-          Text(stackTrace.toString())
+          Text(StackTrace.current.toString())
         ],
       ));
     }else{

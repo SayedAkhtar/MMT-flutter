@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
 import 'package:MyMedTrip/controller/controllers/home_controller.dart';
@@ -11,7 +12,8 @@ class InitialBinding implements Bindings{
   void dependencies() {
     Get.put(LocalStorageController());
     // Get.lazyPut<UserProvider>(() => UserProvider(), fenix: true);
-    Get.lazyPut<UserController>(() => UserController());
+    Get.lazyPut<AuthController>(() => AuthController());
+    // Get.lazyPut<UserController>(() => UserController(), fenix: true);
     // Get.lazyPut<HomeProvider>(() => HomeProvider());
     Get.lazyPut<HomeController>(() => HomeController());
     // Get.lazyPut<QueryProvider>(() => QueryProvider());

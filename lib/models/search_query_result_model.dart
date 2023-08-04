@@ -20,12 +20,15 @@ class SearchQueryResult {
 
 class Result {
   int? id;
-  String? name;
+  String name = "";
 
-  Result({this.id, this.name});
+  Result({this.id, required this.name});
 
   Result.fromJson(Map<String, dynamic> json){
     id = json['id'];
     name = json['name'];
   }
+
+  @override
+  String toString() => name;
 }

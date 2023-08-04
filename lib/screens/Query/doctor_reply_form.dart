@@ -94,7 +94,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
                           result.files.forEach((element) {
                             files.add(File(element.path!));
                           });
-                          List<String>? filesPaths = await FirebaseFunctions.uploadMultipleFiles(files);
+                          List<String>? filesPaths = await FirebaseFunctions.uploadMultipleFiles(files, title: "Uploading documents. Please wait.");
                           setState(() {
                             docPath = filesPaths!;
                           });

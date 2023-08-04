@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:MyMedTrip/screens/Video_consult/appointment_booking_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -27,16 +28,18 @@ class TeLe_Consult_page extends StatefulWidget {
 }
 
 class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
-  late List<Result> specializations;
+  List<Result> specializations = [];
   late TeleconsultController controller;
   Result? selectedOption;
   bool _doctorsFound = false;
+  bool isPopularDoctors = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = Get.put(TeleconsultController());
     getAllSpecializations();
+    getPopularDoctors();
   }
 
   void getAllSpecializations() async {
@@ -60,11 +63,15 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
     }
   }
 
+  void getPopularDoctors() async {
+    controller.getPopularDoctors();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Video Consulting",
+        pageName: "Video Consultation",
         showDivider: true,
       ),
       body: Padding(
@@ -97,6 +104,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                   controller.getDoctors();
                   setState(() {
                     selectedOption = value;
+                    isPopularDoctors = false;
                   });
                 },
                 items: specializations
@@ -106,88 +114,24 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                     child: Text(value.name!),
                   );
                 }).toList()),
-            // Autocomplete<Result>(
-            //   displayStringForOption: Utils.displayStringForOption,
-            //   optionsBuilder: (TextEditingValue textEditingValue) async {
-            //     if (textEditingValue.text.isEmpty) {
-            //       return [];
-            //     }
-            //     return specializations.where((option) => option.name!
-            //         .toLowerCase()
-            //         .contains(textEditingValue.text.toLowerCase()));
-            //   },
-            //   fieldViewBuilder: (BuildContext context,
-            //       TextEditingController fieldTextEditingController,
-            //       FocusNode fieldFocusNode,
-            //       VoidCallback onFieldSubmitted) {
-            //     if(selectedOption != null){
-            //       fieldTextEditingController.text = selectedOption!.name!;
-            //     }
-            //     return TextFormField(
-            //       controller: fieldTextEditingController,
-            //       validator: (text) {
-            //         return "This field is required";
-            //       },
-            //       decoration: InputDecoration(
-            //         suffixIcon: const Icon(Icons.arrow_drop_down),
-            //         border: OutlineInputBorder(
-            //             borderRadius: BorderRadius.circular(8)),
-            //         contentPadding: const EdgeInsets.symmetric(
-            //             vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
-            //       ),
-            //       focusNode: fieldFocusNode,
-            //     );
-            //   },
-            //   optionsViewBuilder: (context, onSelected, options) => Align(
-            //     alignment: Alignment.topLeft,
-            //     child: Material(
-            //       shape: const RoundedRectangleBorder(
-            //         borderRadius:
-            //             BorderRadius.vertical(bottom: Radius.circular(4.0)),
-            //       ),
-            //       child: SizedBox(
-            //         height: 52.0 * options.length,
-            //         width: MediaQuery.of(context).size.width -
-            //             (CustomSpacer.S * 2), // <-- Right here !
-            //         child: ListView.builder(
-            //           padding: EdgeInsets.zero,
-            //           itemCount: options.length,
-            //           shrinkWrap: false,
-            //           itemBuilder: (BuildContext context, int index) {
-            //             final String option = options.elementAt(index).name!;
-            //             return InkWell(
-            //               onTap: () {
-            //                 FocusManager.instance.primaryFocus?.unfocus();
-            //                 controller.specializationId.value = options.elementAt(index).id!;
-            //                 controller.getDoctors();
-            //                 setState((){
-            //                   selectedOption = options.elementAt(index);
-            //                 });
-            //
-            //               },
-            //               child: Card(
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.all(16.0),
-            //                   child: Text(option),
-            //                 ),
-            //               ),
-            //             );
-            //           },
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             CustomSpacer.s(),
             Row(
               children: [
-                Text(
-                  "Doctors",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
+                isPopularDoctors
+                    ? Text(
+                        "Popular Doctors",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      )
+                    : Text(
+                        "Doctors",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
                 CustomSpacer.s(),
                 Obx(
                   () => controller.doctors.value.length > 0
@@ -204,12 +148,13 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
             ),
             Expanded(
               child: Container(
+                margin: EdgeInsets.only(top: 10),
                 child: Obx(() {
                   if (!controller.isSearchingDoctor.value) {
                     if (controller.doctors.value.isEmpty) {
                       return Center(
                         child: Text(
-                          "No doctors available \nfor consultation",
+                          "Please select the \nspecialty from the list",
                           style: AppStyle.txtUrbanistRomanBold24RedA200,
                           textAlign: TextAlign.center,
                         ),
@@ -217,73 +162,116 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                     }
                     return ListView.builder(
                         itemCount: controller.doctors.value.length,
+
                         itemBuilder: (context, index) {
-                          return ExpansionTile(
-                            tilePadding: EdgeInsets.zero,
-                            leading: Container(
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                        controller.doctors.value[index].image!),
-                                  ),
-                                  color: MYcolors.bluecolor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      // color: Color.fromARGB(255, 189, 181, 181),
-                                      color: Colors.grey.withOpacity(0.5),
-                                      blurRadius: 2,
-                                      spreadRadius: 0,
-                                      offset: Offset(0, 1),
-                                    )
-                                  ]),
-                            ),
-                            title: Text(
-                              "${controller.doctors.value[index].name!}",
-                              style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                  color: MYcolors.blacklightcolors,
-                                  fontFamily: "Brandon",
-                                  fontSize: 18),
-                            ),
-                            subtitle: Text(
-                              "${controller.doctors.value[index].experience!} years \n${controller.doctors.value[index].specialization!}",
-                              style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                  color: MYcolors.blacklightcolors,
-                                  fontFamily: "Brandon",
-                                  fontSize: 14),
-                            ),
-                            children: controller.doctors.value[index].timeSlots!
-                                .map((DoctorTimeSlot e) => ActionChip(
-                                      backgroundColor: MYcolors.greenlightcolor,
-                                      avatar: Icon(
-                                        Icons.timer,
-                                        color: Colors.white70,
+                          return Card(
+                            elevation: 15,
+                            shadowColor: MYcolors.bluecolor.withAlpha(80),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(CustomSpacer.S),
+                              child: Wrap(
+                                runSpacing: 10,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage:
+                                        const AssetImage("Images/PR.png"),
+                                        foregroundImage:
+                                        controller.doctors.value[index].image! != null
+                                            ? NetworkImage(
+                                            controller.doctors.value[index].image!)
+                                            : const AssetImage("Images/PR.png")
+                                        as ImageProvider,
+                                        minRadius: 30,
                                       ),
-                                      labelStyle:
-                                          TextStyle(color: Colors.white70),
-                                      label: Text("${e.dayName}"),
-                                      onPressed: () {
-                                        controller.confirmAppointmentSlot(
-                                            e,
-                                            controller
-                                                .doctors.value[index].price,
-                                            controller
-                                                .doctors.value[index].id!);
-                                      },
-                                    ))
-                                .toList(),
+                                      CustomSpacer.s(),
+                                      Wrap(
+                                        // crossAxisAlignment: CrossAxisAlignment.start,
+                                        direction: Axis.vertical,
+                                        clipBehavior: Clip.hardEdge,
+                                        runSpacing: 8.0,
+                                        spacing: 4.0,
+                                        children: [
+                                          Text(
+                                            "${controller.doctors.value[index].name!}",
+                                            style: AppStyle.txtUrbanistRomanBold24,
+                                          ),
+                                          Text(
+                                            "${controller.doctors.value[index].experience!} Years Of Experience",
+                                            style: AppStyle.txtUrbanistRegular16,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      CustomSpacer.xs(),
+                                      Icon(Icons.favorite_border_outlined),
+                                      CustomSpacer.xs(),
+                                      Flexible(
+                                        child: Text(
+                                          "${controller.doctors.value[0].specialization!.join(', ')} ",
+                                          style: AppStyle.txtUrbanistRegular18
+                                              .copyWith(fontWeight: FontWeight.w500),
+                                          softWrap: true,
+                                          overflow: TextOverflow.fade,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Visibility(
+                                    visible: controller
+                                        .doctors.value[0].hospitals!.isNotEmpty,
+                                    child: Row(
+                                      children: [
+                                        CustomSpacer.xs(),
+                                        Icon(Icons.location_on),
+                                        CustomSpacer.xs(),
+                                        Flexible(
+                                          child: Text(
+                                            "${controller.doctors.value[0].hospitals!.take(3).join(", ")}",
+                                            style: AppStyle.txtUrbanistRegular18
+                                                .copyWith(fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      TextButton(onPressed: (){
+                                        Get.to(() => AppointmentBookingWidget(doctor: controller.doctors[index],));
+                                      }, child: Text("Book Now"))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           );
+
                         });
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return SizedBox();
                   }
                 }),
               ),
             ),
+            // Expanded(
+            //   child: Container(
+            //     child: Obx(() {
+            //       if (controller.isSearchingDoctor.value) {
+            //         return Center(child: CircularProgressIndicator());
+            //       } else {
+            //         return SizedBox();
+            //       }
+            //     }),
+            //   ),
+            // ),
+            // Spacer(),
             Container(
               // alignment: Alignment.center,
               height: MediaQuery.of(context).size.height * 0.05,

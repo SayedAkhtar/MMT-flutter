@@ -12,6 +12,7 @@ import 'package:MyMedTrip/models/query_screen_model.dart';
 import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:logger/logger.dart';
 
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/error_model.dart';
@@ -47,7 +48,7 @@ class QueryProvider extends BaseProvider {
     try{
       Loaders.loadingDialog(title: "Uploading Data");
       Response response = await post('/queries', data, headers: _headers);
-      print(response.body);
+      Logger().d(response.body);
       var jsonBody = await responseHandler(response);
       if(response.isOk){
         return true;

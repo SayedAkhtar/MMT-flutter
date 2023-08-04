@@ -1,6 +1,7 @@
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
@@ -43,23 +44,31 @@ class _Query_pageState extends State<Query_page> {
             GetBuilder<QueryController>(builder: (_) {
               if (_controller.isLoaded.isTrue) {
                 return Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: _controller.queryScreen.activeQuery!.length,
-                      itemBuilder: (_, index) {
-                        return _activeQueryCard(context,
-                            id: _controller.queryScreen.activeQuery![index].id!,
-                            date:
-                                "Date: ${_controller.queryScreen.activeQuery![index].createdAt}",
-                            response: _controller.queryScreen
-                                .activeQuery![index].doctorResponse!,
-                            selectedIndex: index,
-                            stepName: _controller
-                                .queryScreen.activeQuery![index].stepName!,
-                            stepNote: _controller
-                                .queryScreen.activeQuery![index].stepNote!,
-                            controller: _controller);
-                      }),
+                  child: RefreshIndicator(
+                    onRefresh: () async{
+                      _controller.isLoaded.value = false;
+                      _controller.getQueryPageData();
+                      _controller.update();
+                    },
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: _controller.queryScreen.activeQuery!.length,
+                        itemBuilder: (_, index) {
+                          return _activeQueryCard(context,
+                              id: _controller.queryScreen.activeQuery![index].id!,
+                              queryHash: _controller.queryScreen.activeQuery![index].queryHash,
+                              date:
+                                  "Date: ${_controller.queryScreen.activeQuery![index].createdAt}",
+                              response: _controller.queryScreen
+                                  .activeQuery![index].doctorResponse!,
+                              selectedIndex: index,
+                              stepName: _controller
+                                  .queryScreen.activeQuery![index].stepName!,
+                              stepNote: _controller
+                                  .queryScreen.activeQuery![index].stepNote!,
+                              controller: _controller);
+                        }),
+                  ),
                 );
               }
               if (_controller.emptyScreen) {
@@ -118,6 +127,7 @@ class _Query_pageState extends State<Query_page> {
 
   Widget _activeQueryCard(BuildContext context,
       {required int id,
+        required String? queryHash,
       required String date,
       required String response,
       required String stepName,
@@ -174,12 +184,15 @@ class _Query_pageState extends State<Query_page> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              date,
+            RichText(text: TextSpan(
+              text: "#${queryHash}",
               style: const TextStyle(
                   fontSize: 15,
                   color: MYcolors.whitecolor),
-            ),
+                children: [
+                  TextSpan(text: '\n'),
+                  TextSpan(text: date)
+                ]), ),
             CustomSpacer.xs(),
             Visibility(
               visible: response.isNotEmpty,

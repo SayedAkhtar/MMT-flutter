@@ -4,6 +4,7 @@ import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/CustomCardWithImage.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/helper/Debouncer.dart';
 import 'package:MyMedTrip/providers/doctor_provider.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
   bool loading = true;
   bool loadingMore = false;
   bool moreAvailable = true;
+  final _debouncer = Debouncer(milliseconds: 1500);
   @override
   void initState() {
     super.initState();
@@ -63,6 +65,17 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
         loadingMore = false;
       });
     }
+  }
+
+  void searchDoctor(text) async{
+    setState(() {
+      loading = true;
+    });
+    List<Doctor?> res = await api.getAllDoctors(parameter: "?ajax_search=$text");
+    setState(() {
+      _doctors = res;
+      loading = false;
+    });
   }
 
   @override
@@ -103,7 +116,21 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Search for Doctors'.tr),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for Doctors'.tr,
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 5, bottom: 7, top: 11),
+                      ),
+                      onChanged: (String search){
+                        _debouncer.run(() {
+                          searchDoctor(search);
+                        });
+                        // print(search);
+                      },
+                    ),
+                  ),
                   CustomSpacer.s(),
                   const Icon(Icons.search_rounded),
                 ],

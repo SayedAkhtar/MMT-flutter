@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
@@ -18,9 +20,11 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:logger/logger.dart';
+import 'package:select_dialog/select_dialog.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
 
 class Generate_New_Query extends StatefulWidget {
@@ -36,7 +40,8 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
   late bool _queryForSomeone = false;
   final ImagePicker _picker = ImagePicker();
   final storageRef = FirebaseStorage.instance.ref();
-
+  final TextEditingController selectedFamilyMemberId = TextEditingController();
+  List<Result> familyMembers = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -45,6 +50,29 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
     userController = Get.put(UserController());
     controller.queryType =
         1; // 1 => for Query::TYPE_QUERY, 2 for Query::TYPE_MEDICAL_VISA
+  }
+
+  Future getFamilyMembersList(patientId) async{
+    Loaders.loadingDialog();
+    Response res = await GetConnect().get("$base_uri/ajax-search/patient_family_details?patient_id=$patientId", headers: {"Accepts": "application/json"});
+    if(res.isOk){
+      var json = res.body['data'];
+      if(json.isNotEmpty) {
+        SearchQueryResult result = SearchQueryResult.fromJson(json);
+        if (result.list!.isNotEmpty) {
+          setState(() {
+            familyMembers = result.list!;
+          });
+          Get.back();
+        }else{
+          setState(() {
+            familyMembers =[];
+          });
+          Loaders.errorDialog("No Friends or family found".tr, title: "No Data".tr);
+        }
+      }
+    }
+
   }
 
   @override
@@ -89,12 +117,43 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                   "Name",
                                 ),
                                 CustomSpacer.s(),
-                                CustomAutocomplete(
-                                  searchTable: "patient_family_details",
-                                  selectedId: controller.patientFaminlyId,
-                                  isRequired: _queryForSomeone,
-                                  patientId: userController.user!.id,
+                                TextFormField(
+                                  controller: selectedFamilyMemberId,
+                                  readOnly: true,
+                                  validator: (text){
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.none,
+                                  onTap: () async{
+                                    await getFamilyMembersList(userController.user!.id);
+                                    if(!context.mounted) return;
+                                    if(familyMembers.isNotEmpty){
+                                      SelectDialog.showModal<Result>(
+                                        context,
+                                        items: List.generate(familyMembers.length, (index) => familyMembers[index]),
+                                        onChange: (Result selected) {
+                                          setState(() {
+                                            selectedFamilyMemberId.text = selected.name;
+                                            controller.patientFaminlyId.value = selected.id!;
+                                          });
+                                        },
+                                      );
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: "Select Friend or Family",
+                                    suffixIcon: const Icon(Icons.arrow_drop_down),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                                  ),
                                 ),
+                                // CustomAutocomplete(
+                                //   searchTable: "patient_family_details",
+                                //   selectedId: controller.patientFaminlyId,
+                                //   isRequired: _queryForSomeone,
+                                //   patientId: userController.user!.id,
+                                // ),
                               ],
                             )),
                         CustomSpacer.s(),
@@ -113,8 +172,8 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                           },
                         ),
                         CustomSpacer.s(),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Text(
                               "Country preferred to travel",
                               style: TextStyle(
@@ -138,7 +197,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                               thickness: 0,
                               color: Colors.transparent,
                             ),
-                            items: <String>['India', 'Africa', 'Russia', 'UAE']
+                            items: <String>['India']
                                 .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -170,7 +229,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           String? imagePath =
                                               await FirebaseFunctions
                                                   .uploadImage(
-                                                      File(cameraImage.path));
+                                                      File(cameraImage.path), title: "Uploading Documents");
                                           if (imagePath != null) {
                                             controller.medicalVisaPath = [
                                               imagePath
@@ -377,11 +436,13 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02,
                             ),
-                            const Text(
-                              "Upload passport",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                            const Flexible(
+                              child: Text(
+                                "Upload passport if available",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ],
@@ -436,7 +497,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
               height: MediaQuery.of(context).size.height * 0.04,
               width: MediaQuery.of(context).size.width * 0.45,
               child: const Text(
-                "Yourself",
+                "For Yourself",
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -460,7 +521,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
               height: MediaQuery.of(context).size.height * 0.04,
               width: MediaQuery.of(context).size.width * 0.38,
               child: const Text(
-                "For someone",
+                "For someone else",
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

@@ -71,7 +71,7 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
           ),
         ),
         Text(
-          "Or Want to Rechedule your video Consulation ?",
+          "Or Want to Reschedule Appointment your video Consultation ?",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,

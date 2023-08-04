@@ -48,10 +48,11 @@ class HospitalProvider extends BaseProvider {
     }
     return null;
   }
-  Future<List<Treatment?>> getAllTreatments() async {
+  Future<List<Treatment?>> getAllTreatments({String? query, page}) async {
     List<Treatment?> treatment = [];
     try {
-      Response response = await get('/treatments',
+      String requestUrl = Uri(path: '/treatments', queryParameters: {'search': query, 'page': page.toString()}).toString();
+      Response response = await get(requestUrl,
           contentType: 'application/json');
       var jsonString = await responseHandler(response);
       jsonString.forEach((element) {

@@ -354,16 +354,16 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       //     ),
                       //   ),
                       // ),
-                      Padding(
-                        padding: getPadding(top: 32, bottom: 5),
-                        child: Wrap(
-                          runSpacing: getVerticalSize(5),
-                          spacing: getHorizontalSize(5),
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children:
-                              List<Widget>.generate(doctor!.timeSlots!.length, (index) => timeChip(doctor!.timeSlots![index].dayName!)),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: getPadding(top: 32, bottom: 5),
+                      //   child: Wrap(
+                      //     runSpacing: getVerticalSize(5),
+                      //     spacing: getHorizontalSize(5),
+                      //     crossAxisAlignment: WrapCrossAlignment.center,
+                      //     children:
+                      //         List<Widget>.generate(doctor!.timeSlots!.length, (index) => timeChip(doctor!.timeSlots![index].dayName!)),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

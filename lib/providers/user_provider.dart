@@ -12,15 +12,17 @@ class UserProvider extends BaseProvider {
   late String? _token;
   late Map<String, String> _headers;
   final LocalStorageController _storage = Get.find<LocalStorageController>();
-
   @override
   void onInit() {
     super.onInit();
   }
 
+
   Future<LocalUser?> getUser(int id) async {
     final response = await get('/users/$id');
-    return response.body;
+    var jsonBody = await responseHandler(response);
+    print(jsonBody);
+    return LocalUser.fromJson(jsonBody);
   }
 
   Future<Response<LocalUser>> postUser(LocalUser user) async =>
@@ -43,12 +45,14 @@ class UserProvider extends BaseProvider {
   }
 
   Future updateUserAvatar(int id, FormData postBody) async {
+    token = _storage.get("token");
     Response response = await post('/update-avatar/$id', postBody);
     var jsonResponse = await responseHandler(response);
     return jsonResponse;
   }
 
   Future<bool> addFamily(Map<String, dynamic> postBody) async {
+    token = _storage.get("token");
     try {
       Response response = await post('/family', postBody);
       var jsonString = await responseHandler(response);
@@ -61,6 +65,7 @@ class UserProvider extends BaseProvider {
   }
 
   Future<List<UserFamily>> listFamilies() async {
+    token = _storage.get("token");
     var families = <UserFamily>[];
     try {
       Response response = await get('/family');

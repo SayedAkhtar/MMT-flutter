@@ -50,7 +50,8 @@ class LoginPage extends GetView<AuthController> {
                   ),
                   Expanded(
                     child: CustomImageView(
-                      url: "https://mymedtrip.com/wp-content/uploads/2023/01/mmt.jpg",
+                      imagePath: "assets/icons/mmt-full-logo.png",
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                   Form(
