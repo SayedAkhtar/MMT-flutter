@@ -15,7 +15,7 @@ class FirebaseFunctions {
       final Reference ref =
           storage.ref().child('$_ref/${DateTime.now()}.${ext}');
       Get.defaultDialog(
-          title: "Uploading",
+          title: title??"Uploading",
           content: const CircularProgressIndicator());
       final UploadTask uploadTask = ref.putFile(imageFile);
       await uploadTask.whenComplete(() => print('Image uploaded'));

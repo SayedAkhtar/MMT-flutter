@@ -346,7 +346,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           String? imagePath =
                                               await FirebaseFunctions
                                                   .uploadImage(
-                                                      File(cameraImage.path));
+                                                      File(cameraImage.path), title: "Uploading Documents");
                                           if (imagePath != null) {
                                             controller.passportPath = [
                                               imagePath
@@ -385,7 +385,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           });
                                           List<String>? filesPaths =
                                               await FirebaseFunctions
-                                                  .uploadMultipleFiles(files);
+                                                  .uploadMultipleFiles(files, title: "Uploading Documents");
                                           controller.passportPath = filesPaths!;
                                           controller.update();
                                         } else {

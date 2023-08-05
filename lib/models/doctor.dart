@@ -61,7 +61,7 @@ class Doctor {
       });
     }
 
-    if (json['time_slots'] != null) {
+    if (json['time_slots'] != null && json['time_slots'].isNotEmpty) {
       timeSlots = {};
       json['time_slots'].forEach((String k,values) {
         List<DoctorTimeSlot> temp = [];
@@ -125,7 +125,6 @@ class DoctorHospital {
 class DoctorTimeSlot {
   String? time;
   int? timestamp;
-  Map<String, dynamic>? slotsDayWiseMap;
   DoctorTimeSlot.fromJson(Map<String, dynamic> json) {
     time = json['time'];
     timestamp = json['utc'];

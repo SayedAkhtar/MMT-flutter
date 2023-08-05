@@ -5,18 +5,11 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/components/CustomAutocomplete.dart';
-import 'package:MyMedTrip/components/CustomElevetedButton.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/models/doctor.dart';
-import 'package:MyMedTrip/screens/Video_consult/shedule.dart';
-import 'package:select_dialog/select_dialog.dart';
-
 import '../../constants/api_constants.dart';
-import '../../helper/Utils.dart';
 import '../../models/search_query_result_model.dart';
 import '../../theme/app_style.dart';
 
@@ -162,7 +155,6 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                     }
                     return ListView.builder(
                         itemCount: controller.doctors.value.length,
-
                         itemBuilder: (context, index) {
                           return Card(
                             elevation: 15,
@@ -178,13 +170,14 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                     children: [
                                       CircleAvatar(
                                         backgroundImage:
-                                        const AssetImage("Images/PR.png"),
-                                        foregroundImage:
-                                        controller.doctors.value[index].image! != null
-                                            ? NetworkImage(
-                                            controller.doctors.value[index].image!)
+                                            const AssetImage("Images/PR.png"),
+                                        foregroundImage: controller.doctors
+                                                    .value[index].image! !=
+                                                null
+                                            ? NetworkImage(controller
+                                                .doctors.value[index].image!)
                                             : const AssetImage("Images/PR.png")
-                                        as ImageProvider,
+                                                as ImageProvider,
                                         minRadius: 30,
                                       ),
                                       CustomSpacer.s(),
@@ -197,11 +190,13 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                         children: [
                                           Text(
                                             "${controller.doctors.value[index].name!}",
-                                            style: AppStyle.txtUrbanistRomanBold24,
+                                            style:
+                                                AppStyle.txtUrbanistRomanBold24,
                                           ),
                                           Text(
                                             "${controller.doctors.value[index].experience!} Years Of Experience",
-                                            style: AppStyle.txtUrbanistRegular16,
+                                            style:
+                                                AppStyle.txtUrbanistRegular16,
                                           ),
                                         ],
                                       )
@@ -216,7 +211,8 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                         child: Text(
                                           "${controller.doctors.value[0].specialization!.join(', ')} ",
                                           style: AppStyle.txtUrbanistRegular18
-                                              .copyWith(fontWeight: FontWeight.w500),
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w500),
                                           softWrap: true,
                                           overflow: TextOverflow.fade,
                                         ),
@@ -233,9 +229,14 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                         CustomSpacer.xs(),
                                         Flexible(
                                           child: Text(
-                                            "${controller.doctors.value[0].hospitals!.take(3).join(", ")}",
+                                            controller.doctors.value[0]
+                                                .hospitals!.take(3)
+                                                .map((v) => v.name)
+                                                .join(', '),
                                             style: AppStyle.txtUrbanistRegular18
-                                                .copyWith(fontWeight: FontWeight.w500),
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                           ),
                                         ),
                                       ],
@@ -243,35 +244,28 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                   ),
                                   Row(
                                     children: [
-                                      TextButton(onPressed: (){
-                                        Get.to(() => AppointmentBookingWidget(doctor: controller.doctors[index],));
-                                      }, child: Text("Book Now"))
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.to(
+                                                () => AppointmentBookingWidget(
+                                                      doctor: controller
+                                                          .doctors[index],
+                                                    ));
+                                          },
+                                          child: Text("Book Now"))
                                     ],
                                   ),
                                 ],
                               ),
                             ),
                           );
-
                         });
                   } else {
-                    return SizedBox();
+                    return Center(child: CircularProgressIndicator());
                   }
                 }),
               ),
             ),
-            // Expanded(
-            //   child: Container(
-            //     child: Obx(() {
-            //       if (controller.isSearchingDoctor.value) {
-            //         return Center(child: CircularProgressIndicator());
-            //       } else {
-            //         return SizedBox();
-            //       }
-            //     }),
-            //   ),
-            // ),
-            // Spacer(),
             Container(
               // alignment: Alignment.center,
               height: MediaQuery.of(context).size.height * 0.05,

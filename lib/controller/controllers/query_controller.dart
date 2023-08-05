@@ -88,7 +88,9 @@ class QueryController extends GetxController {
     responseData["country"] = preferredCountry.value;
     responseData["medical_report"] = medicalVisaPath;
     responseData["passport"] = passportPath;
-    formData["patient_family_id"] = patientFaminlyId.value;
+    if(patientFaminlyId.value != 0){
+      formData["patient_family_id"] = patientFaminlyId.value;
+    }
     formData['response'] = responseData;
 
     Logger().i(formData);

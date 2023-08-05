@@ -94,7 +94,7 @@ class UserController extends GetxController {
 
   void deleteFamily(id) async {
     loading.value = true;
-    Loaders.loadingDialog();
+    Loaders.loadingDialog(shouldCloseAll: false);
     bool res = await _provider.deleteFamilyMember(id);
     if(res){
       List<UserFamily> _newList = [];
@@ -105,7 +105,7 @@ class UserController extends GetxController {
       });
       familiesList = _newList;
     }
-    Get.back();
+    Get.back(closeOverlays: true);
     update();
   }
 

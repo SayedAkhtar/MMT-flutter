@@ -38,11 +38,9 @@ class Add_Family_List_page extends GetView<UserController> {
           padding: EdgeInsets.symmetric(horizontal: CustomSpacer.S),
           child: Column(
             children: [
-              GetBuilder<UserController>(
-                initState: (ctrl){
-                  controller.listFamily();
-                },
-                  builder: (ctrl) {
+              GetBuilder<UserController>(initState: (ctrl) {
+                controller.listFamily();
+              }, builder: (ctrl) {
                 if (controller.loading.isTrue) {
                   return Expanded(
                       child: Center(
@@ -59,8 +57,8 @@ class Add_Family_List_page extends GetView<UserController> {
                           height: MediaQuery.of(context).size.height - 56,
                           child: Align(
                               alignment: Alignment.center,
-                              child:
-                                  TranslatedText(text: 'No families added yet')),
+                              child: TranslatedText(
+                                  text: 'No families added yet')),
                         )
                       ],
                     ),
@@ -123,9 +121,39 @@ class Add_Family_List_page extends GetView<UserController> {
                                 color: Colors.redAccent,
                               ),
                               onPressed: () {
-                                controller.deleteFamily(
-                                    controller.familiesList[index].id);
-                                controller.listFamily();
+                                Get.defaultDialog(
+                                  title: "Are you sure ?",
+                                  content: Container(
+                                    margin: EdgeInsets.only(bottom: CustomSpacer.S),
+                                    child: RichText(
+                                      text: TextSpan(
+                                      children: [
+                                        TextSpan(text: "You are about to remove".tr),
+                                        TextSpan(text: " ${controller.familiesList[index].name!} " ),
+                                        TextSpan(text: "from your family list.".tr ),
+                                        TextSpan(text: "\n"),
+                                        TextSpan(text: "\n"),
+                                        TextSpan(text: "Note: These means".tr),
+                                        TextSpan(text: " ${controller.familiesList[index].name} "),
+                                        TextSpan(text: "wont receive any further notification and you wont be able to create any queries for ".tr),
+                                        TextSpan(text: controller.familiesList[index].gender!.toLowerCase() == 'female' ? 'her'.tr : 'him'.tr),
+                                      ],
+                                        style: AppStyle.txtUrbanistRegular18
+                                      ),
+                                    ),
+                                  ),
+                                  onConfirm: (){
+                                    controller.deleteFamily(
+                                        controller.familiesList[index].id);
+                                    controller.listFamily();
+                                  },
+                                  // confirm: Text("Yes, I am sure", style: AppStyle.txtSourceSansProSemiBold18,),
+                                  textConfirm: "Yes, I am sure",
+                                  onCancel: (){},
+                                  textCancel: "No, It was a mistake",
+                                  buttonColor: MYcolors.bluecolor,
+                                );
+
                               },
                             ),
                           ),

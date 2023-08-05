@@ -93,10 +93,21 @@ class _Add_family_pageState extends State<Add_family_page> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 15, bottom: 11, top: 11, right: 15),
-                      hintText: "Date of birth",
+                      hintText: "dd/mm/yyyy",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
+                    validator: (String? date){
+                      if(date== null || date.isEmpty ){
+                        return "Date of birth is required";
+                      }
+                      int day = int.parse(date.split('/')[0]);
+                      int month = int.parse(date.split('/')[1]);
+                      int year = int.parse(date.split('/')[2]);
+                      if(day > 31 || month > 12 ){
+                        return "Please enter a valid date";
+                      }
+                    },
                   ),
                   DropdownButtonFormField(
                     value: familyMember?.gender,
@@ -187,6 +198,9 @@ class _Add_family_pageState extends State<Add_family_page> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      if(!formKey.currentState!.validate()){
+                        return;
+                      }
                       formKey.currentState!.save();
                       controller.user!.treatmentCountry =
                                 countryPreference;

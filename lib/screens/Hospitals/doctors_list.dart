@@ -24,7 +24,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
   late DoctorProvider api;
   List<Doctor?>? _doctors = [];
   ScrollController lazyScrollController = ScrollController();
-  int currentPage = 0;
+  int currentPage = 1;
   bool loading = true;
   bool loadingMore = false;
   bool moreAvailable = true;
@@ -55,7 +55,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
       loadingMore = true;
     });
     if(moreAvailable){
-      List<Doctor?> res = await api.getAllDoctors(parameter: "?skip=${((currentPage+1) * 10)}");
+      List<Doctor?> res = await api.getAllDoctors(parameter: "?page=${((currentPage+1))}");
       setState(() {
         if(res.isEmpty){
             moreAvailable = false;

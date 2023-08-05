@@ -116,6 +116,7 @@ class AuthProvider extends BaseProvider {
   }
 
   Future<bool> updateFirebase(String uid, String fcm) async {
+    token = _storage.get("token");
     try {
       Loaders.loadingDialog();
       Response? response = await post(

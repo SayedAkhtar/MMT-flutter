@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Loaders {
-  static void loadingDialog({String title="Processing"}) {
-    if(Get.isDialogOpen!){
+  static void loadingDialog({String title="Processing", bool shouldCloseAll = true}) {
+    if(Get.isDialogOpen! && shouldCloseAll){
       Get.back(closeOverlays: true);
     }
     Get.defaultDialog(

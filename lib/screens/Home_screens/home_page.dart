@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
 
   void fetchBlogData() async {
     List<Blog> blogData = await homeProvider.fetchBlogData();
+    print(blogData);
     setState(() {
       blogs = blogData;
       blogLoading = false;

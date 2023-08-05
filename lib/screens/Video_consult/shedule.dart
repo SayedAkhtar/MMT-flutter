@@ -43,7 +43,6 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print("====== Error ======");
     if(response.message != null){
       Loaders.errorDialog(response.message!);
     }
@@ -64,7 +63,7 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
     children: [
         Lottie.asset("assets/lottie/appointment-schedule.json"),
         Text(
-          "You have Selected : ${_controller.selectedSlot.dayName} ${Utils.formatDate(DateTime.fromMillisecondsSinceEpoch(_controller.selectedSlot.timestamp * 1000))}",
+          "You have Selected : ${DateFormat('EEEE').format(DateTime.fromMillisecondsSinceEpoch(_controller.selectedSlot.timestamp * 1000))} ${Utils.localDateTimeFromTimestamp(_controller.selectedSlot!.timestamp)}",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
@@ -104,7 +103,7 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
         SafeArea(
           child: ElevatedButton(
             onPressed: () {
-              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount: 15* 100));
+              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount:_controller.consultationFees * 100));
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

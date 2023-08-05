@@ -5,6 +5,7 @@ import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/models/blog.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
+import 'package:logger/logger.dart';
 
 class HomeProvider extends BaseProvider {
   late String? _token;
@@ -40,8 +41,9 @@ class HomeProvider extends BaseProvider {
           blogs.add(Blog.fromJson(element));
         }
       }
-    }catch(e){
+    }catch(e, stacktrace){
       print(e.toString());
+      Logger().e(e.toString());
     }
     return blogs;
   }

@@ -40,10 +40,10 @@ class HospitalProvider extends BaseProvider {
       jsonString.forEach((element) {
         hospitals.add(Hospital.fromJson(element));
       });
-      print(hospitals);
       return hospitals;
       // return ConfirmedQuery.fromJson(jsonString);
-    } catch (error) {
+    } catch (error, stacktrace) {
+      print(stacktrace);
       Loaders.errorDialog(error.toString(), title: "Error");
     }
     return null;

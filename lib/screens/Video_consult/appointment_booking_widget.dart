@@ -1,6 +1,8 @@
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
+import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../components/CustomAppBar.dart';
 import '../../models/doctor.dart';
@@ -92,6 +94,7 @@ class _AppointmentBookingWidgetState extends State<AppointmentBookingWidget> {
                   return ListTile(
                     title: Text(timing.time!),
                     onTap: () {
+                      Get.find<TeleconsultController>().confirmAppointmentSlot(selectedTimings[index], widget.doctor.price, widget.doctor.id!);
                       // Handle the selected timing here, e.g., book appointment, show confirmation dialog, etc.
                       // You can also navigate to a different screen for further actions.
                     },

@@ -89,7 +89,6 @@ class _Loading_pageState extends State<Loading_page> with TickerProviderStateMix
   }
 
   pushRouteAfterSplash()async {
-    print("---------- Animation complete  -------");
     if(_storage.get('language') != null){
      _authController.validateUserToken();
     }else{

@@ -83,8 +83,6 @@ void main() async {
       FlutterLocalNotificationsPlugin();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
@@ -119,7 +117,7 @@ void main() async {
     getPages: getPages,
     theme: ThemeData(
       fontFamily: AppStyle.txtUrbanistRegular16.fontFamily,
-      fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!]
+      fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!],
     ),
   ));
 }

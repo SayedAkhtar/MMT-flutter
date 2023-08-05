@@ -149,6 +149,12 @@ class CustomImageView extends StatelessWidget {
         color: color,
       );
     }
-    return const SizedBox();
+    return Image.asset(
+      placeHolder,
+      height: height,
+      width: width,
+      fit: fit ?? BoxFit.cover,
+      color: color,
+    );
   }
 }

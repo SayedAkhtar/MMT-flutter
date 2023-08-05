@@ -10,6 +10,7 @@ import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/providers/auth_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:logger/logger.dart';
 
 import '../../models/user_model.dart';
 
@@ -134,8 +135,27 @@ class AuthController extends GetxController {
         isLoggedIn.value = true;
         phoneController.text = "";
         passwordController.text = "";
-        update();
-        Get.offAllNamed(Routes.home);
+
+        try {
+          final userCredential = await FirebaseAuth.instance.signInAnonymously();
+          if(Platform.isAndroid){
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+            await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+          }
+          // print(fcmToken);
+        } on FirebaseAuthException catch (e) {
+          switch (e.code) {
+            case "operation-not-allowed":
+              Logger().d("Anonymous auth hasn't been enabled for this project.");
+              break;
+            default:
+              Logger().d("Unknown error.");
+          }
+        }
+        finally{
+          update();
+          Get.offAllNamed(Routes.home);
+        }
       }
   }
 
@@ -151,7 +171,7 @@ class AuthController extends GetxController {
         if(Platform.isAndroid){
           final fcmToken = await FirebaseMessaging.instance.getToken();
           print(fcmToken);
-          // await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+          await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
         }
         // print(fcmToken);
       } on FirebaseAuthException catch (e) {
