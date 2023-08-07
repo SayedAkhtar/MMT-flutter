@@ -1,3 +1,5 @@
+import 'package:MyMedTrip/constants/query_type.dart';
+import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,15 +19,20 @@ import '../../constants/query_step_name.dart';
 import '../../helper/CustomSpacer.dart';
 
 class QueryForm extends StatefulWidget {
-  const QueryForm({Key? key}) : super(key: key);
-
+  const QueryForm(this.queryType,{Key? key, this.queryId = 0, this.queryStep = QueryStep.documentForVisa}) : super(key: key);
+  final int queryType;
+  final int? queryId;
+  final int? queryStep;
   @override
   State<QueryForm> createState() => _QueryFormState();
 }
 
 class _QueryFormState extends State<QueryForm> {
   late QueryController controller;
-  int queryStep = 2;
+  late int queryStep;
+  late int queryType;
+  bool paymentRequired = false;
+
   List<String> stepName = [
     "Doctor\'s \nReply",
     "Documents For Visa",
@@ -35,14 +42,20 @@ class _QueryFormState extends State<QueryForm> {
 
   @override
   void initState() {
-    controller = Get.find<QueryController>();
-
-    if(controller.queryType == 2){
-      queryStep = QueryStep.documentForVisa;
-    }else{
-      queryStep = controller.queryScreen.activeQuery![controller.selectedIndex].currentStep!;
+    queryStep = widget.queryStep!;
+    queryType = widget.queryType;
+    print(widget.queryId);
+    print(queryStep);
+    if(widget.queryId != 0){
+      fetchStepData();
     }
+
     super.initState();
+  }
+
+  void fetchStepData()async{
+    var res = await Get.put(QueryProvider()).getQueryStepData(widget.queryId!, widget.queryStep!);
+    print(res);
   }
 
   @override
@@ -64,49 +77,61 @@ class _QueryFormState extends State<QueryForm> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      (controller.queryType == QueryType.query)?
-                      CustomStep(
-                      stepName: stepName[0],
-                      isActive: controller.currentStep.value > 1,
-                      isLast: false,
-                      function: () {
-                        controller.currentStep.value = QueryStep.doctorResponse;
-                        controller.getCurrentStepData(QueryStep.doctorResponse);
-                      }):const SizedBox(),
+                      (QueryType.query == queryType)
+                          ? CustomStep(
+                              stepName: stepName[0],
+                              isActive: queryStep > 1,
+                              isLast: false,
+                              function: () {
+                                // controller.currentStep.value =
+                                //     QueryStep.doctorResponse;
+                                // controller.getCurrentStepData(
+                                //     QueryStep.doctorResponse);
+                              })
+                          : const SizedBox(),
                       CustomStep(
                           stepName: stepName[1],
-                          isActive: controller.currentStep.value >= QueryStep.documentForVisa ,
+                          isActive: queryStep >=
+                              QueryStep.documentForVisa,
                           isLast: false,
                           function: () {
-                            if(queryStep < QueryStep.documentForVisa){
+                            if (queryStep < QueryStep.documentForVisa) {
                               return;
                             }
-                            controller.currentStep.value = QueryStep.documentForVisa;
-                            controller.getCurrentStepData(QueryStep.documentForVisa);
-                      }),
-                      controller.showPaymentPage ?
-                      CustomStep(
-                          stepName: stepName[2],
-                          isActive: controller.currentStep.value >= QueryStep.payment,
-                          isLast: false,
-                          function: () {
-                            if(queryStep < QueryStep.payment){
-                              return;
-                            }
-                            controller.currentStep.value = QueryStep.payment;
-                            controller.getCurrentStepData(QueryStep.payment);
-                      }):const SizedBox(),
+                            queryStep =
+                                QueryStep.documentForVisa;
+                            // controller
+                            //     .getCurrentStepData(QueryStep.documentForVisa);
+                          }),
+                      paymentRequired
+                          ? CustomStep(
+                              stepName: stepName[2],
+                              isActive: queryStep >=
+                                  QueryStep.payment,
+                              isLast: false,
+                              function: () {
+                                // if (queryStep < QueryStep.payment) {
+                                //   return;
+                                // }
+                                // controller.currentStep.value =
+                                //     QueryStep.payment;
+                                // controller
+                                //     .getCurrentStepData(QueryStep.payment);
+                              })
+                          : const SizedBox(),
                       CustomStep(
                           stepName: stepName[3],
-                          isActive: controller.currentStep.value >= QueryStep.payment,
+                          isActive:
+                              queryStep >= QueryStep.payment,
                           isLast: true,
                           function: () {
-                            if(queryStep < QueryStep.ticketsAndVisa){
-                              return;
-                            }
-                            controller.currentStep.value = QueryStep.ticketsAndVisa;
+                            // if (queryStep < QueryStep.ticketsAndVisa) {
+                            //   return;
+                            // }
+                            // controller.currentStep.value =
+                            //     QueryStep.ticketsAndVisa;
                             // controller.getCurrentStepData(QueryStep.ticketsAndVisa);
-                      }),
+                          }),
                     ],
                   ),
                 ),
@@ -114,7 +139,7 @@ class _QueryFormState extends State<QueryForm> {
                   // height: MediaQuery.of(context).size.height - 120.0 - AppBar().preferredSize.height,
                   // color: Colors.greenAccent,
                   child: Container(
-                    padding: EdgeInsets.all(CustomSpacer.S),
+                    padding: const EdgeInsets.all(CustomSpacer.S),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -126,23 +151,26 @@ class _QueryFormState extends State<QueryForm> {
                             color: Color.fromRGBO(0, 0, 0, 0.43),
                           )
                         ]),
-                    child: Obx(() {
-                      // print(controller.stepData);
-                      switch(controller.currentStep.value){
-                        case QueryStep.doctorResponse:
-                          return DoctorReplyForm();
-                        case QueryStep.documentForVisa:
-                          return const DocumentForVisaForm();
-                        case QueryStep.payment:
-                          return const PayPageForm();
-                        case QueryStep.ticketsAndVisa:
-                          return const UploadTicketAndVisaForm();
-                      }
-                      return Text("${controller.stepData[controller.currentStep]}");
-                    }),
+                    child: Builder(
+                      builder: (context){
+                        switch (queryStep) {
+                          case QueryStep.doctorResponse:
+                            return DoctorReplyForm();
+                          case QueryStep.documentForVisa:
+                            return const DocumentForVisaForm();
+                          case QueryStep.payment:
+                            return const PayPageForm();
+                          case QueryStep.ticketsAndVisa:
+                            return const UploadTicketAndVisaForm();
+                          default:
+                            return const SizedBox();
+                        }
+                        // return Text(
+                        //     "${controller.stepData[controller.currentStep]}");
+                      },
+                    ),
                   ),
                 ),
-
               ],
             )),
       ),

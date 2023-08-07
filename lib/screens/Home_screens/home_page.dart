@@ -1,5 +1,6 @@
 import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
+import 'package:MyMedTrip/constants/query_type.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/models/faq_model.dart';
 import 'package:MyMedTrip/providers/home_provider.dart';
@@ -75,11 +76,12 @@ class _HomePageState extends State<HomePage> {
 
   void fetchBlogData() async {
     List<Blog> blogData = await homeProvider.fetchBlogData();
-    print(blogData);
-    setState(() {
-      blogs = blogData;
-      blogLoading = false;
-    });
+    if(context.mounted) {
+      setState(() {
+        blogs = blogData;
+        blogLoading = false;
+      });
+    }
   }
 
   @override
@@ -301,11 +303,7 @@ class _HomePageState extends State<HomePage> {
                       CustomSpacer.s(),
                       GestureDetector(
                         onTap: () {
-                          QueryController _ctrl = Get.find<QueryController>();
-                          _ctrl.queryType = 2;
-                          _ctrl.currentStep.value = QueryStep.documentForVisa;
-                          _ctrl.stepData = {};
-                          Get.to(() => const QueryForm());
+                          Get.to(() => QueryForm(QueryType.medicalVisa));
                         },
                         child: Container(
                           width: (MediaQuery.of(context).size.width - 48) / 2,

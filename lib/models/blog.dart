@@ -22,7 +22,6 @@ class Blog {
     title = json['title']['rendered'];
     content = json['content']['rendered'];
     thumbnail = json['fimg_url'].runtimeType == String ? json['fimg_url'] : '';
-    print(thumbnail);
     excerpt = json['excerpt']['rendered'];
     link = json['link']?? "";
     date = json['date'] ?? "";

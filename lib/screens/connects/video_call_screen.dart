@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -28,22 +29,20 @@ class Video_Call_Screen extends StatefulWidget {
 class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   dynamic argumentData = Get.arguments;
   Set<int> _remoteUid = {};
-  bool _localUserJoined = false,
-      switchCamera = true,
-      switchRender = true,
-      enableAudio = true;
+  bool _localUserJoined = false, switchCamera = true, switchRender = true, enableAudio = true;
   late RtcEngine _engine;
   final ChannelProfileType _channelProfileType = ChannelProfileType.channelProfileLiveBroadcasting;
 
   late FirebaseDatabase database;
   late DatabaseReference dbRef;
-  late final storageRef;
+  late String storageRef;
   final ScrollController _messageScrollController = ScrollController();
 
   int messageFrom = 1;
   String messageType = "image";
-  String filePath = "";
   TextEditingController messageController = TextEditingController();
+
+  late List<Message> messages;
 
   @override
   void initState() {
@@ -54,9 +53,8 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     database = FirebaseDatabase.instance;
     dbRef = FirebaseDatabase.instance
         .ref("messages/${argumentData['channelName']}/");
-    storageRef = FirebaseStorage.instance.ref('gs://mymedtrip-app.appspot.com/')
-    .child('message_doc')
-    .child(argumentData['channelName']);
+    storageRef = "messages/${argumentData['channelName']}";
+    getMessages();
     super.initState();
   }
 
@@ -77,8 +75,8 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     _engine = createAgoraRtcEngine();
 
     await _engine.initialize(RtcEngineContext(
-      appId: argumentData['token'],
-    ));
+        appId: argumentData['token'],
+        logConfig: LogConfig(level: LogLevel.logLevelNone)));
     await _engine.setLogLevel(LogLevel.logLevelNone);
 
     _engine.registerEventHandler(
@@ -162,6 +160,28 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     });
   }
 
+  void getMessages() async{
+    List<Message> temp = [];
+    try{
+      DatabaseEvent event = await dbRef.once();
+      if(event.snapshot.exists){
+          Map messageJson = event.snapshot.value as Map;
+          messageJson.forEach((key, value) {
+            temp.add(Message.fromMap(value));
+          });
+          setState(() {
+            messages = temp;
+          });
+      }else{
+        Logger().d("No data Available");
+      }
+    }catch (e) {
+      print('Error fetching data: $e');
+    }
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,31 +247,33 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                   ),
                   CustomSpacer.s(),
                   ElevatedButton(
-                    onPressed: () async{
-                      if(!_localUserJoined){
+                    onPressed: () async {
+                      if (!_localUserJoined) {
                         await _joinChannel();
-                      }else{
+                      } else {
                         await _engine.leaveChannel(
-                          options: LeaveChannelOptions(
-                            stopAllEffect: true,
-                            stopAudioMixing: true,
-                            stopMicrophoneRecording: true
-                          )
-                        );
+                            options: LeaveChannelOptions(
+                                stopAllEffect: true,
+                                stopAudioMixing: true,
+                                stopMicrophoneRecording: true));
                       }
                       // _localUserJoined ? disposeAgora() : _joinChannel();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _localUserJoined? Colors.redAccent: Colors.green,
+                      backgroundColor:
+                          _localUserJoined ? Colors.redAccent : Colors.green,
                       shape: CircleBorder(),
                       padding: EdgeInsets.all(14),
                     ),
-                    child: _localUserJoined? Icon(Icons.phone_disabled):Icon(Icons.phone_enabled),
+                    child: _localUserJoined
+                        ? Icon(Icons.phone_disabled)
+                        : Icon(Icons.phone_enabled),
                   ),
                   CustomSpacer.s(),
                   ElevatedButton(
                     onPressed: () {
-                      _switchCamera();
+                      getMessages();
+                      // _switchCamera();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black26,
@@ -304,7 +326,9 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       );
     } else {
       return Text(
-        _localUserJoined?'Please wait for remote user to join':" Click on the call button to connect call",
+        _localUserJoined
+            ? 'Please wait for remote user to join'
+            : " Click on the call button to connect call",
         style: TextStyle(fontSize: 16.0),
         textAlign: TextAlign.center,
       );
@@ -317,7 +341,9 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       case Message.IMAGE:
         child = InkWell(
             onTap: () {
-              String ext = data.message.split('.').last != ''? data.message.split('.').last:'jpg';
+              String ext = data.message.split('.').last != ''
+                  ? data.message.split('.').last
+                  : 'jpg';
               Utils.saveFileToDevice(
                   "mmt_${DateTime.now().microsecond}.$ext", data.message);
             },
@@ -431,7 +457,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                           return ListView.builder(
                               shrinkWrap: true,
                               controller: _messageScrollController,
-                              itemCount: event.data?.snapshot.children.length,
+                              itemCount: event.data!.snapshot.children.length,
                               itemBuilder: (ctx, idx) {
                                 List<DataSnapshot> obj =
                                     event.data!.snapshot.children.toList();
@@ -490,29 +516,44 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                                     );
 
                                     if (result != null) {
-                                      File file = File(result.files.single.path!);
-                                      String ext = result.files.single.path!.split('.').last;
+                                      File file =
+                                          File(result.files.single.path!);
+                                      String ext = result.files.single.path!
+                                          .split('.')
+                                          .last;
                                       try {
-                                        Loaders.loadingDialog();
-                                        final finalRef = storageRef.child("${DateTime.now().millisecondsSinceEpoch.toString()}");
-                                        await finalRef.putFile(file);
-                                        filePath = await finalRef.getDownloadURL();
-                                        await dbRef.push().set({
-                                          "from": LocalUser.TYPE_PATIENT,
-                                          "type": messageType,
-                                          "message": filePath,
-                                        });
-                                        Get.back();
-                                        _messageScrollController.animateTo(
-                                            _messageScrollController.position.maxScrollExtent,
-                                            duration: const Duration(milliseconds: 500),
-                                            curve: Curves.ease);
+                                        String fileName = DateTime.now()
+                                            .millisecondsSinceEpoch
+                                            .toString();
+                                        final String? filePath =
+                                            await FirebaseFunctions.uploadImage(
+                                                file,
+                                                ref: storageRef,
+                                                title:
+                                                    "Uploading Image Please Wait.");
+                                        if (filePath != null) {
+                                          await dbRef.push().set({
+                                            "from": LocalUser.TYPE_PATIENT,
+                                            "type": messageType,
+                                            "message": filePath,
+                                          });
+                                          Get.back();
+                                          _messageScrollController.animateTo(
+                                              _messageScrollController
+                                                  .position.maxScrollExtent,
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              curve: Curves.ease);
+                                        } else {
+                                          throw Exception(
+                                              "File not uploaded. Please try again");
+                                        }
                                       } on FirebaseException catch (e) {
-                                        print(e.toString());
+                                        Loaders.errorDialog(e.toString());
+                                      } catch (e, stacktrace) {
+                                        Loaders.errorDialog(e.toString(),
+                                            stackTrace: stacktrace);
                                       }
-
-                                    } else {
-                                      // User canceled the picker
                                     }
                                   },
                                   icon: Icon(Icons.image_outlined))

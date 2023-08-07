@@ -21,7 +21,8 @@ class _Chat_pageState extends State<Chat_page> {
     // TODO: implement initState
     database = FirebaseDatabase.instance;
     dbRef = FirebaseDatabase.instance
-        .ref("messages/fb8f1616-9d1f-4bd3-b0b7-8611d6a5545a/");
+        .ref("messages")
+        .child('fb8f1616-9d1f-4bd3-b0b7-8611d6a5545a');
     super.initState();
   }
 
@@ -74,12 +75,14 @@ class _Chat_pageState extends State<Chat_page> {
               }),
           ElevatedButton(
               onPressed: () async {
+                print(dbRef.onDisconnect());
                 await dbRef.push().set({
                   "from": 1,
                   "type": "image",
                   "message":
                       "https://picsum.photos/200/300",
                 });
+
                 _messageScrollController.animateTo(_messageScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.ease);
               },
               child: Text("Send Message"))

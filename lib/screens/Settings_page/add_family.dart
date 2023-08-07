@@ -86,14 +86,14 @@ class _Add_family_pageState extends State<Add_family_page> {
                   TextFormField(
                     onSaved: (value) {
                       familyMember?.dob =
-                          Utils.formatStringToDateTime(value!);
+                          (Utils.formatStringToDateTime(value!));
                     },
                     inputFormatters: [DateInputFormatter()],
                     keyboardType: TextInputType.datetime,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 15, bottom: 11, top: 11, right: 15),
-                      hintText: "dd/mm/yyyy",
+                      hintText: "mm/dd/yyyy",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -104,9 +104,9 @@ class _Add_family_pageState extends State<Add_family_page> {
                       int day = int.parse(date.split('/')[0]);
                       int month = int.parse(date.split('/')[1]);
                       int year = int.parse(date.split('/')[2]);
-                      if(day > 31 || month > 12 ){
-                        return "Please enter a valid date";
-                      }
+                      // if(day > 31 || month > 12 ){
+                      //   return "Please enter a valid date";
+                      // }
                     },
                   ),
                   DropdownButtonFormField(

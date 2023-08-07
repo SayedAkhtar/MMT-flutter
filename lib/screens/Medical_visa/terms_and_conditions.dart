@@ -42,7 +42,7 @@ class Terms_and_Conditions extends GetView<QueryController> {
                 }else{
                   controller.currentStep.value = controller.currentStep.value + 1;
                 }
-                Get.to(() => QueryForm());
+                // Get.to(() => QueryForm());
               },
               child: Container(
                 decoration: BoxDecoration(

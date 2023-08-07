@@ -9,6 +9,7 @@ import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/user_model.dart';
 import 'package:MyMedTrip/providers/user_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 import '../../models/user_family_model.dart';
@@ -75,6 +76,7 @@ class UserController extends GetxController {
 
   void addFamily(userId, UserFamily family) async {
     Map<String, dynamic> postBody = family.toJson();
+    postBody['dob'] = DateFormat('MM/dd/yyyy hh:mm a').format(family.dob!);
     print(postBody);
     Loaders.loadingDialog();
     bool res = await _provider.addFamily(postBody);

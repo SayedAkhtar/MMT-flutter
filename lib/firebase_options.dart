@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -46,20 +49,9 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB3zpdPFZHof19ydzy6XYqSYEoafYvKIi8',
-    appId: '1:922681658193:web:0c19c89833e51c376aa170',
-    messagingSenderId: '922681658193',
-    projectId: 'mymedtrip-app',
-    authDomain: 'mymedtrip-app.firebaseapp.com',
-    databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
-    storageBucket: 'mymedtrip-app.appspot.com',
-    measurementId: 'G-ELKMH046XM',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCwa0paL-G-HEGoi7k3OYgOK9wpPgD_nlg',
-    appId: '1:922681658193:android:588e3e7c8aab646d6aa170',
+    appId: '1:922681658193:android:c0778bf9284132716aa170',
     messagingSenderId: '922681658193',
     projectId: 'mymedtrip-app',
     databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
@@ -73,6 +65,7 @@ class DefaultFirebaseOptions {
     projectId: 'mymedtrip-app',
     databaseURL: 'https://mymedtrip-app-default-rtdb.firebaseio.com',
     storageBucket: 'mymedtrip-app.appspot.com',
+    androidClientId: '922681658193-j8uguecjpnb79npuc27uge71pm3o3vcb.apps.googleusercontent.com',
     iosClientId: '922681658193-fhui2l8k8lunrj57a7epknoal0q6th87.apps.googleusercontent.com',
     iosBundleId: 'com.example.mmt',
   );

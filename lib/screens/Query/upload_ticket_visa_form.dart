@@ -337,7 +337,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                 data['tickets'] = tickets;
               }
               print(data);
-              _controller.uploadStepData(data, QueryStep.ticketsAndVisa);
+              // _controller.uploadStepData(data, QueryStep.ticketsAndVisa);
               // Get.to(Visa_submit_page());
             },
             style: ElevatedButton.styleFrom(

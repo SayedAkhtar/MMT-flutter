@@ -64,15 +64,15 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
             familyMembers = result.list!;
           });
           Get.back();
+          return;
         }else{
           setState(() {
             familyMembers =[];
           });
-          Loaders.errorDialog("No Friends or family found".tr, title: "No Data".tr);
         }
       }
+      Loaders.errorDialog("No Friends or family found".tr, title: "No Data".tr);
     }
-
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:MyMedTrip/screens/connects/chat_page.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

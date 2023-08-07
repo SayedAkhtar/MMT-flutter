@@ -1,4 +1,7 @@
+import 'package:MyMedTrip/constants/query_type.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/providers/query_provider.dart';
+import 'package:MyMedTrip/screens/Query/query_form.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +12,7 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
+import 'package:logger/logger.dart';
 
 import '../../constants/colors.dart';
 import '../../models/query_screen_model.dart';
@@ -22,12 +26,27 @@ class Query_page extends StatefulWidget {
 
 class _Query_pageState extends State<Query_page> {
   late QueryController _controller;
+  late List<ActiveQuery> queries;
+  bool loading = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _controller = Get.put(QueryController());
-    _controller.getQueryPageData();
+    // _controller.getQueryPageData();
+    fetchQueries();
+  }
+
+  void fetchQueries() async{
+    QueryScreen? data = await Get.put(QueryProvider()).getQueryScreenData();
+    List<ActiveQuery> tempQueries = [];
+    if(data  != null && data.activeQuery != null && data.activeQuery!.isNotEmpty){
+      tempQueries = data.activeQuery!;
+    }
+    setState(() {
+      queries = tempQueries;
+      loading = false;
+    });
   }
 
   @override
@@ -41,37 +60,36 @@ class _Query_pageState extends State<Query_page> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            GetBuilder<QueryController>(builder: (_) {
-              if (_controller.isLoaded.isTrue) {
+            Builder(builder: (_) {
+              if (!loading) {
                 return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async{
-                      _controller.isLoaded.value = false;
-                      _controller.getQueryPageData();
-                      _controller.update();
+                      setState(() {
+                        loading = true;
+                      });
+                      fetchQueries();
                     },
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: _controller.queryScreen.activeQuery!.length,
+                        itemCount: queries.length,
                         itemBuilder: (_, index) {
                           return _activeQueryCard(context,
-                              id: _controller.queryScreen.activeQuery![index].id!,
-                              queryHash: _controller.queryScreen.activeQuery![index].queryHash,
+                              id: queries[index].id!,
+                              queryHash: queries[index].queryHash,
                               date:
-                                  "Date: ${_controller.queryScreen.activeQuery![index].createdAt}",
-                              response: _controller.queryScreen
-                                  .activeQuery![index].doctorResponse!,
+                                  "Date: ${queries[index].createdAt}",
+                              response: queries[index].doctorResponse!,
                               selectedIndex: index,
-                              stepName: _controller
-                                  .queryScreen.activeQuery![index].stepName!,
-                              stepNote: _controller
-                                  .queryScreen.activeQuery![index].stepNote!,
-                              controller: _controller);
+                              stepName: queries[index].stepName!,
+                              stepNote: queries[index].stepNote!,
+                              query: queries[index]
+                              );
                         }),
                   ),
                 );
               }
-              if (_controller.emptyScreen) {
+              if (!loading && queries.isEmpty) {
                 return Expanded(
                   child: Center(
                     child: Text(
@@ -82,11 +100,13 @@ class _Query_pageState extends State<Query_page> {
                   ),
                 );
               }
-              return const SizedBox(
-                height: 350,
-                width: 350,
-                child: Center(
-                  child: CircularProgressIndicator(),
+              return const Expanded(
+                child: SizedBox(
+                  height: 350,
+                  width: 350,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               );
             }),
@@ -133,31 +153,32 @@ class _Query_pageState extends State<Query_page> {
       required String stepName,
       required int selectedIndex,
       required String stepNote,
-      required QueryController controller}) {
-    ActiveQuery currQuery = controller.queryScreen.activeQuery![selectedIndex];
+      required ActiveQuery query}) {
+    ActiveQuery currQuery = query;
     // String stepTitle = controller.queryScreen.activeQuery![selectedIndex].type! == QueryType.medicalVisa ? "MMT Admin's ":"";
     List<Color> color =
         (currQuery.currentStep! > 1 || currQuery.type == QueryType.medicalVisa)
             ? [MYcolors.greenlightcolor, MYcolors.bluecolor]
-            : [Color(0xffe29578), Color(0xffe26d5c)];
+            : [const Color(0xffe29578), const Color(0xffe26d5c)];
     return GestureDetector(
       onTap: () {
         if (currQuery.isConfirmed!) {
-          controller.selectedQuery = id;
-          controller.selectedIndex = selectedIndex;
           Get.toNamed(Routes.confirmedQuery);
           return;
         }
-        if (currQuery.currentStep! > 1 ||
-            currQuery.type == QueryType.medicalVisa) {
-          controller.navigateToQueryForm(id, selectedIndex, response);
-        } else {
-          Get.showSnackbar(const GetSnackBar(
+        if(currQuery.type == QueryType.query && currQuery.currentStep == 1){
+          Get.showSnackbar(GetSnackBar(
             message:
-                "Please wait until we get the doctor's response for your query",
-            duration: Duration(seconds: 2),
+            "Please wait until we get the doctor's response for your query".tr,
+            duration: const Duration(seconds: 2),
           ));
+          return;
         }
+        Get.to(() => QueryForm(
+          currQuery.type!,
+          queryId: currQuery.id!,
+          queryStep: currQuery.currentStep!,
+        ));
       },
       child: Container(
         alignment: Alignment.centerLeft,
@@ -185,12 +206,12 @@ class _Query_pageState extends State<Query_page> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RichText(text: TextSpan(
-              text: "#${queryHash}",
+              text: "#$queryHash",
               style: const TextStyle(
                   fontSize: 15,
                   color: MYcolors.whitecolor),
                 children: [
-                  TextSpan(text: '\n'),
+                  const TextSpan(text: '\n'),
                   TextSpan(text: date)
                 ]), ),
             CustomSpacer.xs(),
@@ -227,9 +248,9 @@ class _Query_pageState extends State<Query_page> {
                         fontSize: 15,
                         color: MYcolors.greycolor),
                   ),
-                  const Text(
-                    "Response :-\n",
-                    style: TextStyle(
+                  Text(
+                    "Response :-".tr,
+                    style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: MYcolors.whitecolor),

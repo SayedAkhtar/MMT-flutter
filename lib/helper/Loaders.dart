@@ -6,7 +6,12 @@ import 'package:get/get.dart';
 class Loaders {
   static void loadingDialog({String title="Processing", bool shouldCloseAll = true}) {
     if(Get.isDialogOpen! && shouldCloseAll){
-      Get.back(closeOverlays: true);
+      if(shouldCloseAll){
+        Get.back(closeOverlays: true);
+      }
+      else{
+        Get.back();
+      }
     }
     Get.defaultDialog(
       title: title,
@@ -24,10 +29,10 @@ class Loaders {
 
   static void errorDialog(String error, {String title="Error",stackTrace = ""}){
     if(Get.isDialogOpen!){
-      Get.back(closeOverlays: true);
+      Get.back();
     }
     if(kDebugMode){
-      Get.defaultDialog(title:"Error", content: Column(
+      Get.defaultDialog(title:title, content: Column(
         children: [
           Text(error),
           Text(StackTrace.current.toString())

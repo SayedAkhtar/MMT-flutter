@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/constants/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -17,7 +18,10 @@ import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Medical_visa/document_preview.dart';
 import 'package:MyMedTrip/screens/Medical_visa/proccessing_submit.dart';
+import 'package:logger/logger.dart';
+import 'package:select_dialog/select_dialog.dart';
 
+import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
 
 class DocumentForVisaForm extends StatefulWidget {
@@ -30,25 +34,38 @@ class DocumentForVisaForm extends StatefulWidget {
 class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   late QueryController _controller;
 
-  String patient_passport = "";
-  List<dynamic> attendant_passport = [];
-  String second_attendant_passport = "";
-  TextEditingController country = TextEditingController();
-  TextEditingController city = TextEditingController();
+  String patientPassport = "";
+  List<dynamic> attendantPassport = [];
+  String secondAttendantPassport = "";
+  String selectedCountry = "";
+  String selectedCity = "";
+  List<String> cityNames = [];
   @override
   void initState() {
     // TODO: implement initState
+    selectedCountry = "India";
     super.initState();
-    _controller = Get.find<QueryController>();
-    _controller.getCurrentStepData(QueryStep.documentForVisa);
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    country.dispose();
-    city.dispose();
+
     super.dispose();
+  }
+
+  buildCountryOption(int countryId) async {
+    var t = await GetConnect(allowAutoSignedCert: true).get('$base_uri/ajax-search/cities?country_id=$countryId');
+    List<String> temp = [];
+    Logger().d(t.statusText);
+    if (t.statusCode == 200) {
+      t.body['data'].forEach((element) {
+        temp.add(element['name']);
+      });
+    }
+    setState(() {
+      cityNames = temp;
+    });
   }
 
   @override
@@ -57,12 +74,12 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
       body: SingleChildScrollView(
         child: GetBuilder<QueryController>(builder: (ctrl) {
           if (ctrl.stepData.isNotEmpty) {
-            print(ctrl.stepData);
-            country.text = _controller.stepData['country'] ?? '';
-            city.text = _controller.stepData['city'] ?? '';
-            patient_passport = _controller.stepData['passport'] ?? '';
-            attendant_passport =
-                _controller.stepData['attendant_passport'];
+            // print(ctrl.stepData);
+            // country.text = _controller.stepData['country'] ?? '';
+            // city.text = _controller.stepData['city'] ?? '';
+            // patient_passport = _controller.stepData['passport'] ?? '';
+            // attendant_passport =
+            //     _controller.stepData['attendant_passport'];
           }
           return Padding(
             padding: const EdgeInsets.all(CustomSpacer.S),
@@ -86,36 +103,81 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 FormLabel(
                   "Country".tr,
                 ),
-                TextFormField(
-                  textAlign: TextAlign.start,
-                  controller: country,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: MYcolors.greycolor),
+                      borderRadius: BorderRadius.circular(8)),
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(left: CustomSpacer.XS),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    underline: const Divider(
+                      height: 0,
+                      thickness: 0,
+                      color: Colors.transparent,
+                    ),
+                    items: <String>['India']
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    value: selectedCountry.isNotEmpty ? selectedCountry: "",
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCountry = value!;
+                      });
+                      buildCountryOption(Constants.countryIdMap[value!.toLowerCase()]!);
+                    },
                   ),
                 ),
                 CustomSpacer.s(),
                 FormLabel(
                   "City".tr,
                 ),
-                TextFormField(
-                  textAlign: TextAlign.start,
-                  // initialValue: ctrl.stepData['city']??'',
-                  controller: city,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                GestureDetector(
+                  onTap: () {
+                    SelectDialog.showModal<String>(
+                      context,
+                      label: "Select City",
+                      selectedValue: selectedCountry,
+                      items:
+                      List.generate(cityNames.length, (index) => cityNames[index]),
+                      onChange: (String selected) {
+                        setState(() {
+                          selectedCity = selected;
+                        });
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.only(
+                        left: 15, bottom: 15, top: 11, right: 15),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.withAlpha(60)),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text( selectedCity.isEmpty?"Select City".tr : selectedCity,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ),
                 ),
                 TextButton(
                   onPressed: () {
+                    if(selectedCity == "Select City" || selectedCountry == "Select a country"){
+                      Get.showSnackbar(GetSnackBar(
+                        message: "Please select a country and a city to proceed".tr,
+                      ));
+                      return;
+                    }
                     Map<String, dynamic> data = {};
-                    data['passport'] = patient_passport;
-                    data['attendant_passport'] = attendant_passport;
-                    data['country'] = country.value.text;
-                    data['city'] = city.value.text;
+                    data['passport'] = patientPassport;
+                    data['attendant_passport'] = attendantPassport;
+                    data['country'] = selectedCountry;
+                    data['city'] = selectedCity;
                     // print(data);
-                    _controller.uploadStepData(data, QueryStep.documentForVisa);
+                    // _controller.uploadStepData(data, QueryStep.documentForVisa);
                     // Get.toNamed(Routes.activeQueryProcessing);
                   },
                   child: Container(
@@ -158,17 +220,17 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
             }
             if (name == 'patient_passport') {
               setState(() {
-                patient_passport = uploadedPath;
+                patientPassport = uploadedPath;
               });
             }
             if (name == 'attendant_passport') {
               setState(() {
-                attendant_passport.add(uploadedPath);
+                attendantPassport.add(uploadedPath);
               });
             }
             if (name == 'second_attendant_passport') {
               setState(() {
-                attendant_passport.add(uploadedPath);
+                attendantPassport.add(uploadedPath);
               });
             }
             // _controller.uploadVisaDocuments(path: result.files.first.path!, name: name);
@@ -186,7 +248,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
             width: 60,
             child: Builder(builder: (context) {
               if (name == 'patient_passport') {
-                if (patient_passport != "") {
+                if (patientPassport != "") {
                   // if(patient_passport.split('.').last == 'pdf'){
                   return Image.asset('assets/icons/pdf_file.png');
                   // }
@@ -194,7 +256,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 }
               }
               if (name == 'attendant_passport') {
-                if (attendant_passport.isNotEmpty) {
+                if (attendantPassport.isNotEmpty) {
                   // if(attendant_passport.split('.').last == 'pdf'){
                   return Image.asset('assets/icons/pdf_file.png');
                   // }
@@ -202,7 +264,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 }
               }
               if (name == 'second_attendant_passport') {
-                if (attendant_passport.asMap().containsKey(1)) {
+                if (attendantPassport.asMap().containsKey(1)) {
                   // if(second_attendant_passport.split('.').last == 'pdf'){
                   return Image.asset('assets/icons/pdf_file.png');
                   // }
@@ -224,17 +286,17 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
         onPressed: () {
           if (name == 'patient_passport') {
             setState(() {
-              patient_passport = "";
+              patientPassport = "";
             });
           }
           if (name == 'attendant_passport') {
             setState(() {
-              attendant_passport = [];
+              attendantPassport = [];
             });
           }
           if (name == 'second_attendant_passport') {
             setState(() {
-              second_attendant_passport = "";
+              secondAttendantPassport = "";
             });
           }
         },

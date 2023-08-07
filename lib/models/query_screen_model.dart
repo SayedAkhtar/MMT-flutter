@@ -1,3 +1,5 @@
+import '../constants/query_type.dart';
+
 class QueryScreen {
   List<ActiveQuery>? activeQuery;
   List<AllQuery>? allQuery;
@@ -128,9 +130,4 @@ class AllQuery {
     data['completed_at'] = completedAt;
     return data;
   }
-}
-
-class QueryType{
-  static const query = 1;
-  static const medicalVisa = 2;
 }

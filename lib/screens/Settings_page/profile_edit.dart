@@ -29,6 +29,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
   @override
   void initState() {
     buildCountryOption();
+    countryPreference = Get.find<UserController>().user?.treatmentCountry ?? '';
     super.initState();
   }
 
@@ -156,7 +157,9 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                     selectedValue: controller.user!.treatmentCountry,
                     items: List.generate(countryName.length, (index) => countryName[index]),
                     onChange: (String selected) {
-                      controller.user!.treatmentCountry = countryPreference;
+                      print(selected);
+                      controller.user!.treatmentCountry = selected;
+                      controller.update();
                     },
                   );
               },
