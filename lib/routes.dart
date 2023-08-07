@@ -180,10 +180,10 @@ final getPages = [
       name: Routes.activeQueryProcessing,
       page: () => const Proccessing_page()
   ),
-  GetPage(
-      name: Routes.activeQueryTermsConditions,
-      page: () => const Terms_and_Conditions()
-  ),
+  // GetPage(
+  //     name: Routes.activeQueryTermsConditions,
+  //     page: () => const Terms_and_Conditions()
+  // ),
   GetPage(
       name: Routes.activeQueryUploadVisa,
       page: () => const Document_visa_page()

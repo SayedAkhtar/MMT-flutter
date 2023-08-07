@@ -1,5 +1,8 @@
 import 'package:MyMedTrip/constants/query_type.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
+import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
+import 'package:MyMedTrip/screens/Query/document_visa_form_edit.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +34,9 @@ class _QueryFormState extends State<QueryForm> {
   late QueryController controller;
   late int queryStep;
   late int queryType;
+  QueryResponse? response;
   bool paymentRequired = false;
+  bool loading = false;
 
   List<String> stepName = [
     "Doctor\'s \nReply",
@@ -44,9 +49,8 @@ class _QueryFormState extends State<QueryForm> {
   void initState() {
     queryStep = widget.queryStep!;
     queryType = widget.queryType;
-    print(widget.queryId);
-    print(queryStep);
     if(widget.queryId != 0){
+      loading = true;
       fetchStepData();
     }
 
@@ -54,8 +58,12 @@ class _QueryFormState extends State<QueryForm> {
   }
 
   void fetchStepData()async{
-    var res = await Get.put(QueryProvider()).getQueryStepData(widget.queryId!, widget.queryStep!);
-    print(res);
+    QueryResponse res = await Get.put(QueryProvider()).getQueryStepData(widget.queryId!, widget.queryStep!);
+    setState(() {
+      response = res;
+      paymentRequired = res.paymentRequired!;
+      loading = false;
+    });
   }
 
   @override
@@ -140,6 +148,7 @@ class _QueryFormState extends State<QueryForm> {
                   // color: Colors.greenAccent,
                   child: Container(
                     padding: const EdgeInsets.all(CustomSpacer.S),
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -153,18 +162,36 @@ class _QueryFormState extends State<QueryForm> {
                         ]),
                     child: Builder(
                       builder: (context){
-                        switch (queryStep) {
-                          case QueryStep.doctorResponse:
-                            return DoctorReplyForm();
-                          case QueryStep.documentForVisa:
-                            return const DocumentForVisaForm();
-                          case QueryStep.payment:
-                            return const PayPageForm();
-                          case QueryStep.ticketsAndVisa:
-                            return const UploadTicketAndVisaForm();
-                          default:
-                            return const SizedBox();
+                        if(loading){
+                          return const Center(child: SizedBox(child: CircularProgressIndicator()));
                         }
+                        print(response);
+                        if(response!.response!.isEmpty){
+                          switch (queryStep) {
+                            case QueryStep.documentForVisa:
+                              return const DocumentForVisaForm();
+                            case QueryStep.payment:
+                              return const PayPageForm();
+                            case QueryStep.ticketsAndVisa:
+                              return const UploadTicketAndVisaForm();
+                            default:
+                              return const SizedBox();
+                          }
+                        }else{
+                          switch (queryStep) {
+                            case QueryStep.doctorResponse:
+                              return DoctorReplyForm(response!);
+                            case QueryStep.documentForVisa:
+                              return EditDocumentForVisaForm(response!);
+                            case QueryStep.payment:
+                              return const PayPageForm();
+                            case QueryStep.ticketsAndVisa:
+                              return const UploadTicketAndVisaForm();
+                            default:
+                              return const SizedBox();
+                          }
+                        }
+
                         // return Text(
                         //     "${controller.stepData[controller.currentStep]}");
                       },

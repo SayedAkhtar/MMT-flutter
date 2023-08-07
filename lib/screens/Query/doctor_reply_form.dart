@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/screens/Medical_visa/terms_and_conditions.dart';
+import 'package:MyMedTrip/screens/Query/query_form.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +20,11 @@ import 'package:MyMedTrip/screens/Medical_visa/processing_page.dart';
 import 'package:get/get.dart';
 import '../../constants/colors.dart';
 import '../../helper/FirebaseFunctions.dart';
+import '../../models/query_response_model.dart';
 
 class DoctorReplyForm extends StatefulWidget {
-  DoctorReplyForm({super.key});
-
+  const DoctorReplyForm(this.response,{super.key});
+  final QueryResponse response;
   @override
   State<DoctorReplyForm> createState() => _DoctorReplyFormState();
 }
@@ -46,23 +49,9 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            child:GetBuilder<QueryController>(
-              builder: (con) {
-                if(!controller.isLoaded.value){
-                  return CircularProgressIndicator();
-                }
-                return Html(
-                  data: con.stepData['doctor'],
-                  // text: TextSpan(
-                  //   text: "${con.stepData['doctor']}",
-                  //   style: TextStyle(
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 15,
-                  //       color: MYcolors.blackcolor),
-                  // ),
-                );
-              }
-            ),
+            child: Html(
+    data: widget.response.response!['doctor'],
+    )
           ),
         ),
         Row(
@@ -195,7 +184,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
         ),
         ElevatedButton(
           onPressed: () {
-            controller.navigateToTermsPage(docPath,  QueryStep.doctorResponse);
+            Get.to(() => Terms_and_Conditions(widget.response));
           },
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

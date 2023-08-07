@@ -17,7 +17,8 @@ import 'package:MyMedTrip/screens/Query/query_form.dart';
 import '../../constants/colors.dart';
 
 class Terms_and_Conditions extends GetView<QueryController> {
-  const Terms_and_Conditions({super.key});
+  const Terms_and_Conditions(this.response, {super.key});
+  final QueryResponse response;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,12 +38,12 @@ class Terms_and_Conditions extends GetView<QueryController> {
             Spacer(),
             GestureDetector(
               onTap: () {
-                if(controller.currentStep.value == QueryStep.documentForVisa && !controller.showPaymentPage){
-                  controller.currentStep.value = controller.currentStep.value + 2;
-                }else{
-                  controller.currentStep.value = controller.currentStep.value + 1;
-                }
-                // Get.to(() => QueryForm());
+                // if(controller.currentStep.value == QueryStep.documentForVisa && !controller.showPaymentPage){
+                //   controller.currentStep.value = controller.currentStep.value + 2;
+                // }else{
+                //   controller.currentStep.value = controller.currentStep.value + 1;
+                // }
+                Get.to(() => QueryForm(response.queryType!, queryStep: response.nextStep, queryId: response.queryId,));
               },
               child: Container(
                 decoration: BoxDecoration(

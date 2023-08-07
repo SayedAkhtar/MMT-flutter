@@ -32,6 +32,8 @@ class QueryController extends GetxController {
   int selectedQuery = 0;
   int selectedIndex = 0;
 
+
+
   RxInt currentStep = 0.obs;
   Map<String, dynamic> stepData = {};
   bool showPaymentPage = false;
