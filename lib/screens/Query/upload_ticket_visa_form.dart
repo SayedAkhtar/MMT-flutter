@@ -20,8 +20,8 @@ import '../../models/query_response_model.dart';
 import '../../providers/query_provider.dart';
 
 class UploadTicketAndVisaForm extends StatefulWidget {
-  const UploadTicketAndVisaForm({super.key});
-
+  const UploadTicketAndVisaForm(this.response,{super.key});
+  final QueryResponse response;
   @override
   State<UploadTicketAndVisaForm> createState() =>
       _UploadTicketAndVisaFormState();
@@ -42,7 +42,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
     _provider = Get.put(QueryProvider());
     _controller = Get.find<QueryController>();
     _picker = ImagePicker();
-    fetchData();
+    // fetchData();
   }
 
   void fetchData() async {
@@ -326,15 +326,33 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
           ),
           Spacer(),
           ElevatedButton(
-            onPressed: () {
-              Map<String, dynamic> data = {};
+            onPressed: () async{
+
+              QueryResponse data = widget.response!;
+              Map<String, dynamic> response = widget.response.response!;
+              data.currentStep = QueryStep.ticketsAndVisa;
               if(visa.isNotEmpty){
-                data['visa'] = visa;
+                response['visa'] = visa;
               }
               if(tickets.isNotEmpty){
-                data['tickets'] = tickets;
+                response['tickets'] = tickets;
+              };
+              data.response = response;
+              bool res = await Get.put(QueryProvider())
+                  .postQueryGenerationData(data.toJson());
+              Get.back();
+              if (res) {
+                Get.showSnackbar(GetSnackBar(
+                  message: "Successfully Updated".tr,
+                  duration: Duration(milliseconds: 1000),
+                ));
+
+              } else {
+                Get.showSnackbar(GetSnackBar(
+                  message: "Please try again later".tr,
+                  duration: Duration(milliseconds: 1500),
+                ));
               }
-              print(data);
               // _controller.uploadStepData(data, QueryStep.ticketsAndVisa);
               // Get.to(Visa_submit_page());
             },

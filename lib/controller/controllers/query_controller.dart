@@ -147,7 +147,7 @@ class QueryController extends GetxController {
     await _provider.uploadVisaDocuments(path: path, fieldName: name);
   }
 
-  void handleSuccesfulPaymentResponse(PaymentSuccessResponse response) async {
+  void handleSuccesfulPaymentResponse(int selectedQuery, PaymentSuccessResponse response) async {
     var data = {
       'query_id': selectedQuery,
       'r_payment_id': response.paymentId,

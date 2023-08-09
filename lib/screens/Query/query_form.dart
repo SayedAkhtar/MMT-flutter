@@ -1,6 +1,10 @@
+import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/query_type.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
+import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/Query/pay_page_form.dart';
+import 'package:MyMedTrip/screens/Query/upload_ticket_visa_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +13,9 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import '../../constants/colors.dart';
 import '../../constants/query_step_name.dart';
 import '../../helper/CustomSpacer.dart';
+import 'doctor_reply_form.dart';
+import 'document_visa_form.dart';
+import 'document_visa_form_edit.dart';
 
 class QueryForm extends StatefulWidget {
   const QueryForm(this.queryType,{Key? key, this.queryId = 0, this.queryStep = QueryStep.documentForVisa}) : super(key: key);
@@ -20,8 +27,8 @@ class QueryForm extends StatefulWidget {
 }
 
 class _QueryFormState extends State<QueryForm> {
-  late QueryController controller;
-  late int queryStep;
+  late int currentQueryStep;
+  late int nextQueryStep;
   late int queryType;
   late int nextStep;
   QueryResponse? response;
@@ -37,10 +44,10 @@ class _QueryFormState extends State<QueryForm> {
 
   @override
   void initState() {
-    queryStep = widget.queryStep!;
+    currentQueryStep = widget.queryStep!;
     queryType = widget.queryType;
     loading = true;
-    fetchStepData(widget.queryId!, queryStep);
+    fetchStepData(widget.queryId!, currentQueryStep);
     super.initState();
   }
 
@@ -49,147 +56,144 @@ class _QueryFormState extends State<QueryForm> {
       return;
     }
     QueryResponse res = await Get.put(QueryProvider()).getQueryStepData(queryId, stepNo);
-    print(res.response);
-    print(res.nextStep);
     setState(() {
-      // response = res;
+      response = res;
       paymentRequired = res.paymentRequired!;
-      queryStep = res.nextStep!;
+      nextQueryStep = res.nextStep!;
       loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // print()
     return Scaffold(
-      // appBar: CustomAppBar(
-      //   pageName: "Query Form",
-      //   showDivider: true,
-      // ),
-      body: SafeArea(
-        child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(CustomSpacer.XS),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 100,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      (QueryType.query == queryType)
-                          ? CustomStep(
-                              stepName: stepName[0],
-                              isActive: queryStep > 1,
-                              isLast: false,
-                              function: () {
-                                fetchStepData(widget.queryId!, queryStep);
-                              })
-                          : const SizedBox(),
-                      CustomStep(
-                          stepName: stepName[1],
-                          isActive: queryStep >=
-                              QueryStep.documentForVisa,
-                          isLast: false,
-                          function: () {
-                            if (queryStep < QueryStep.documentForVisa) {
-                              return;
-                            }
-                            queryStep =
-                                QueryStep.documentForVisa;
-                            // controller
-                            //     .getCurrentStepData(QueryStep.documentForVisa);
-                          }),
-                      paymentRequired
-                          ? CustomStep(
-                              stepName: stepName[2],
-                              isActive: queryStep >=
-                                  QueryStep.payment,
-                              isLast: false,
-                              function: () {
-                                // if (queryStep < QueryStep.payment) {
-                                //   return;
-                                // }
-                                // controller.currentStep.value =
-                                //     QueryStep.payment;
-                                // controller
-                                //     .getCurrentStepData(QueryStep.payment);
-                              })
-                          : const SizedBox(),
-                      CustomStep(
-                          stepName: stepName[3],
-                          isActive:
-                              queryStep >= QueryStep.payment,
-                          isLast: true,
-                          function: () {
-                            // if (queryStep < QueryStep.ticketsAndVisa) {
-                            //   return;
-                            // }
-                            // controller.currentStep.value =
-                            //     QueryStep.ticketsAndVisa;
-                            // controller.getCurrentStepData(QueryStep.ticketsAndVisa);
-                          }),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  // height: MediaQuery.of(context).size.height - 120.0 - AppBar().preferredSize.height,
-                  // color: Colors.greenAccent,
-                  child: Container(
-                    padding: const EdgeInsets.all(CustomSpacer.S),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            offset: Offset(3, 3),
-                            spreadRadius: -1,
-                            blurRadius: 11,
-                            color: Color.fromRGBO(0, 0, 0, 0.43),
-                          )
-                        ]),
-                    child: Builder(
-                      builder: (context){
-                        if(loading){
-                          return const Center(child: SizedBox(child: CircularProgressIndicator()));
-                        }
-                        return Text("Currrent Strp: $queryStep, ");
-                        // if(response!.response!.isEmpty){
-                        //   switch (queryStep) {
-                        //     case QueryStep.documentForVisa:
-                        //       return const DocumentForVisaForm();
-                        //     case QueryStep.payment:
-                        //       return const PayPageForm();
-                        //     case QueryStep.ticketsAndVisa:
-                        //       return const UploadTicketAndVisaForm();
-                        //     default:
-                        //       return const SizedBox();
-                        //   }
-                        // }else{
-                        //   switch (queryStep) {
-                        //     case QueryStep.doctorResponse:
-                        //       return DoctorReplyForm(response!);
-                        //     case QueryStep.documentForVisa:
-                        //       return EditDocumentForVisaForm(response!);
-                        //     case QueryStep.payment:
-                        //       return const PayPageForm();
-                        //     case QueryStep.ticketsAndVisa:
-                        //       return const UploadTicketAndVisaForm();
-                        //     default:
-                        //       return const SizedBox();
-                        //   }
-                        // }
-
-                        // return Text(
-                        //     "${controller.stepData[controller.currentStep]}");
-                      },
+      appBar: CustomAppBar(
+        pageName: "Query Form",
+        showDivider: true,
+        backFunction: (){
+          Get.toNamed(Routes.home);
+        },
+      ),
+      body: WillPopScope(
+        onWillPop: ()async {
+          Get.snackbar("Are you Sure ?", "Press back button twice to exit the app.");
+          return await Future.value(false);
+        },
+        child: SafeArea(
+          child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(CustomSpacer.XS),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        (QueryType.query == queryType)
+                            ? CustomStep(
+                                stepName: stepName[0],
+                                isActive: currentQueryStep > 1,
+                                isLast: false,
+                                function: () {
+                                  fetchStepData(widget.queryId!, currentQueryStep);
+                                })
+                            : const SizedBox(),
+                        CustomStep(
+                            stepName: stepName[1],
+                            isActive: currentQueryStep >=
+                                QueryStep.documentForVisa,
+                            isLast: false,
+                            function: () {
+                              if (currentQueryStep < QueryStep.documentForVisa) {
+                                return;
+                              }
+                              currentQueryStep =
+                                  QueryStep.documentForVisa;
+                              // controller
+                              //     .getCurrentStepData(QueryStep.documentForVisa);
+                            }),
+                        paymentRequired
+                            ? CustomStep(
+                                stepName: stepName[2],
+                                isActive: currentQueryStep >=
+                                    QueryStep.payment,
+                                isLast: false,
+                                function: () {
+                                  // if (queryStep < QueryStep.payment) {
+                                  //   return;
+                                  // }
+                                  // controller.currentStep.value =
+                                  //     QueryStep.payment;
+                                  // controller
+                                  //     .getCurrentStepData(QueryStep.payment);
+                                })
+                            : const SizedBox(),
+                        CustomStep(
+                            stepName: stepName[3],
+                            isActive:
+                            currentQueryStep >= QueryStep.payment,
+                            isLast: true,
+                            function: () {
+                              // if (queryStep < QueryStep.ticketsAndVisa) {
+                              //   return;
+                              // }
+                              // controller.currentStep.value =
+                              //     QueryStep.ticketsAndVisa;
+                              // controller.getCurrentStepData(QueryStep.ticketsAndVisa);
+                            }),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            )),
+                  Text("Currrent Strp: $currentQueryStep, "),
+                  Expanded(
+                    // height: MediaQuery.of(context).size.height - 120.0 - AppBar().preferredSize.height,
+                    // color: Colors.greenAccent,
+                    child: Container(
+                      padding: const EdgeInsets.all(CustomSpacer.S),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              offset: Offset(3, 3),
+                              spreadRadius: -1,
+                              blurRadius: 11,
+                              color: Color.fromRGBO(0, 0, 0, 0.43),
+                            )
+                          ]),
+                      child: Builder(
+                        builder: (context){
+                          if(loading){
+                            return const Center(child: SizedBox(child: CircularProgressIndicator()));
+                          }
+                          switch (currentQueryStep) {
+                            case QueryStep.doctorResponse:
+                              return DoctorReplyForm(response!);
+                            case QueryStep.documentForVisa:
+                              if(response!.response!.isEmpty){
+                                return DocumentForVisaForm(response!);
+                              }
+                              return EditDocumentForVisaForm(response!);
+                            case QueryStep.payment:
+                              return PayPageForm(response!);
+                            case QueryStep.ticketsAndVisa:
+                              return UploadTicketAndVisaForm(response!);
+                            default:
+                              return const SizedBox();
+                          }
+
+                          return SizedBox();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }

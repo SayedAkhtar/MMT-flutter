@@ -47,6 +47,7 @@ class ActiveQuery {
   bool? isPaymentDone;
   bool? isConfirmed;
   int? currentStep;
+  int? nextStep;
   int? type;
   String? createdAt;
 
@@ -77,6 +78,7 @@ class ActiveQuery {
     isPaymentDone = json['is_payment_done'];
     isConfirmed = json['is_confirmed'];
     currentStep = json['current_step'];
+    nextStep = json['next_step'];
     createdAt = json['created_at'];
     type = json['type'] == 2? QueryType.medicalVisa : QueryType.query;
   }

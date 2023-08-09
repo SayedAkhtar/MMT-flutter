@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -15,8 +16,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../constants/colors.dart';
 
 class PayPageForm extends StatefulWidget {
-  const PayPageForm({super.key});
-
+  const PayPageForm(this.response, {super.key});
+  final QueryResponse response;
   @override
   State<PayPageForm> createState() => _PayPageFormState();
 }
@@ -33,8 +34,7 @@ class _PayPageFormState extends State<PayPageForm> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    _controller.selectedQuery = 3;
-    _controller.handleSuccesfulPaymentResponse(response);
+    _controller.handleSuccesfulPaymentResponse(widget.response.queryId!, response);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {

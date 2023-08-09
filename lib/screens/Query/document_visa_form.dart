@@ -3,6 +3,9 @@
 import 'dart:io';
 
 import 'package:MyMedTrip/constants/constants.dart';
+import 'package:MyMedTrip/constants/query_step_name.dart';
+import 'package:MyMedTrip/models/query_response_model.dart';
+import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -20,7 +23,8 @@ import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
 
 class DocumentForVisaForm extends StatefulWidget {
-  const DocumentForVisaForm({super.key});
+  const DocumentForVisaForm(this.response, {super.key});
+  final QueryResponse response;
 
   @override
   State<DocumentForVisaForm> createState() => _DocumentForVisaFormState();
@@ -151,21 +155,35 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if(selectedCity == "Select City" || selectedCountry == "Select a country"){
                       Get.showSnackbar(GetSnackBar(
                         message: "Please select a country and a city to proceed".tr,
                       ));
                       return;
                     }
-                    Map<String, dynamic> data = {};
-                    data['passport'] = patientPassport;
-                    data['attendant_passport'] = attendantPassport;
-                    data['country'] = selectedCountry;
-                    data['city'] = selectedCity;
-                    // print(data);
-                    // _controller.uploadStepData(data, QueryStep.documentForVisa);
-                    // Get.toNamed(Routes.activeQueryProcessing);
+                    QueryResponse data = widget.response!;
+                    Map<String, dynamic> response = widget.response.response!;
+                    data.currentStep = QueryStep.documentForVisa;
+                    response['passport'] = patientPassport;
+                    response['attendant_passport'] = attendantPassport;
+                    response['country'] = selectedCountry;
+                    response['city'] = selectedCity;
+                    data.response = response;
+                    bool res = await Get.put(QueryProvider())
+                        .postQueryGenerationData(data.toJson());
+                    Get.back();
+                    if (res) {
+                      Get.showSnackbar(GetSnackBar(
+                        message: "Successfully Updated".tr,
+                        duration: Duration(milliseconds: 1000),
+                      ));
+                    } else {
+                      Get.showSnackbar(GetSnackBar(
+                        message: "Please try again later".tr,
+                        duration: Duration(milliseconds: 1500),
+                      ));
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,

@@ -16,10 +16,12 @@ class QueryResponse {
     queryId = json['id'];
   }
 
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['question'] = this.question;
-  //   data['answer'] = this.answer;
-  //   return data;
-  // }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> formData = new Map<String, dynamic>();
+    formData["current_step"] = currentStep;
+    formData["type"] = queryType;
+    formData['response'] = response;
+    formData['query_id'] = queryId;
+    return formData;
+  }
 }
