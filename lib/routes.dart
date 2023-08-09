@@ -3,7 +3,6 @@ import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:MyMedTrip/bindings/AuthBinding.dart';
 import 'package:MyMedTrip/bindings/DoctorBinding.dart';
-import 'package:MyMedTrip/bindings/HospitalBinding.dart';
 import 'package:MyMedTrip/bindings/InitialBinding.dart';
 import 'package:MyMedTrip/bindings/QueryBinding.dart';
 import 'package:MyMedTrip/screens/Home_screens/faqs.dart';
@@ -11,17 +10,8 @@ import 'package:MyMedTrip/screens/Home_screens/home_bottom.dart';
 import 'package:MyMedTrip/screens/Hospitals/availble_treatment.dart';
 import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
 import 'package:MyMedTrip/screens/Hospitals/doctors_list.dart';
-import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
 import 'package:MyMedTrip/screens/Hospitals/hospitals_list_page.dart';
 import 'package:MyMedTrip/screens/Hospitals/patient_stories.dart';
-import 'package:MyMedTrip/screens/Medical_visa/doctor_reply.dart';
-import 'package:MyMedTrip/screens/Medical_visa/document_preview.dart';
-import 'package:MyMedTrip/screens/Medical_visa/document_visa.dart';
-import 'package:MyMedTrip/screens/Medical_visa/pay_page.dart';
-import 'package:MyMedTrip/screens/Medical_visa/processing_page.dart';
-import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
-import 'package:MyMedTrip/screens/Medical_visa/upload_ticket_visa.dart';
-import 'package:MyMedTrip/screens/Medical_visa/visa_end_page.dart';
 import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
 import 'package:MyMedTrip/screens/Query/query.dart';
 import 'package:MyMedTrip/screens/Settings_page/add_family.dart';
@@ -171,38 +161,6 @@ final getPages = [
       name: Routes.startQuery,
       page: () => const Generate_New_Query(),
       binding: QueryBinding(),
-  ),
-  GetPage(
-      name: Routes.activeQueryDoctorReply,
-      page: () => DoctorReply()
-  ),
-  GetPage(
-      name: Routes.activeQueryProcessing,
-      page: () => const Proccessing_page()
-  ),
-  // GetPage(
-  //     name: Routes.activeQueryTermsConditions,
-  //     page: () => const Terms_and_Conditions()
-  // ),
-  GetPage(
-      name: Routes.activeQueryUploadVisa,
-      page: () => const Document_visa_page()
-  ),
-  GetPage(
-      name: Routes.activeQueryVisaPreview,
-      page: () => const Document_preview_page()
-  ),
-  GetPage(
-      name: Routes.activeQueryPaymentScreen,
-      page: () => const Pay_page()
-  ),
-  GetPage(
-      name: Routes.activeQueryUploadTicket,
-      page: () => const Upload_Ticket_visa()
-  ),
-  GetPage(
-      name: Routes.activeQueryThankYou,
-      page: () => const Visa_submit_page()
   ),
   GetPage(
       name: Routes.confirmedQuery,
