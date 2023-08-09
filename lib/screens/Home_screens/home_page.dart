@@ -6,6 +6,7 @@ import 'package:MyMedTrip/models/faq_model.dart';
 import 'package:MyMedTrip/providers/home_provider.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_doctors.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_hospitals.dart';
+import 'package:MyMedTrip/screens/Medical_visa/medical_visa_form.dart';
 import 'package:MyMedTrip/screens/Query/document_visa_form.dart';
 import 'package:MyMedTrip/screens/treatments/list.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
@@ -304,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                       CustomSpacer.s(),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => DocumentForVisaForm());
+                          Get.to(() => MedicalVisaForm());
                         },
                         child: Container(
                           width: (MediaQuery.of(context).size.width - 48) / 2,

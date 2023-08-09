@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
-
 import 'package:MyMedTrip/constants/constants.dart';
+import 'package:MyMedTrip/constants/query_step_name.dart';
+import 'package:MyMedTrip/constants/query_type.dart';
+import 'package:MyMedTrip/providers/query_provider.dart';
+import 'package:MyMedTrip/routes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
@@ -18,16 +19,16 @@ import 'package:select_dialog/select_dialog.dart';
 
 import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
+import '../../constants/size_utils.dart';
 
-class DocumentForVisaForm extends StatefulWidget {
-  const DocumentForVisaForm({super.key});
+class MedicalVisaForm extends StatefulWidget {
+  const MedicalVisaForm({super.key});
 
   @override
-  State<DocumentForVisaForm> createState() => _DocumentForVisaFormState();
+  State<MedicalVisaForm> createState() => _MedicalVisaFormState();
 }
 
-class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
-  late QueryController _controller;
+class _MedicalVisaFormState extends State<MedicalVisaForm> {
 
   String patientPassport = "";
   List<dynamic> attendantPassport = [];
@@ -38,14 +39,13 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   @override
   void initState() {
     // TODO: implement initState
-    selectedCountry = "India";
+    selectedCountry = "Select Country";
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-
     super.dispose();
   }
 
@@ -66,126 +66,148 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(pageName: "Request Medical Visa".tr, showDivider: false,),
       body: SingleChildScrollView(
-        child: GetBuilder<QueryController>(builder: (ctrl) {
-          return Padding(
-            padding: const EdgeInsets.all(CustomSpacer.S),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _documentUploadListTile(
-                    title: "Upload Patient's Passport here",
-                    name: 'patient_passport'),
-                _documentUploadListTile(
-                    title: "Upload Attendant's Passport here",
-                    name: 'attendant_passport'),
-                _documentUploadListTile(
-                    title: "Upload Second Attendant's Passport here, (If any)",
-                    name: 'second_attendant_passport'),
-                CustomSpacer.m(),
-                FormLabel(
-                  "Where will you be applying for \nyour visa ?".tr,
-                ),
-                CustomSpacer.m(),
-                FormLabel(
-                  "Country".tr,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: MYcolors.greycolor),
-                      borderRadius: BorderRadius.circular(8)),
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: CustomSpacer.XS),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    underline: const Divider(
-                      height: 0,
-                      thickness: 0,
-                      color: Colors.transparent,
-                    ),
-                    items: <String>['India']
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    value: selectedCountry.isNotEmpty ? selectedCountry: "",
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCountry = value!;
-                      });
-                      buildCountryOption(Constants.countryIdMap[value!.toLowerCase()]!);
-                    },
+        child: Container(
+          margin: const EdgeInsets.only(top: CustomSpacer.S),
+          padding: const EdgeInsets.all(CustomSpacer.S),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text("Please fill in the complete form to apply. ",
+              //   style: AppStyle.txtUrbanistRomanBold24,
+              // ),
+              _documentUploadListTile(
+                  title: "Upload Patient's Passport here",
+                  name: 'patient_passport'),
+              _documentUploadListTile(
+                  title: "Upload Attendant's Passport here",
+                  name: 'attendant_passport'),
+              _documentUploadListTile(
+                  title: "Upload Second Attendant's Passport here, (If any)",
+                  name: 'second_attendant_passport'),
+              CustomSpacer.m(),
+              FormLabel(
+                "Where will you be applying for \nyour visa ?".tr,
+              ),
+              CustomSpacer.m(),
+              FormLabel(
+                "Country".tr,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: MYcolors.greycolor),
+                    borderRadius: BorderRadius.circular(8)),
+                width: double.infinity,
+                padding: const EdgeInsets.only(left: CustomSpacer.XS),
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  underline: const Divider(
+                    height: 0,
+                    thickness: 0,
+                    color: Colors.transparent,
                   ),
-                ),
-                CustomSpacer.s(),
-                FormLabel(
-                  "City".tr,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    SelectDialog.showModal<String>(
-                      context,
-                      label: "Select City",
-                      selectedValue: selectedCountry,
-                      items:
-                      List.generate(cityNames.length, (index) => cityNames[index]),
-                      onChange: (String selected) {
-                        setState(() {
-                          selectedCity = selected;
-                        });
-                      },
+                  items: <String>['Select Country','India']
+                      .map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
                     );
-                  },
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.only(
-                        left: 15, bottom: 15, top: 11, right: 15),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.withAlpha(60)),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text( selectedCity.isEmpty?"Select City".tr : selectedCity,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if(selectedCity == "Select City" || selectedCountry == "Select a country"){
-                      Get.showSnackbar(GetSnackBar(
-                        message: "Please select a country and a city to proceed".tr,
-                      ));
+                  }).toList(),
+                  value: selectedCountry.isNotEmpty ? selectedCountry: "",
+                  onChanged: (value) {
+                    if(value == 'Select Country'){
                       return;
                     }
-                    Map<String, dynamic> data = {};
-                    data['passport'] = patientPassport;
-                    data['attendant_passport'] = attendantPassport;
-                    data['country'] = selectedCountry;
-                    data['city'] = selectedCity;
-                    // print(data);
-                    // _controller.uploadStepData(data, QueryStep.documentForVisa);
-                    // Get.toNamed(Routes.activeQueryProcessing);
+                    setState(() {
+                      selectedCountry = value!;
+                    });
+                    buildCountryOption(Constants.countryIdMap[value!.toLowerCase()]!);
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: BoxDecoration(
-                        color: MYcolors.bluecolor,
-                        borderRadius: BorderRadius.circular(100)),
-                    child: Text(
-                      "Submit".tr,
-                      style: TextStyle(
-                          color: MYcolors.whitecolor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+                ),
+              ),
+              CustomSpacer.s(),
+              FormLabel(
+                "City".tr,
+              ),
+              GestureDetector(
+                onTap: () {
+                  SelectDialog.showModal<String>(
+                    context,
+                    label: "Select City",
+                    selectedValue: selectedCountry,
+                    items:
+                    List.generate(cityNames.length, (index) => cityNames[index]),
+                    onChange: (String selected) {
+                      setState(() {
+                        selectedCity = selected;
+                      });
+                    },
+                  );
+                },
+                child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.only(
+                      left: 15, bottom: 15, top: 11, right: 15),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.withAlpha(60)),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text( selectedCity.isEmpty?"Select City".tr : selectedCity,
+                    style: const TextStyle(fontSize: 16.0),
                   ),
                 ),
-              ],
-            ),
-          );
-        }),
+              ),
+              CustomSpacer.m(),
+              TextButton(
+                onPressed: () async {
+                  if(selectedCity == "Select City" || selectedCountry == "Select a country" || selectedCity.isEmpty){
+                    Get.showSnackbar(GetSnackBar(
+                      message: "Please select a country and a city to proceed".tr,
+                      duration: Duration(seconds: 2),
+                      onTap: (s){
+                        Get.back(closeOverlays: false);
+                      },
+                    ), );
+                    return;
+                  }
+                  Map<String, dynamic> data = {};
+                  Map<String, dynamic> query = {};
+                  query['passport'] = patientPassport;
+                  query['attendant_passport'] = attendantPassport;
+                  query['country'] = selectedCountry;
+                  query['city'] = selectedCity;
+                  data['response'] = query;
+                  data['current_step'] = QueryStep.documentForVisa;
+                  data['type'] = QueryType.medicalVisa;
+                  bool res = await Get.put(QueryProvider()).postMedicalVisaQueryData(data);
+                  if(res){
+                    Get.defaultDialog(
+                      title: "Success",
+                      content: Text("A medical Query request has been successfully processed.\nPlease check the Query screen for updates on the query."),
+                      confirm: ElevatedButton(onPressed: (){
+                        Get.offNamed(Routes.home);
+                      }, child: Text("Go to Home"))
+                    );
+                  }
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: BoxDecoration(
+                      color: MYcolors.bluecolor,
+                      borderRadius: BorderRadius.circular(100)),
+                  child: Text(
+                    "Apply for medical visa".tr,
+                    style: TextStyle(
+                        color: MYcolors.whitecolor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -201,7 +223,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             File file = File(result.files.single.path!);
-            String? uploadedPath = await FirebaseFunctions.uploadImage(file);
+            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents");
             if (uploadedPath == null) {
               return;
             }

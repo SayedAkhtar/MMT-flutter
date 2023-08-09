@@ -60,7 +60,7 @@ class Loaders {
 
   static void closeLoaders(){
     if(Get.isDialogOpen!){
-      Get.back(closeOverlays: true);
+      Get.back();
     }
   }
 }

@@ -2,16 +2,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/constants/query_step_name.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
-import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Medical_visa/document_visa.dart';
 import 'package:MyMedTrip/screens/Query/query_form.dart';
 
 import '../../constants/colors.dart';

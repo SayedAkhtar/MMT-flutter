@@ -143,11 +143,12 @@ class QueryProvider extends BaseProvider {
   Future<bool> postMedicalVisaQueryData(Map data) async {
 
     try{
-      Loaders.loadingDialog(title: "Uploading Data");
+      Loaders.loadingDialog(title: "Please Wait");
       Response response = await post('/queries', data, headers: _headers);
       print(response.body);
       responseHandler(response);
       if(response.isOk){
+        Loaders.closeLoaders();
         return true;
       }
     }catch(e){
