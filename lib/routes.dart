@@ -19,7 +19,7 @@ import 'package:MyMedTrip/screens/Medical_visa/document_preview.dart';
 import 'package:MyMedTrip/screens/Medical_visa/document_visa.dart';
 import 'package:MyMedTrip/screens/Medical_visa/pay_page.dart';
 import 'package:MyMedTrip/screens/Medical_visa/processing_page.dart';
-import 'package:MyMedTrip/screens/Medical_visa/terms_and_conditions.dart';
+import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
 import 'package:MyMedTrip/screens/Medical_visa/upload_ticket_visa.dart';
 import 'package:MyMedTrip/screens/Medical_visa/visa_end_page.dart';
 import 'package:MyMedTrip/screens/Query/generate_new_query.dart';

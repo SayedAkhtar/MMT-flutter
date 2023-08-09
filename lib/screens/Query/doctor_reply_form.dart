@@ -1,23 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
-
-import 'package:MyMedTrip/screens/Medical_visa/terms_and_conditions.dart';
-import 'package:MyMedTrip/screens/Query/query_form.dart';
+import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/constants/query_step_name.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Medical_visa/processing_page.dart';
-import 'package:get/get.dart';
 import '../../constants/colors.dart';
 import '../../helper/FirebaseFunctions.dart';
 import '../../models/query_response_model.dart';

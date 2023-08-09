@@ -1,21 +1,10 @@
 import 'package:MyMedTrip/constants/query_type.dart';
-import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
-import 'package:MyMedTrip/screens/Query/document_visa_form_edit.dart';
-import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
-import 'package:MyMedTrip/models/query_screen_model.dart';
-import 'package:MyMedTrip/screens/Medical_visa/doctor_reply.dart';
-import 'package:MyMedTrip/screens/Query/doctor_reply_form.dart';
-import 'package:MyMedTrip/screens/Query/document_visa_form.dart';
-import 'package:MyMedTrip/screens/Query/pay_page_form.dart';
-import 'package:MyMedTrip/screens/Query/upload_ticket_visa_form.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/query_step_name.dart';
@@ -34,6 +23,7 @@ class _QueryFormState extends State<QueryForm> {
   late QueryController controller;
   late int queryStep;
   late int queryType;
+  late int nextStep;
   QueryResponse? response;
   bool paymentRequired = false;
   bool loading = false;
@@ -49,19 +39,22 @@ class _QueryFormState extends State<QueryForm> {
   void initState() {
     queryStep = widget.queryStep!;
     queryType = widget.queryType;
-    if(widget.queryId != 0){
-      loading = true;
-      fetchStepData();
-    }
-
+    loading = true;
+    fetchStepData(widget.queryId!, queryStep);
     super.initState();
   }
 
-  void fetchStepData()async{
-    QueryResponse res = await Get.put(QueryProvider()).getQueryStepData(widget.queryId!, widget.queryStep!);
+  void fetchStepData(int queryId, int stepNo)async{
+    if(widget.queryId == 0) {
+      return;
+    }
+    QueryResponse res = await Get.put(QueryProvider()).getQueryStepData(queryId, stepNo);
+    print(res.response);
+    print(res.nextStep);
     setState(() {
-      response = res;
+      // response = res;
       paymentRequired = res.paymentRequired!;
+      queryStep = res.nextStep!;
       loading = false;
     });
   }
@@ -91,10 +84,7 @@ class _QueryFormState extends State<QueryForm> {
                               isActive: queryStep > 1,
                               isLast: false,
                               function: () {
-                                // controller.currentStep.value =
-                                //     QueryStep.doctorResponse;
-                                // controller.getCurrentStepData(
-                                //     QueryStep.doctorResponse);
+                                fetchStepData(widget.queryId!, queryStep);
                               })
                           : const SizedBox(),
                       CustomStep(
@@ -165,32 +155,32 @@ class _QueryFormState extends State<QueryForm> {
                         if(loading){
                           return const Center(child: SizedBox(child: CircularProgressIndicator()));
                         }
-                        print(response);
-                        if(response!.response!.isEmpty){
-                          switch (queryStep) {
-                            case QueryStep.documentForVisa:
-                              return const DocumentForVisaForm();
-                            case QueryStep.payment:
-                              return const PayPageForm();
-                            case QueryStep.ticketsAndVisa:
-                              return const UploadTicketAndVisaForm();
-                            default:
-                              return const SizedBox();
-                          }
-                        }else{
-                          switch (queryStep) {
-                            case QueryStep.doctorResponse:
-                              return DoctorReplyForm(response!);
-                            case QueryStep.documentForVisa:
-                              return EditDocumentForVisaForm(response!);
-                            case QueryStep.payment:
-                              return const PayPageForm();
-                            case QueryStep.ticketsAndVisa:
-                              return const UploadTicketAndVisaForm();
-                            default:
-                              return const SizedBox();
-                          }
-                        }
+                        return Text("Currrent Strp: $queryStep, ");
+                        // if(response!.response!.isEmpty){
+                        //   switch (queryStep) {
+                        //     case QueryStep.documentForVisa:
+                        //       return const DocumentForVisaForm();
+                        //     case QueryStep.payment:
+                        //       return const PayPageForm();
+                        //     case QueryStep.ticketsAndVisa:
+                        //       return const UploadTicketAndVisaForm();
+                        //     default:
+                        //       return const SizedBox();
+                        //   }
+                        // }else{
+                        //   switch (queryStep) {
+                        //     case QueryStep.doctorResponse:
+                        //       return DoctorReplyForm(response!);
+                        //     case QueryStep.documentForVisa:
+                        //       return EditDocumentForVisaForm(response!);
+                        //     case QueryStep.payment:
+                        //       return const PayPageForm();
+                        //     case QueryStep.ticketsAndVisa:
+                        //       return const UploadTicketAndVisaForm();
+                        //     default:
+                        //       return const SizedBox();
+                        //   }
+                        // }
 
                         // return Text(
                         //     "${controller.stepData[controller.currentStep]}");

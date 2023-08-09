@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:MyMedTrip/constants/colors.dart';
+import 'package:get/get.dart';
 
 class NoCoordinator extends StatelessWidget {
  const NoCoordinator({super.key});
@@ -14,20 +14,23 @@ class NoCoordinator extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
-            "Oops !",
+            "No Confirmed Query".tr,
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
           ),
+          CustomSpacer.s(),
           Text(
-            "No Data found",
+            "It seems that you do not have any queries confirmed. Please go to the query section to check the status of your queries.".tr,
             style: TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

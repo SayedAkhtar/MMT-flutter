@@ -7,7 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Medical_visa/terms_and_conditions.dart';
+import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../constants/colors.dart';

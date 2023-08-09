@@ -48,13 +48,13 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
     patientPassport = widget.response.response!['passport'];
     attendantPassport = widget.response.response!['attendant_passport'];
     selectedCity = widget.response.response!['city'];
+    buildCountryOption(Constants.countryIdMap[selectedCountry.toLowerCase()]!);
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-
     super.dispose();
   }
 
@@ -77,14 +77,6 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
     return Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<QueryController>(builder: (ctrl) {
-          if (ctrl.stepData.isNotEmpty) {
-            // print(ctrl.stepData);
-            // country.text = _controller.stepData['country'] ?? '';
-            // city.text = _controller.stepData['city'] ?? '';
-            // patient_passport = _controller.stepData['passport'] ?? '';
-            // attendant_passport =
-            //     _controller.stepData['attendant_passport'];
-          }
           return Padding(
             padding: const EdgeInsets.all(CustomSpacer.S),
             child: Column(
@@ -164,38 +156,6 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                         borderRadius: BorderRadius.circular(10)),
                     child: Text( selectedCity.isEmpty?"Select City".tr : selectedCity,
                       style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if(selectedCity == "Select City" || selectedCountry == "Select a country"){
-                      Get.showSnackbar(GetSnackBar(
-                        message: "Please select a country and a city to proceed".tr,
-                      ));
-                      return;
-                    }
-                    Map<String, dynamic> data = {};
-                    data['passport'] = patientPassport;
-                    data['attendant_passport'] = attendantPassport;
-                    data['country'] = selectedCountry;
-                    data['city'] = selectedCity;
-                    // print(data);
-                    // _controller.uploadStepData(data, QueryStep.documentForVisa);
-                    // Get.toNamed(Routes.activeQueryProcessing);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: BoxDecoration(
-                        color: MYcolors.bluecolor,
-                        borderRadius: BorderRadius.circular(100)),
-                    child: Text(
-                      "Submit".tr,
-                      style: TextStyle(
-                          color: MYcolors.whitecolor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

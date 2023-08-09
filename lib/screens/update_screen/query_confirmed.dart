@@ -22,7 +22,7 @@ class QueryConfirmed extends GetView<QueryController> {
   Widget build(BuildContext context) {
     QueryProvider _provider = Get.put(QueryProvider());
     return Scaffold(
-      appBar: CustomAppBar(pageName: "Confirmed details".tr, showDivider: true ),
+      appBar: CustomAppBar(pageName: "Confirmed details".tr, showDivider: false, showBack: false, ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -72,7 +72,7 @@ class QueryConfirmed extends GetView<QueryController> {
                             fontSize: 20,
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: MediaQuery
                               .of(context)
                               .size

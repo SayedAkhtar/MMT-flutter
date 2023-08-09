@@ -12,8 +12,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/components/CustomAutocomplete.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';

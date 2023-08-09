@@ -3,16 +3,12 @@ import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/screens/Query/query_form.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
-import 'package:logger/logger.dart';
 
 import '../../constants/colors.dart';
 import '../../models/query_screen_model.dart';

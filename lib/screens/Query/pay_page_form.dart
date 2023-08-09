@@ -10,7 +10,6 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Medical_visa/upload_ticket_visa.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../constants/colors.dart';
