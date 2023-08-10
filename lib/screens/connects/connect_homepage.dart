@@ -36,6 +36,11 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
@@ -87,6 +92,11 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                     Get.showSnackbar(GetSnackBar(
                                       title: "Consultation not yet active",
                                       message: "Scheduled at :" + _schedule,
+                                      duration: Duration(seconds: 5),
+                                      showProgressIndicator: true,
+                                      onTap: (event){
+                                        Get.back();
+                                      },
                                     ));
                                   } else {
                                     print(_controller.consultationList[idx]);

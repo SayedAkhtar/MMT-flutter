@@ -12,7 +12,6 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
   const DoctorDetailScreen({Key? key}) : super(key: key);
@@ -26,7 +25,6 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   late DoctorProvider api;
   Doctor? doctor;
   bool isLoading = true;
-
   @override
   void initState() {
     api = Get.put(DoctorProvider());
@@ -35,7 +33,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   }
 
   fetchData() async {
-    Doctor? d = await api.getDoctorById(data['id']); 
+    Doctor? d = await api.getDoctorById(data['id']);
     setState(() {
       doctor = d;
       isLoading = false;
@@ -119,30 +117,33 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                             ),
                           ]),
                         ),
-                        doctor!.hospitals!.isNotEmpty?
-                        CheckDisplay(
-                          display: doctor!.hospitals!.isNotEmpty,
-                          child: SizedBox(
-                            width: getSize(210),
-                            child: Padding(
-                              padding: getPadding(top: 7),
-                              child: Row(children: [
-                                CustomImageView(
-                                    imagePath: "assets/icons/location-sm.png",
-                                    height: getSize(26),
-                                    margin: getMargin(bottom: 1)),
-                                Expanded(
-                                  child: Text(
-                                      "${doctor!.hospitals!.first.name}",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: AppStyle.txtUrbanistRegular14
-                                          .copyWith(color: Colors.black87)),
-                                )
-                              ]),
-                            ),
-                          ),
-                        ):SizedBox(),
+                        doctor!.hospitals!.isNotEmpty
+                            ? CheckDisplay(
+                                display: doctor!.hospitals!.isNotEmpty,
+                                child: SizedBox(
+                                  width: getSize(210),
+                                  child: Padding(
+                                    padding: getPadding(top: 7),
+                                    child: Row(children: [
+                                      CustomImageView(
+                                          imagePath:
+                                              "assets/icons/location-sm.png",
+                                          height: getSize(26),
+                                          margin: getMargin(bottom: 1)),
+                                      Expanded(
+                                        child: Text(
+                                            "${doctor!.hospitals!.first.name}",
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: AppStyle.txtUrbanistRegular14
+                                                .copyWith(
+                                                    color: Colors.black87)),
+                                      )
+                                    ]),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
                       ],
                     ),
                   ),
@@ -195,11 +196,14 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                   const SizedBox(
                                     width: 8,
                                   ),
-                                  Flexible(child: Text(doctor!.specialization![index],
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      maxLines: 3,
-                                      style: AppStyle.txtUrbanistRegular18)),
+                                  Flexible(
+                                      child: Text(
+                                          doctor!.specialization![index],
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.left,
+                                          maxLines: 3,
+                                          style:
+                                              AppStyle.txtUrbanistRegular18)),
                                 ],
                               ),
                             );
@@ -247,7 +251,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         ),
                       ],
                     )),
-                    Visibility(
+                Visibility(
                     visible: doctor!.hospitals!.isNotEmpty,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,8 +270,11 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                               padding: getPadding(
                                   top: CustomSpacer.XS, left: CustomSpacer.XS),
                               child: GestureDetector(
-                                onTap: (){
-                                  Get.toNamed(Routes.hospitalPreview,arguments: {'id':doctor!.hospitals![index].id});
+                                onTap: () {
+                                  Get.toNamed(Routes.hospitalPreview,
+                                      arguments: {
+                                        'id': doctor!.hospitals![index].id
+                                      });
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -279,16 +286,17 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                       width: 8,
                                     ),
                                     Flexible(
-                                        child: Text(doctor!.hospitals![index].name!,
+                                        child: Text(
+                                            doctor!.hospitals![index].name!,
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.left,
                                             style:
                                                 AppStyle.txtUrbanistRegular18)),
-                                                const SizedBox(
+                                    const SizedBox(
                                       width: 4,
                                     ),
-                                                Icon(Icons.open_in_new_off_rounded,
+                                    Icon(Icons.open_in_new_off_rounded,
                                         size: 8, color: MYcolors.cyan60001),
                                   ],
                                 ),
@@ -304,12 +312,79 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: getPadding(top: 17),
+                        padding: getPadding(top: 17, bottom: 17),
                         child: Text("Consultation timings (for this week)",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: AppStyle.txtUrbanistRomanBold20),
                       ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: doctor!.timeSlots!.length,
+                        itemBuilder: (context, index) {
+                          List<String> day = doctor!.timeSlots!.keys.toList();
+                          String dayname = day[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("$dayname : ", style: AppStyle.txtUrbanistRomanBold18,),
+                              Wrap(
+                                spacing: 5.0,
+                                children: List<Widget>.generate(
+                                  doctor!.timeSlots![dayname]!.length,
+                                  (index) {
+                                    List<DoctorTimeSlot>? slot =
+                                        doctor!.timeSlots![dayname];
+                                    return ElevatedButton(
+                                      onPressed: () {
+                                        return;
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              20.0), // Adjust the value for desired roundness
+                                        ),
+                                        elevation:
+                                            1.0, // Adjust the elevation value
+                                      ),
+                                      child: Text(
+                                        Utils.localTimeFromTimestamp(
+                                            slot![index].timestamp!),
+                                        style: TextStyle(fontSize: 16.0),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      // ListView.builder(
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      //   scrollDirection: Axis.vertical,
+                      //   itemCount: doctor!.timeSlots![dayname]?.length,
+                      //   itemBuilder: (context, index) {
+                      //     List<DoctorTimeSlot>? slot = doctor!.timeSlots![dayname];
+                      //     return ElevatedButton(
+                      //       onPressed: () {
+                      //         return;
+                      //       },
+                      //       style: ElevatedButton.styleFrom(
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(20.0), // Adjust the value for desired roundness
+                      //         ),
+                      //         elevation: 8.0, // Adjust the elevation value
+                      //       ),
+                      //       child: Text(
+                      //         Utils.localDateTimeFromTimestamp(slot![index].timestamp!),
+                      //         style: TextStyle(fontSize: 16.0),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                       // Padding(
                       //   padding: getPadding(top: 32),
                       //   child: SingleChildScrollView(

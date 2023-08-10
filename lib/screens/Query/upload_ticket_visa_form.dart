@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -29,40 +30,29 @@ class UploadTicketAndVisaForm extends StatefulWidget {
 
 class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
   late QueryProvider _provider;
-  late QueryController _controller;
   late ImagePicker _picker;
   List files = [];
   List tickets = [];
   List visa = [];
+  bool formSubmitted = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _provider = Get.put(QueryProvider());
-    _controller = Get.find<QueryController>();
     _picker = ImagePicker();
     // fetchData();
   }
 
-  void fetchData() async {
-    QueryResponse data = await _provider.getQueryStepData(
-        _controller.selectedQuery, QueryStep.ticketsAndVisa);
-    if (data.response!.isNotEmpty) {
-      if (data.response!['tickets'] != null && data.response!['tickets'].isNotEmpty) {
-        files = data.response!['tickets'];
-      }
-      if (data.response!['visa']!= null && data.response!['visa'].isNotEmpty) {
-        files.addAll(data.response!['visa']);
-      }
-      setState(() {
-        files = List.from(files.reversed);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    if(formSubmitted || widget.response.response!.isNotEmpty){
+      return Scaffold(
+        body: Center(child: Text("Please wait while Our HCF validates your documents.\nYou will be notified once its completed.",
+          style: AppStyle.txtUrbanistRomanBold24, textAlign: TextAlign.center,),),
+      );
+    }
     return SafeArea(
         child: Scaffold(
       body: Column(
@@ -346,7 +336,9 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                   message: "Successfully Updated".tr,
                   duration: Duration(milliseconds: 1000),
                 ));
-
+                setState(() {
+                  formSubmitted = true;
+                });
               } else {
                 Get.showSnackbar(GetSnackBar(
                   message: "Please try again later".tr,

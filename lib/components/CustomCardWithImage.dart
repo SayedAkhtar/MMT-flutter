@@ -14,7 +14,12 @@ class CustomCardWithImage extends StatelessWidget {
       this.bodyText,
       this.align,
       this.width,
-      this.icon, this.imagePadding, this.titleStyle, this.bodyStyle, this.bgColor, this.imageHeight})
+      this.icon,
+      this.imagePadding,
+      this.titleStyle,
+      this.bodyStyle,
+      this.bgColor,
+      this.imageHeight})
       : super(key: key);
   final onTap;
   final String? imageUri;
@@ -28,7 +33,7 @@ class CustomCardWithImage extends StatelessWidget {
   final EdgeInsetsGeometry? imagePadding;
   final TextStyle? titleStyle;
   final TextStyle? bodyStyle;
-  final Color? bgColor; 
+  final Color? bgColor;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -43,21 +48,18 @@ class CustomCardWithImage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                flex: 2,
-                child: CustomImageView(
-                  // color: bgColor?? Colors.transparent,
-                  url: imageUri,
-                  fit: BoxFit.fitWidth,
-                  height: getVerticalSize(imageHeight?? 100),
-                  margin: imagePadding ?? const EdgeInsets.all(0),
-                )
-              ),
-              Flexible(
-                flex: 1,
+                  flex: 2,
+                  child: CustomImageView(
+                    // color: bgColor?? Colors.transparent,
+                    url: imageUri,
+                    fit: BoxFit.fitWidth,
+                    height: getVerticalSize(imageHeight ?? 100),
+                    margin: imagePadding ?? const EdgeInsets.all(0),
+                  )),
+              Expanded(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
-                  constraints:
-                      const BoxConstraints.expand( width: 180),
+                  constraints: const BoxConstraints.expand(width: 180),
                   child: Column(
                     crossAxisAlignment: align == TextAlign.center
                         ? CrossAxisAlignment.center
@@ -65,15 +67,17 @@ class CustomCardWithImage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Flexible(
-                        flex: 2,
+                      Container(
+                        constraints: BoxConstraints(maxHeight: getVerticalSize(40)),
+                        // height: getVerticalSize(20),
                         child: Text(
-                        title,
-                        style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
-                        textAlign: align ?? TextAlign.start,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      )),
+                          title,
+                          style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
+                          textAlign: align ?? TextAlign.start,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       bodyText != null ? buildCardBody(icon) : const SizedBox(),
                       body ?? const SizedBox()
                     ],
@@ -88,7 +92,8 @@ class CustomCardWithImage extends StatelessWidget {
   }
 
   buildCardBody(IconData? icon) {
-    TextStyle bstyle = bodyStyle ?? AppStyle.txtUrbanistSemiBold14.copyWith(fontSize: 12);
+    TextStyle bstyle =
+        bodyStyle ?? AppStyle.txtUrbanistSemiBold14.copyWith(fontSize: 12);
     if (icon != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,8 +117,7 @@ class CustomCardWithImage extends StatelessWidget {
         ],
       );
     } else {
-      return Flexible(
-        flex: 1,
+      return Expanded(
         child: Text(
           bodyText!,
           overflow: TextOverflow.ellipsis,

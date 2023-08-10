@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/bindings/HospitalBinding.dart';
 import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
 import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -188,7 +189,8 @@ final getPages = [
   // ),
   GetPage(
       name: Routes.hospitals,
-      page: () => const HospitalsListPage()
+      page: () => const HospitalsListPage(),
+      binding: HospitalBinding(),
   ),
   GetPage(
       name: Routes.hospitalPreview,

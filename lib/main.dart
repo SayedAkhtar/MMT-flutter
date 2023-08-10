@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
+import 'package:MyMedTrip/screens/TestCallScreen.dart';
 import 'package:MyMedTrip/screens/connects/chat_page.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -19,10 +22,7 @@ import 'bindings/InitialBinding.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-
   print("Handling a background message: ${message.messageId}");
 }
 
@@ -68,6 +68,33 @@ void main() async {
     await Firebase.initializeApp();
   }
 
+  //=========== Firebase CrashAnalytics Code ==============//
+  const fatalError = true;
+  // Non-async exceptions
+  FlutterError.onError = (errorDetails) {
+    if (fatalError) {
+      // If you want to record a "fatal" exception
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      // ignore: dead_code
+    } else {
+      // If you want to record a "non-fatal" exception
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    }
+  };
+  // Async exceptions
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (fatalError) {
+      // If you want to record a "fatal" exception
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      // ignore: dead_code
+    } else {
+      // If you want to record a "non-fatal" exception
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    }
+    return true;
+  };
+
+  //=========== Firebase Messaging Code ==============//
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
@@ -98,8 +125,6 @@ void main() async {
         onDidReceiveNotificationResponse: (payload) {});
 
     if (message.notification != null) {
-      print(
-          'Message also contained a notification: ${message.notification?.title!}');
       _showNotification(message);
     }
   });

@@ -170,6 +170,13 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                     ), );
                     return;
                   }
+                  if(attendantPassport.isEmpty){
+                    Get.showSnackbar(GetSnackBar(
+                      message: "Attendant's passport is mandatory".tr,
+                      duration: Duration(seconds: 2),
+                    ));
+                    return;
+                  }
                   Map<String, dynamic> data = {};
                   Map<String, dynamic> query = {};
                   query['passport'] = patientPassport;
@@ -220,6 +227,13 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
           EdgeInsets.only(left: 0.0, right: 0.0, bottom: CustomSpacer.M),
       leading: InkWell(
         onTap: () async {
+          if(attendantPassport.isEmpty && name == "second_attendant_passport"){
+            Get.showSnackbar(GetSnackBar(
+              message: "Please upload primary attendants passport first.".tr,
+              duration: Duration(seconds: 2),
+            ));
+            return;
+          }
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             File file = File(result.files.single.path!);

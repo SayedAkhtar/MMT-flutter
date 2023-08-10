@@ -6,6 +6,7 @@ import 'package:MyMedTrip/constants/constants.dart';
 import 'package:MyMedTrip/constants/query_step_name.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -39,6 +40,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   String selectedCountry = "";
   String selectedCity = "";
   List<String> cityNames = [];
+  bool formSubmitted = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -49,7 +51,6 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   @override
   void dispose() {
     // TODO: implement dispose
-
     super.dispose();
   }
 
@@ -69,6 +70,12 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
 
   @override
   Widget build(BuildContext context) {
+    if(formSubmitted){
+      return Scaffold(
+        body: Center(child: Text("Please wait while Our HCF validates your documents.\nYou will be notified once its completed.",
+          style: AppStyle.txtUrbanistRomanBold24, textAlign: TextAlign.center,),),
+      );
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<QueryController>(builder: (ctrl) {
@@ -159,6 +166,14 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     if(selectedCity == "Select City" || selectedCountry == "Select a country"){
                       Get.showSnackbar(GetSnackBar(
                         message: "Please select a country and a city to proceed".tr,
+                        duration: Duration(milliseconds: 1000),
+                      ),);
+                      return;
+                    }
+                    if(attendantPassport.isEmpty){
+                      Get.showSnackbar(GetSnackBar(
+                        message: "Attendant's passport is mandatory".tr,
+                        duration: Duration(milliseconds: 1000),
                       ));
                       return;
                     }
@@ -178,6 +193,9 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                         message: "Successfully Updated".tr,
                         duration: Duration(milliseconds: 1000),
                       ));
+                      setState(() {
+                        formSubmitted = true;
+                      });
                     } else {
                       Get.showSnackbar(GetSnackBar(
                         message: "Please try again later".tr,
@@ -216,10 +234,19 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
           EdgeInsets.only(left: 0.0, right: 0.0, bottom: CustomSpacer.M),
       leading: InkWell(
         onTap: () async {
+          print(attendantPassport.isEmpty);
+          print(name);
+          if(attendantPassport.isEmpty && name == "second_attendant_passport"){
+            Get.showSnackbar(GetSnackBar(
+              message: "Please Upload Primary passport first.".tr,
+              duration: Duration(milliseconds: 1000),
+            ));
+            return;
+          }
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             File file = File(result.files.single.path!);
-            String? uploadedPath = await FirebaseFunctions.uploadImage(file);
+            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents");
             if (uploadedPath == null) {
               return;
             }

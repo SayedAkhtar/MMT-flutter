@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:MyMedTrip/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,6 +17,8 @@ import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Video_consult/thankyou.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+import '../../controller/controllers/user_controller.dart';
 
 class Schedule_page extends StatefulWidget {
   const Schedule_page({super.key});
@@ -103,7 +106,8 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
         SafeArea(
           child: ElevatedButton(
             onPressed: () {
-              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount:_controller.consultationFees * 100));
+              LocalUser user= Get.find<UserController>().user!;
+              _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount:_controller.consultationFees, name: user.name!, phoneNumber: user.phoneNo!));
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

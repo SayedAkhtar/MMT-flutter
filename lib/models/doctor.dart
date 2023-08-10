@@ -60,9 +60,8 @@ class Doctor {
         hospitals?.add(DoctorHospital.fromJson(v));
       });
     }
-
+    timeSlots = {};
     if (json['time_slots'] != null && json['time_slots'].isNotEmpty) {
-      timeSlots = {};
       json['time_slots'].forEach((String k,values) {
         List<DoctorTimeSlot> temp = [];
         values.forEach((data){
@@ -70,8 +69,8 @@ class Doctor {
         });
         timeSlots?[k] = temp;
       });
-      timeSlots = timeSlots;
     }
+    timeSlots = timeSlots;
 
     if(json['faq'] != null){
       faq = [];

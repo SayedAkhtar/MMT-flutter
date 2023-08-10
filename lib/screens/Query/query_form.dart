@@ -34,6 +34,7 @@ class _QueryFormState extends State<QueryForm> {
   QueryResponse? response;
   bool paymentRequired = false;
   bool loading = false;
+  DateTime? currentBackPressTime;
 
   List<String> stepName = [
     "Doctor\'s \nReply",
@@ -77,8 +78,14 @@ class _QueryFormState extends State<QueryForm> {
       ),
       body: WillPopScope(
         onWillPop: ()async {
-          Get.snackbar("Are you Sure ?", "Press back button twice to exit the app.");
-          return await Future.value(false);
+          DateTime now = DateTime.now();
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            Get.showSnackbar(const GetSnackBar(title: "Are you sure to you want to exit ?", message: "Press back button twice to close the app.",duration: Duration(milliseconds: 2),));
+            return Future.value(false);
+          }
+          return Future.value(true);
         },
         child: SafeArea(
           child: Container(
@@ -147,7 +154,6 @@ class _QueryFormState extends State<QueryForm> {
                       ],
                     ),
                   ),
-                  Text("Currrent Strp: $currentQueryStep, "),
                   Expanded(
                     // height: MediaQuery.of(context).size.height - 120.0 - AppBar().preferredSize.height,
                     // color: Colors.greenAccent,

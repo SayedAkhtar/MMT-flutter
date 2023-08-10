@@ -390,6 +390,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                             ],
                           )),
                       Visibility(
+
                           child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -432,22 +433,25 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                 crossAxisSpacing: CustomSpacer.S,
                                 mainAxisSpacing: CustomSpacer.S,
                               ),
-                              itemCount: 3,
+                              itemCount: hospital.testimony!.length,
                               itemBuilder: (context, index) {
-                                return CustomImageView(
-                                  imagePath: "Images/P1.jpg",
-                                  height: getSize(
-                                    MediaQuery.of(context).size.width * 0.35,
-                                  ),
-                                  width: getSize(
-                                    MediaQuery.of(context).size.width * 0.35,
-                                  ),
-                                  radius: BorderRadius.circular(
-                                    getHorizontalSize(
-                                      16,
+                                if(hospital.testimony![index].type == "image"){
+                                  return CustomImageView(
+                                    imagePath: "Images/P1.jpg",
+                                    height: getSize(
+                                      MediaQuery.of(context).size.width * 0.35,
                                     ),
-                                  ),
-                                );
+                                    width: getSize(
+                                      MediaQuery.of(context).size.width * 0.35,
+                                    ),
+                                    radius: BorderRadius.circular(
+                                      getHorizontalSize(
+                                        16,
+                                      ),
+                                    ),
+                                  );
+                                }
+
                               },
                             ),
                           ),

@@ -31,10 +31,10 @@ class HospitalProvider extends BaseProvider {
     return null;
   }
 
-  Future<List<Hospital?>?> getAllHospitals() async {
+  Future<List<Hospital?>> getAllHospitals({String? params}) async {
     List<Hospital?> hospitals = [];
     try {
-      Response response = await get('/hospitals',
+      Response response = await get('/hospitals?$params',
           contentType: 'application/json', headers: _headers);
       var jsonString = await responseHandler(response);
       jsonString.forEach((element) {
@@ -46,7 +46,7 @@ class HospitalProvider extends BaseProvider {
       print(stacktrace);
       Loaders.errorDialog(error.toString(), title: "Error");
     }
-    return null;
+    return hospitals;
   }
   Future<List<Treatment?>> getAllTreatments({String? query, page}) async {
     List<Treatment?> treatment = [];

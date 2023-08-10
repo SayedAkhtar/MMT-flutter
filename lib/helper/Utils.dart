@@ -118,6 +118,10 @@ class Utils {
     return Utils.formatDateWithTime(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal());
   }
 
+  static localTimeFromTimestamp(int timestamp){
+    return DateFormat('jm').format((DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal()));
+  }
+
   static Future<File?> saveFileToDevice(String filename, String url) async {
     HttpClient client = HttpClient();
     try {

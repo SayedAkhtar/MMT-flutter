@@ -146,12 +146,17 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget searchSection(List data) {
     return GridView.builder(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: MediaQuery.of(context).size.width /
+                    (MediaQuery.of(context).size.height / 1.8)
+            ),
         itemCount: data.length,
         itemBuilder: (_, i) {
           return CustomCardWithImage(
-            width: getHorizontalSize(160),
+            width: getHorizontalSize(280),
             onTap: () {
               if (data[i]['type'] == 'doctor') {
                 Get.toNamed(Routes.doctorPreviewNew,

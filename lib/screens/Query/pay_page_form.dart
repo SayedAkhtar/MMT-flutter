@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -14,6 +15,7 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../constants/colors.dart';
+import '../../models/user_model.dart';
 
 class PayPageForm extends StatefulWidget {
   const PayPageForm(this.response, {super.key});
@@ -28,10 +30,10 @@ class _PayPageFormState extends State<PayPageForm> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    super.initState();
   }
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     _controller.handleSuccesfulPaymentResponse(widget.response.queryId!, response);
@@ -39,6 +41,8 @@ class _PayPageFormState extends State<PayPageForm> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("====== Error ======");
+    print(response.error);
+    print(response.code);
     if(response.message != null){
       Loaders.errorDialog(response.message!);
     }
@@ -79,7 +83,8 @@ class _PayPageFormState extends State<PayPageForm> {
           Spacer(),
           GestureDetector(
             onTap: () {
-              _razorpay.open(RazorpayConstants.getOptionsForQueryConfirmation());
+              LocalUser user= Get.find<UserController>().user!;
+              _razorpay.open(RazorpayConstants.getOptionsForQueryConfirmation(phoneNumber: user.phoneNo!, name: user.name!));
             },
             child: Container(
               decoration: BoxDecoration(
