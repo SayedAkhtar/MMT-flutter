@@ -40,38 +40,17 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
   final storageRef = FirebaseStorage.instance.ref();
   final TextEditingController selectedFamilyMemberId = TextEditingController();
   List<Result> familyMembers = [];
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = Get.find<QueryController>();
     userController = Get.put(UserController());
-    controller.queryType =
-        1; // 1 => for Query::TYPE_QUERY, 2 for Query::TYPE_MEDICAL_VISA
+    controller.queryType = 1; // 1 => for Query::TYPE_QUERY, 2 for Query::TYPE_MEDICAL_VISA
+    controller.queryFor = 1;
   }
 
-  Future getFamilyMembersList(patientId) async{
-    Loaders.loadingDialog();
-    Response res = await GetConnect().get("$base_uri/ajax-search/patient_family_details?patient_id=$patientId", headers: {"Accepts": "application/json"});
-    if(res.isOk){
-      var json = res.body['data'];
-      if(json.isNotEmpty) {
-        SearchQueryResult result = SearchQueryResult.fromJson(json);
-        if (result.list!.isNotEmpty) {
-          setState(() {
-            familyMembers = result.list!;
-          });
-          Get.back();
-          return;
-        }else{
-          setState(() {
-            familyMembers =[];
-          });
-        }
-      }
-      Loaders.errorDialog("No Friends or family found".tr, title: "No Data".tr);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +79,13 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                 scrollDirection: Axis.vertical,
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
-                child: GetBuilder<QueryController>(builder: (controller) {
+                child: GetBuilder<QueryController>(
+                  initState: (ctrl){
+                    controller.preferredCountry.value = "India";
+                  } ,
+                    builder: (controller) {
                   return Form(
-                    // key: controller.generateQueryForm.value,
+                    key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -117,41 +100,23 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                 CustomSpacer.s(),
                                 TextFormField(
                                   controller: selectedFamilyMemberId,
-                                  readOnly: true,
+                                  readOnly: false,
                                   validator: (text){
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.none,
-                                  onTap: () async{
-                                    await getFamilyMembersList(userController.user!.id);
-                                    if(!context.mounted) return;
-                                    if(familyMembers.isNotEmpty){
-                                      SelectDialog.showModal<Result>(
-                                        context,
-                                        items: List.generate(familyMembers.length, (index) => familyMembers[index]),
-                                        onChange: (Result selected) {
-                                          setState(() {
-                                            selectedFamilyMemberId.text = selected.name;
-                                            controller.patientFaminlyId.value = selected.id!;
-                                          });
-                                        },
-                                      );
+                                    if(text == null || text.isEmpty){
+                                      return 'Required';
                                     }
                                   },
+                                  onFieldSubmitted: (String? name){
+                                    controller.patientName = name!;
+                                  },
+                                  keyboardType: TextInputType.text,
                                   decoration: InputDecoration(
-                                    hintText: "Select Friend or Family",
-                                    suffixIcon: const Icon(Icons.arrow_drop_down),
+                                    hintText: "Friend or Family Name",
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8)),
                                     contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
                                   ),
                                 ),
-                                // CustomAutocomplete(
-                                //   searchTable: "patient_family_details",
-                                //   selectedId: controller.patientFaminlyId,
-                                //   isRequired: _queryForSomeone,
-                                //   patientId: userController.user!.id,
-                                // ),
                               ],
                             )),
                         CustomSpacer.s(),
@@ -452,7 +417,10 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                 (CustomSpacer.S * 2.5),
                             backgroundColor: MYcolors.greycolor,
                             onConfirmation: () {
-                              controller.generateQuery();
+                              if(formKey.currentState!.validate()){
+                                formKey.currentState!.save();
+                                controller.generateQuery();
+                              }
                             }),
                         CustomSpacer.m()
                       ],
@@ -507,6 +475,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
             onTap: () {
               setState(() {
                 _queryForSomeone = true;
+                controller.queryFor = 2;
               });
             },
             child: Container(

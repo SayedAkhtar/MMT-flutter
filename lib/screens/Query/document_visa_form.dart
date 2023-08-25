@@ -78,7 +78,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
     }
     return Scaffold(
       body: SingleChildScrollView(
-        child: GetBuilder<QueryController>(builder: (ctrl) {
+        child: Builder(builder: (ctrl) {
           return Padding(
             padding: const EdgeInsets.all(CustomSpacer.S),
             child: Column(
@@ -178,7 +178,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                       return;
                     }
                     QueryResponse data = widget.response!;
-                    Map<String, dynamic> response = widget.response.response!;
+                    Map<dynamic, dynamic> response = widget.response.response!;
                     data.currentStep = QueryStep.documentForVisa;
                     response['passport'] = patientPassport;
                     response['attendant_passport'] = attendantPassport;

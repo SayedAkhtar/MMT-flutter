@@ -91,6 +91,9 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
               onSaved: (value) {
                 controller.user?.dob = Utils.formatStringToDateTime(value!);
               },
+              onChanged: (value){
+                // print(Utils.formatStringToDateTime(value!).month);
+              },
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(
                     left: 15, bottom: 11, top: 11, right: 15),

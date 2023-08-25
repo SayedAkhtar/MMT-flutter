@@ -33,6 +33,12 @@ class _Query_pageState extends State<Query_page> {
     fetchQueries();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   void fetchQueries() async{
     QueryScreen? data = await Get.put(QueryProvider()).getQueryScreenData();
     List<ActiveQuery> tempQueries = [];

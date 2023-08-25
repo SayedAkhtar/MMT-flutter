@@ -29,9 +29,13 @@ class Video_Call_Screen extends StatefulWidget {
 class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   dynamic argumentData = Get.arguments;
   Set<int> _remoteUid = {};
-  bool _localUserJoined = false, switchCamera = true, switchRender = true, enableAudio = true;
+  bool _localUserJoined = false,
+      switchCamera = true,
+      switchRender = true,
+      enableAudio = true;
   late RtcEngine _engine;
-  final ChannelProfileType _channelProfileType = ChannelProfileType.channelProfileLiveBroadcasting;
+  final ChannelProfileType _channelProfileType =
+      ChannelProfileType.channelProfileLiveBroadcasting;
 
   late FirebaseDatabase database;
   late DatabaseReference dbRef;
@@ -160,26 +164,24 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     });
   }
 
-  void getMessages() async{
+  void getMessages() async {
     List<Message> temp = [];
-    try{
+    try {
       DatabaseEvent event = await dbRef.once();
-      if(event.snapshot.exists){
-          Map messageJson = event.snapshot.value as Map;
-          messageJson.forEach((key, value) {
-            temp.add(Message.fromMap(value));
-          });
-          setState(() {
-            messages = temp;
-          });
-      }else{
+      if (event.snapshot.exists) {
+        Map messageJson = event.snapshot.value as Map;
+        messageJson.forEach((key, value) {
+          temp.add(Message.fromMap(value));
+        });
+        setState(() {
+          messages = temp;
+        });
+      } else {
         Logger().d("No data Available");
       }
-    }catch (e) {
+    } catch (e) {
       print('Error fetching data: $e');
     }
-
-
   }
 
   @override
@@ -192,7 +194,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
               child: _remoteVideo(),
             ),
             Align(
-              alignment: Alignment(-0.95, -1),
+              alignment: Alignment(-0.95, -0.95),
               child: ElevatedButton(
                 onPressed: () {
                   Get.back();
@@ -206,7 +208,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
               ),
             ),
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment(0.95, -0.90),
               child: Container(
                   width: 150,
                   height: 180,
@@ -232,82 +234,85 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _toggleAudio,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          enableAudio ? Colors.black26 : Colors.greenAccent,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(14),
+              child: Container(
+                margin: EdgeInsets.only(bottom: CustomSpacer.L),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _toggleAudio,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            enableAudio ? Colors.black26 : Colors.greenAccent,
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(14),
+                      ),
+                      child: Icon(Icons.mic_off),
                     ),
-                    child: Icon(Icons.mic_off),
-                  ),
-                  CustomSpacer.s(),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (!_localUserJoined) {
-                        await _joinChannel();
-                      } else {
-                        await _engine.leaveChannel(
-                            options: LeaveChannelOptions(
-                                stopAllEffect: true,
-                                stopAudioMixing: true,
-                                stopMicrophoneRecording: true));
-                      }
-                      // _localUserJoined ? disposeAgora() : _joinChannel();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _localUserJoined ? Colors.redAccent : Colors.green,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(14),
+                    CustomSpacer.s(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (!_localUserJoined) {
+                          await _joinChannel();
+                        } else {
+                          await _engine.leaveChannel(
+                              options: LeaveChannelOptions(
+                                  stopAllEffect: true,
+                                  stopAudioMixing: true,
+                                  stopMicrophoneRecording: true));
+                        }
+                        // _localUserJoined ? disposeAgora() : _joinChannel();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _localUserJoined ? Colors.redAccent : Colors.green,
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(14),
+                      ),
+                      child: _localUserJoined
+                          ? Icon(Icons.phone_disabled)
+                          : Icon(Icons.phone_enabled),
                     ),
-                    child: _localUserJoined
-                        ? Icon(Icons.phone_disabled)
-                        : Icon(Icons.phone_enabled),
-                  ),
-                  CustomSpacer.s(),
-                  ElevatedButton(
-                    onPressed: () {
-                      getMessages();
-                      // _switchCamera();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black26,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(14),
+                    CustomSpacer.s(),
+                    ElevatedButton(
+                      onPressed: () {
+                        getMessages();
+                        // _switchCamera();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black26,
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(14),
+                      ),
+                      child: Icon(Icons.cameraswitch_rounded),
                     ),
-                    child: Icon(Icons.cameraswitch_rounded),
-                  ),
-                  CustomSpacer.s(),
-                  ElevatedButton(
-                    onPressed: () {
-                      showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          isDismissible: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30.0),
-                                topRight: Radius.circular(30.0)),
-                          ),
-                          builder: (BuildContext context) {
-                            return chatContainer();
-                          });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black26,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(14),
+                    CustomSpacer.s(),
+                    ElevatedButton(
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            isDismissible: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30.0),
+                                  topRight: Radius.circular(30.0)),
+                            ),
+                            builder: (BuildContext context) {
+                              return chatContainer();
+                            });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black26,
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(14),
+                      ),
+                      child: Icon(Icons.messenger_outline_outlined),
                     ),
-                    child: Icon(Icons.messenger_outline_outlined),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -316,7 +321,23 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
 
   // Display remote user's video
   Widget _remoteVideo() {
+    List<AgoraVideoView> _child = [];
     if (_remoteUid.isNotEmpty) {
+      for (var element in _remoteUid) {
+        _child.add(AgoraVideoView(
+          controller: VideoViewController.remote(
+            rtcEngine: _engine,
+            canvas: VideoCanvas(uid: element),
+            connection: RtcConnection(channelId: argumentData['channelName']),
+          ),
+        ));
+      }
+      return GridView.count(
+        scrollDirection: Axis.horizontal,
+        crossAxisCount: _remoteUid.length,
+        shrinkWrap: true,
+        children: _child,
+      );
       return AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: _engine,
@@ -564,13 +585,12 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                       ElevatedButton(
                         onPressed: () async {
                           var t = await dbRef.get();
-                          print(t);
                           await dbRef.push().set({
                             "from": LocalUser.TYPE_PATIENT,
                             "type": Message.TEXT,
                             "message": messageController.text,
                           });
-
+                          messageController.text = "";
                           _messageScrollController.animateTo(
                               _messageScrollController.position.maxScrollExtent,
                               duration: const Duration(milliseconds: 500),

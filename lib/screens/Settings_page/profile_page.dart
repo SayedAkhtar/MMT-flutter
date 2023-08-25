@@ -199,11 +199,11 @@ class Profile_Page extends GetView<UserController> {
                   Text(":"),
                   _profileValueText(controller.user?.phoneNo),
                 ]),
-                TableRow(children: [
-                  _profileKeyText("Email"),
-                  Text(":"),
-                  _profileValueText(controller.user?.email),
-                ]),
+                // TableRow(children: [
+                //   _profileKeyText("Email"),
+                //   Text(":"),
+                //   _profileValueText(controller.user?.email),
+                // ]),
                 // TableRow(
                 //     children: [
                 //       _profileKeyText("City"),

@@ -45,9 +45,11 @@ class QueryController extends GetxController {
   RxInt patientFaminlyId = 0.obs;
   RxString briefHistory = "".obs;
   RxString preferredCountry = "India".obs;
+  String patientName = "";
   List<String> medicalVisaPath = [];
   List<String> passportPath = [];
   int queryType = 1;
+  int queryFor = 1; //1 =>self | 2 => someone
   final generateQueryForm = GlobalKey<FormState>().obs;
 
   String doctor_response = "";
@@ -87,12 +89,14 @@ class QueryController extends GetxController {
     Map<String, dynamic> responseData = {};
     formData["current_step"] = 1;
     formData["type"] = queryType;
+    formData['query_for'] = queryFor;
     responseData["history"] = briefHistory.value;
     responseData["country"] = preferredCountry.value;
     responseData["medical_report"] = medicalVisaPath;
     responseData["passport"] = passportPath;
-    if (patientFaminlyId.value != 0) {
-      formData["patient_family_id"] = patientFaminlyId.value;
+
+    if (patientName.isNotEmpty) {
+      formData["patient_name"] = patientName;
     }
     formData['response'] = responseData;
 

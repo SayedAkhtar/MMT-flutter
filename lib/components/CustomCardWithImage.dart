@@ -67,8 +67,8 @@ class CustomCardWithImage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
-                        constraints: BoxConstraints(maxHeight: getVerticalSize(40)),
+                      Flexible(
+                        // constraints: BoxConstraints(maxHeight: getVerticalSize(40)),
                         // height: getVerticalSize(20),
                         child: Text(
                           title,
@@ -120,6 +120,7 @@ class CustomCardWithImage extends StatelessWidget {
       return Expanded(
         child: Text(
           bodyText!,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: bstyle,
           textAlign: align ?? TextAlign.start,

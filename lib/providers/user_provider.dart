@@ -14,6 +14,7 @@ class UserProvider extends BaseProvider {
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   @override
   void onInit() {
+    this.token = _storage.get('token');
     super.onInit();
   }
 
@@ -94,14 +95,14 @@ class UserProvider extends BaseProvider {
   Future updateUserPassword(
       {required String oldPassword,
       required String newPassword,
-      required String confirmPassword}) async {
+      required String confirmPassword, required LocalUser user}) async {
     Map<String, dynamic> data = {
       'old_password': oldPassword,
       'password': newPassword,
-      'password_confirmation': confirmPassword
+      'password_confirmation': confirmPassword,
     };
     try {
-      Response response = await patch('/update-password', data);
+      Response response = await post('/users/${user.id}', data);
       var jsonString = await responseHandler(response);
       return true;
     } catch (error) {
@@ -112,8 +113,8 @@ class UserProvider extends BaseProvider {
 
   Future<bool> updateUserLanguage({required language}) async{
     try {
-      Response response = await post('/update-language', {'language': language});
-      var jsonString = await responseHandler(response);
+      // Response response = await post('/update-language', {'language': language});
+      // var jsonString = await responseHandler(response);
       return true;
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");

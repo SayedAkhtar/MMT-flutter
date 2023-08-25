@@ -151,7 +151,58 @@ class _TreatmentsListState extends State<TreatmentsList> {
                     itemBuilder: (_, i) {
                       return CustomCardWithImage(
                         width: getHorizontalSize(160),
-                        onTap: () {},
+                        onTap: () {
+                          Get.defaultDialog(
+                            title: allData![i]!.name!,
+                            content: Table(
+                              children : [
+                                TableRow(
+                                  children: [
+                                    Text("Maximum Price (USD):"),
+                                    Text(allData![i]!.maxPrice.toString())
+                                  ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Minimum Price (USD):"),
+                                      Text(allData![i]!.minPrice.toString())
+                                    ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Days Required :"),
+                                      Text(allData![i]!.daysRequired.toString())
+                                    ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Recovery Time:"),
+                                      Text(allData![i]!.recoveryTime.toString())
+                                    ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Success Rate:"),
+                                      Text(allData![i]!.successRate.toString())
+                                    ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Covered:"),
+                                      Text(allData![i]!.covered.toString())
+                                    ]
+                                ),
+                                TableRow(
+                                    children: [
+                                      Text("Not Covered:"),
+                                      Text("${allData![i]!.notCovered ?? 'N/A'}")
+                                    ]
+                                ),
+
+                              ]
+                            )
+                          );
+                        },
                         imageUri: allData![i]!.logo,
                         title: allData![i]!.name!,
                         titleStyle: AppStyle.txtUrbanistRomanBold10

@@ -123,7 +123,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                       userController.updatePassword(
                           oldPassword: oldPasswordController.text,
                           newPassword: newPasswordController.text,
-                          confirmPassword: confirmPasswordController.text);
+                          confirmPassword: confirmPasswordController.text,
+                          user: userController.user!,
+                      );
                     },
                     child: Text("Submit".tr))
               ],

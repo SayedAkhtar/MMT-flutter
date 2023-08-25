@@ -1,6 +1,6 @@
 class QueryResponse {
   int? nextStep;
-  Map<String, dynamic>? response;
+  dynamic response;
   bool? paymentRequired;
   int? queryType;
   int? currentStep;

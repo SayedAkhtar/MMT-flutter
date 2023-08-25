@@ -110,6 +110,10 @@ class Utils {
     return DateFormat('dd/MM/yyyy').parse(date);
   }
 
+  static DateTime formatCommonStringToDateTime(String date) {
+    return DateFormat('MM/dd/yyyy').parse(date);
+  }
+
   static localDateFromTimestamp(int timestamp){
     return Utils.formatDate(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal());
   }

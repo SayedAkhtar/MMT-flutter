@@ -34,6 +34,7 @@ class _QueryFormState extends State<QueryForm> {
   QueryResponse? response;
   bool paymentRequired = false;
   bool loading = false;
+  bool isEditable = false;
   DateTime? currentBackPressTime;
 
   List<String> stepName = [
@@ -105,20 +106,26 @@ class _QueryFormState extends State<QueryForm> {
                                 isActive: currentQueryStep > 1,
                                 isLast: false,
                                 function: () {
-                                  fetchStepData(widget.queryId!, currentQueryStep);
+                                  setState(() {
+                                    currentQueryStep = QueryStep.doctorResponse;
+                                    isEditable = true;
+                                    loading = true;
+                                  });
+                                  fetchStepData(widget.queryId!, QueryStep.doctorResponse);
+
                                 })
                             : const SizedBox(),
                         CustomStep(
                             stepName: stepName[1],
-                            isActive: currentQueryStep >=
-                                QueryStep.documentForVisa,
+                            isActive: (currentQueryStep >= QueryStep.documentForVisa) || isEditable,
                             isLast: false,
                             function: () {
-                              if (currentQueryStep < QueryStep.documentForVisa) {
-                                return;
-                              }
-                              currentQueryStep =
-                                  QueryStep.documentForVisa;
+                              setState(() {
+                                currentQueryStep = QueryStep.documentForVisa;
+                                isEditable = true;
+                                loading = true;
+                              });
+                              fetchStepData(widget.queryId!, QueryStep.documentForVisa);
                               // controller
                               //     .getCurrentStepData(QueryStep.documentForVisa);
                             }),
@@ -129,27 +136,20 @@ class _QueryFormState extends State<QueryForm> {
                                     QueryStep.payment,
                                 isLast: false,
                                 function: () {
-                                  // if (queryStep < QueryStep.payment) {
-                                  //   return;
-                                  // }
-                                  // controller.currentStep.value =
-                                  //     QueryStep.payment;
-                                  // controller
-                                  //     .getCurrentStepData(QueryStep.payment);
                                 })
                             : const SizedBox(),
                         CustomStep(
                             stepName: stepName[3],
                             isActive:
-                            currentQueryStep >= QueryStep.payment,
+                            (currentQueryStep >= QueryStep.ticketsAndVisa) || isEditable,
                             isLast: true,
                             function: () {
-                              // if (queryStep < QueryStep.ticketsAndVisa) {
-                              //   return;
-                              // }
-                              // controller.currentStep.value =
-                              //     QueryStep.ticketsAndVisa;
-                              // controller.getCurrentStepData(QueryStep.ticketsAndVisa);
+                              setState(() {
+                                currentQueryStep = QueryStep.ticketsAndVisa;
+                                isEditable = true;
+                                loading = true;
+                              });
+                              fetchStepData(widget.queryId!, QueryStep.ticketsAndVisa);
                             }),
                       ],
                     ),

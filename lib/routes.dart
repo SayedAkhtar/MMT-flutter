@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/bindings/ConsultationBinding.dart';
 import 'package:MyMedTrip/bindings/HospitalBinding.dart';
 import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
 import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
@@ -86,7 +87,6 @@ class Routes {
   static String teleconsultationConnect = '/teleconsultation_connect';
   static String videoChat = '/video_chat';
   static String supportCall = '/support_call';
-
 }
 
 final getPages = [
@@ -97,153 +97,80 @@ final getPages = [
   GetPage(
       name: Routes.login,
       page: () => const LoginPage(),
-      bindings: [AuthBinding(),InitialBinding()]
-  ),
-  GetPage(
-      name: Routes.registerFirstStep,
-      page: () => const SignupHerePage()
-  ),
+      bindings: [AuthBinding(), InitialBinding()]),
+  GetPage(name: Routes.registerFirstStep, page: () => const SignupHerePage()),
   GetPage(
       name: Routes.registerSecondStep,
-      page: () => const Complete_Sign_Up_Page()
-  ),
+      page: () => const Complete_Sign_Up_Page()),
+  GetPage(name: Routes.otpVerify, page: () => const Verify_page()),
+  GetPage(name: Routes.profile, page: () => const Profile_Page()),
+  GetPage(name: Routes.biometric, page: () => const Login_fingerprint_page()),
+  GetPage(name: Routes.home, page: () => const Home_screen(), bindings: [
+    QueryBinding(),
+  ]),
+  GetPage(name: Routes.faq, page: () => const FAQS_Page()),
+  GetPage(name: Routes.setting, page: () => const User_Profile()),
+  GetPage(name: Routes.addPersonalDetail, page: () => Profile_edit_page()),
+  GetPage(name: Routes.addMedicalDetail, page: () => const Medical_Edit_page()),
+  GetPage(name: Routes.support, page: () => const Need_Help_page()),
+  GetPage(name: Routes.addFamily, page: () => const Add_family_page()),
+  GetPage(name: Routes.listFamily, page: () => const Add_Family_List_page()),
+  GetPage(name: Routes.listQuery, page: () => const Query_page()),
   GetPage(
-      name: Routes.otpVerify,
-      page: () => const Verify_page()
+    name: Routes.startQuery,
+    page: () => const Generate_New_Query(),
+    binding: QueryBinding(),
   ),
+  GetPage(name: Routes.confirmedQuery, page: () => QueryConfirmed()),
+  GetPage(name: Routes.noCoordinator, page: () => const NoCoordinator()),
   GetPage(
-      name: Routes.profile,
-      page: () => const Profile_Page()
+    name: Routes.connects,
+    page: () => const Connect_Home_page(),
+    binding: ConsultationBinding(),
   ),
-  GetPage(
-      name: Routes.biometric,
-      page: () => const Login_fingerprint_page()
-  ),
-  GetPage(
-      name: Routes.home,
-      page: () => const Home_screen(),
-      bindings: [
-        QueryBinding(),
-      ]
-  ),
-  GetPage(
-      name: Routes.faq,
-      page: () => const FAQS_Page()
-  ),
-  GetPage(
-      name: Routes.setting,
-      page: () => const User_Profile()
-  ),
-  GetPage(
-      name: Routes.addPersonalDetail,
-      page: () => Profile_edit_page()
-  ),
-  GetPage(
-      name: Routes.addMedicalDetail,
-      page: () => const Medical_Edit_page()
-  ),
-  GetPage(
-      name: Routes.support,
-      page: () => const Need_Help_page()
-  ),
-  GetPage(
-      name: Routes.addFamily,
-      page: () => const Add_family_page()
-  ),
-  GetPage(
-      name: Routes.listFamily,
-      page: () => const Add_Family_List_page()
-  ),
-  GetPage(
-      name: Routes.listQuery,
-      page: () => const Query_page()
-  ),
-  GetPage(
-      name: Routes.startQuery,
-      page: () => const Generate_New_Query(),
-      binding: QueryBinding(),
-  ),
-  GetPage(
-      name: Routes.confirmedQuery,
-      page: () => QueryConfirmed()
-  ),
-  GetPage(
-      name: Routes.noCoordinator,
-      page: () => const NoCoordinator()
-  ),
-  GetPage(
-      name: Routes.connects,
-      page: () => const Connect_Home_page()
-  ),
-  GetPage(
-      name: Routes.chat,
-      page: () => const Messages_pages()
-  ),
-  GetPage(
-      name: Routes.blogs,
-      page: () => const Trending_blog_page()
-  ),
+  GetPage(name: Routes.chat, page: () => const Messages_pages()),
+  GetPage(name: Routes.blogs, page: () => const Trending_blog_page()),
   // GetPage(
   //     name: Routes.blogDetails,
   //     page: () => ReadBlogPage("title", "description")
   // ),
   GetPage(
-      name: Routes.hospitals,
-      page: () => const HospitalsListPage(),
-      binding: HospitalBinding(),
+    name: Routes.hospitals,
+    page: () => const HospitalsListPage(),
+    binding: HospitalBinding(),
   ),
   GetPage(
-      name: Routes.hospitalPreview,
-      page: () => const HospitalDetailsScreen(),
-      // binding: HospitalBinding(),
-
+    name: Routes.hospitalPreview,
+    page: () => const HospitalDetailsScreen(),
+    // binding: HospitalBinding(),
   ),
   GetPage(
       name: Routes.treatmentsAvailable,
-      page: () => const Available_Treatment()
+      page: () => const Available_Treatment()),
+  GetPage(name: Routes.patientTestimony, page: () => const Patient_page()),
+  GetPage(
+    name: Routes.doctors,
+    page: () => const Doctors_list_page(),
+    binding: DoctorBinding(),
   ),
   GetPage(
-      name: Routes.patientTestimony,
-      page: () => const Patient_page()
+    name: Routes.doctorPreview,
+    page: () => const Doctors_Details_page(),
+    binding: DoctorBinding(),
   ),
   GetPage(
-      name: Routes.doctors,
-      page: () => const Doctors_list_page(),
-      binding: DoctorBinding(),
-  ),
-  GetPage(
-      name: Routes.doctorPreview,
-      page: () => const Doctors_Details_page(),
-      binding: DoctorBinding(),
-  ),
-  GetPage(
-      name: Routes.doctorPreviewNew,
-      page: () => DoctorDetailScreen(),
+    name: Routes.doctorPreviewNew,
+    page: () => DoctorDetailScreen(),
   ),
   GetPage(
       name: Routes.teleconsultationSchedule,
-      page: () => const TeLe_Consult_page()
-  ),
+      page: () => const TeLe_Consult_page()),
+  GetPage(name: Routes.teleconsultationPay, page: () => const Schedule_page()),
   GetPage(
-      name: Routes.teleconsultationPay,
-      page: () => const Schedule_page()
-  ),
-  GetPage(
-      name: Routes.teleconsultationConfirm,
-      page: () => const Thank_you_page()
-  ),
+      name: Routes.teleconsultationConfirm, page: () => const Thank_you_page()),
   GetPage(
       name: Routes.teleconsultationConnect,
-      page: () => const Doctor_call_page()
-  ),
-  GetPage(
-      name: Routes.videoChat,
-      page: () => const Video_Call_Screen()
-  ),
-  GetPage(
-      name: Routes.supportCall,
-      page: () => const SupportConnect()
-  ),
-
+      page: () => const Doctor_call_page()),
+  GetPage(name: Routes.videoChat, page: () => const Video_Call_Screen()),
+  GetPage(name: Routes.supportCall, page: () => const SupportConnect()),
 ];
-

@@ -13,6 +13,7 @@ import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:logger/logger.dart';
 import 'package:select_dialog/select_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
@@ -21,7 +22,8 @@ class EditDocumentForVisaForm extends StatefulWidget {
   const EditDocumentForVisaForm(this.response, {super.key});
   final QueryResponse response;
   @override
-  State<EditDocumentForVisaForm> createState() => _EditDocumentForVisaFormState();
+  State<EditDocumentForVisaForm> createState() =>
+      _EditDocumentForVisaFormState();
 }
 
 class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
@@ -32,6 +34,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
   String secondAttendantPassport = "";
   String selectedCountry = "";
   String selectedCity = "";
+  String? vil = "";
   List<String> cityNames = [];
   @override
   void initState() {
@@ -40,6 +43,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
     patientPassport = widget.response.response!['passport'];
     attendantPassport = widget.response.response!['attendant_passport'];
     selectedCity = widget.response.response!['city'];
+    vil = widget.response.response!['vil'];
     buildCountryOption(Constants.countryIdMap[selectedCountry.toLowerCase()]!);
     super.initState();
   }
@@ -51,7 +55,8 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
   }
 
   buildCountryOption(int countryId) async {
-    var t = await GetConnect(allowAutoSignedCert: true).get('$base_uri/ajax-search/cities?country_id=$countryId');
+    var t = await GetConnect(allowAutoSignedCert: true)
+        .get('$base_uri/ajax-search/cities?country_id=$countryId');
     List<String> temp = [];
     Logger().d(t.statusText);
     if (t.statusCode == 200) {
@@ -68,12 +73,39 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: GetBuilder<QueryController>(builder: (ctrl) {
+        child: Builder(builder: (ctrl) {
           return Padding(
             padding: const EdgeInsets.all(CustomSpacer.S),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Visibility(
+                  visible: vil!=null && vil!.isNotEmpty,
+                  child: GestureDetector(
+                      onTap: () async {
+                        if (Platform.isIOS) {
+                          // for iOS phone only
+                          if (await canLaunchUrl(Uri.parse(vil!))) {
+                            await launchUrl(Uri.parse(
+                              vil!,
+                            ));
+                          } else {
+                            Get.snackbar("Cannot Open","",
+                                snackPosition: SnackPosition.BOTTOM);
+                          }
+                        } else {
+                          // android , web
+                          if (await canLaunchUrl(Uri.parse(vil!))) {
+                            await launchUrl(Uri.parse(vil!));
+                          } else {
+                            Get.snackbar("Cannot Open","",
+                                snackPosition: SnackPosition.BOTTOM);
+                          }
+                        }
+                      },
+                      child: Container(margin: EdgeInsets.only(bottom: CustomSpacer.L),child: Image.asset('assets/icons/pdf_file.png'))
+                  ),
+                ),
                 _documentUploadListTile(
                     title: "Upload Edit Patient's Passport here",
                     name: 'patient_passport'),
@@ -104,19 +136,19 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                       thickness: 0,
                       color: Colors.transparent,
                     ),
-                    items: <String>['India']
-                        .map((String value) {
+                    items: <String>['India'].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
-                    value: selectedCountry.isNotEmpty ? selectedCountry: "",
+                    value: selectedCountry.isNotEmpty ? selectedCountry : "",
                     onChanged: (value) {
                       setState(() {
                         selectedCountry = value!;
                       });
-                      buildCountryOption(Constants.countryIdMap[value!.toLowerCase()]!);
+                      buildCountryOption(
+                          Constants.countryIdMap[value!.toLowerCase()]!);
                     },
                   ),
                 ),
@@ -130,8 +162,8 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                       context,
                       label: "Select City",
                       selectedValue: selectedCountry,
-                      items:
-                      List.generate(cityNames.length, (index) => cityNames[index]),
+                      items: List.generate(
+                          cityNames.length, (index) => cityNames[index]),
                       onChange: (String selected) {
                         setState(() {
                           selectedCity = selected;
@@ -146,7 +178,8 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.withAlpha(60)),
                         borderRadius: BorderRadius.circular(10)),
-                    child: Text( selectedCity.isEmpty?"Select City".tr : selectedCity,
+                    child: Text(
+                      selectedCity.isEmpty ? "Select City".tr : selectedCity,
                       style: const TextStyle(fontSize: 16.0),
                     ),
                   ),

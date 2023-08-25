@@ -11,6 +11,7 @@ dependencies:
   adaptive_action_sheet: ^2.0.2
   lottie: ^2.2.0
   get_storage: 2.0.3
+  path_provider:
   path_provider_android: 2.0.22
   path_provider_ios: 2.0.11
   connectivity_plus: ^3.0.3

@@ -63,8 +63,8 @@ class BaseProvider extends GetConnect implements GetxService{
       case 401:
         storage.delete(key: "token");
         Get.offNamedUntil(Routes.login, (route) => false);
-        String message = response.body['MESSAGE'];
-        String error = response.body['ERROR'];
+        String message = response.body['MESSAGE'] ?? "";
+        String error = response.body['ERROR'] ?? "";
         logger.i(response.body);
         if(message.isNotEmpty && error.isNotEmpty){
           throw Exception("$message\n$error");

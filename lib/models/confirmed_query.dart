@@ -3,8 +3,8 @@ class ConfirmedQuery {
   Accommodation? accommodation;
   Cab? cab;
   Coordinator? coordinator;
-
-  ConfirmedQuery({this.accommodation, this.cab, this.coordinator});
+  List<Status>? statuses;
+  ConfirmedQuery({this.accommodation, this.cab, this.coordinator, this.statuses});
 
   ConfirmedQuery.fromJson(Map<String, dynamic> json) {
     accommodation = json['accommodation'] != null
@@ -14,6 +14,14 @@ class ConfirmedQuery {
     coordinator = json['coordinator'] != null
         ? new Coordinator.fromJson(json['coordinator'])
         : null;
+    List<Status> tempStatus = [];
+    if(json['status'] != null){
+      json['status'].forEach((element){
+        Status t = Status.fromJson(element);
+        tempStatus.add(t);
+      });
+    }
+    statuses = tempStatus;
   }
 
   Map<String, dynamic> toJson() {
@@ -62,8 +70,8 @@ class Cab {
 
   Cab.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    number = json['number'];
-    type = json['type'];
+    number = json['car_number'];
+    type = json['car_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +104,28 @@ class Coordinator {
     data['phone'] = this.phone;
     data['email'] = this.email;
     data['image'] = this.image;
+    return data;
+  }
+}
+
+class Status {
+  String? status;
+  List<String>? file;
+  int? timestamp;
+
+  Status({this.status, this.file, this.timestamp});
+
+  Status.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    file = json['file'].cast<String>();
+    timestamp = json['timestamp'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['file'] = this.file;
+    data['timestamp'] = this.timestamp;
     return data;
   }
 }

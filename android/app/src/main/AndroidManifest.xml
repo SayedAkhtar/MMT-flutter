@@ -4,7 +4,9 @@
    <application
         android:label="MyMedTrip"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+       android:requestLegacyExternalStorage="true"
+       >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -14,7 +16,8 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:showWhenLocked="true"
-            android:turnScreenOn="true">
+            android:turnScreenOn="true"
+            >
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -51,6 +54,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />

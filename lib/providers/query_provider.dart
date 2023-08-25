@@ -59,13 +59,13 @@ class QueryProvider extends BaseProvider {
     return false;
   }
 
-  Future getConfirmedQueryDetail(int queryId) async{
+  Future<ConfirmedQuery?>? getConfirmedQueryDetail(int queryId) async{
     try {
       Response response = await get('/queries/${queryId}/${QueryStep.queryConfirmed}',
           contentType: 'application/json', headers: _headers);
       var jsonString = await responseHandler(response);
       if(jsonString is List && jsonString.isEmpty){
-        return;
+        return null;
       }
       return ConfirmedQuery.fromJson(jsonString);
     } catch (error) {
@@ -153,6 +153,21 @@ class QueryProvider extends BaseProvider {
       }
     }catch(e){
       Loaders.errorDialog(e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> placeCall(String uuid, {String? userId}) async{
+    try{
+      // Loaders.loadingDialog(title: "Calling");
+      Response response = await post('/trigger-support-call', {'uuid': uuid, 'user_id': userId}, headers: _headers);
+      responseHandler(response);
+      if(response.isOk){
+        // Loaders.closeLoaders();
+        return true;
+      }
+    }catch(e){
+      // Loaders.errorDialog(e.toString());
     }
     return false;
   }

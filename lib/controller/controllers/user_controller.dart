@@ -115,12 +115,15 @@ class UserController extends GetxController {
     required String oldPassword,
     required String newPassword,
     required String confirmPassword,
+    required LocalUser user,
   }) async {
     Loaders.loadingDialog();
     bool res = await _provider.updateUserPassword(
         oldPassword: oldPassword,
         newPassword: newPassword,
-        confirmPassword: confirmPassword);
+        confirmPassword: confirmPassword,
+        user: user
+    );
     if(res){
       AuthController authController = Get.find<AuthController>();
       authController.logout();

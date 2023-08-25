@@ -129,12 +129,12 @@ class User_Profile extends GetView<UserController> {
                     _menuLinks(context, onTap: () {
                       Get.to(const ChangePassword());
                     }, label: "Change Password"),
-                    _menuLinks(context,
-                        onTap: () {},
-                        label: "Notifications",
-                        linkAction: Switch(value: false, onChanged: (value) {}),
-                        subLabel:
-                            "Manage if you want to receive updates about promotion features or news"),
+                    // _menuLinks(context,
+                    //     onTap: () {},
+                    //     label: "Notifications",
+                    //     linkAction: Switch(value: false, onChanged: (value) {}),
+                    //     subLabel:
+                    //         "Manage if you want to receive updates about promotion features or news"),
                     _menuLinks(context, onTap: () {
                       Get.to(ChangeLanguagePage());
                     }, label: "App Language"),
