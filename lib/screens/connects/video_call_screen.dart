@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -8,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
@@ -16,6 +19,7 @@ import 'package:MyMedTrip/models/message_model.dart';
 import 'package:MyMedTrip/models/user_model.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../constants/colors.dart';
 
@@ -40,13 +44,16 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   late FirebaseDatabase database;
   late DatabaseReference dbRef;
   late String storageRef;
+  late Stream<DatabaseEvent> messageStream;
+  late StreamSubscription<DatabaseEvent> streamSubscription;
+
   final ScrollController _messageScrollController = ScrollController();
 
   int messageFrom = 1;
   String messageType = "image";
   TextEditingController messageController = TextEditingController();
 
-  late List<Message> messages;
+  late List<ChatMessage> messages;
 
   @override
   void initState() {
@@ -59,8 +66,19 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
         .ref("messages/${argumentData['channelName']}/");
     storageRef = "messages/${argumentData['channelName']}";
     getMessages();
+    WakelockPlus.enable();
+    messageStream = dbRef.onValue;
+    startListening();
     super.initState();
   }
+
+  void startListening() {
+    streamSubscription = messageStream.listen((DatabaseEvent event) {
+      // print(event.snapshot.children.last);
+    });
+  }
+
+
 
   @override
   void dispose() {
@@ -68,7 +86,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     super.dispose();
     disposeAgora();
     messageController.dispose();
-    database.goOffline();
+    // database.goOffline();
   }
 
   void requestPermissions() async {
@@ -126,6 +144,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       frameRate: 15,
       bitrate: 0,
     ));
+    await _engine.startPreview();
   }
 
   Future<void> _joinChannel() async {
@@ -154,24 +173,22 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   }
 
   Future<void> _toggleAudio() async {
-    if (enableAudio) {
-      await _engine.disableAudio();
-    } else {
-      await _engine.enableAudio();
-    }
+    await _engine.muteLocalAudioStream(enableAudio);
     setState(() {
       enableAudio = !enableAudio;
     });
   }
 
   void getMessages() async {
-    List<Message> temp = [];
+    List<ChatMessage> temp = [];
+
     try {
       DatabaseEvent event = await dbRef.once();
+
       if (event.snapshot.exists) {
         Map messageJson = event.snapshot.value as Map;
         messageJson.forEach((key, value) {
-          temp.add(Message.fromMap(value));
+          temp.add(ChatMessage.fromMap(value));
         });
         setState(() {
           messages = temp;
@@ -179,10 +196,42 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       } else {
         Logger().d("No data Available");
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
+      Loaders.errorDialog("${e.toString()} $stacktrace",
+          stackTrace: stacktrace);
       print('Error fetching data: $e');
     }
   }
+
+  Future<void> _showNotification(title, body) async {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      Random.secure().nextInt(1000).toString(),
+      'Your Channel Name',
+      channelDescription: 'Your Channel Description',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    DarwinNotificationDetails darwinNotificationDetails = const DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    final NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +292,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                       onPressed: _toggleAudio,
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            enableAudio ? Colors.black26 : Colors.greenAccent,
+                            enableAudio ? Colors.black26 : Colors.redAccent,
                         shape: CircleBorder(),
                         padding: EdgeInsets.all(14),
                       ),
@@ -276,8 +325,8 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                     CustomSpacer.s(),
                     ElevatedButton(
                       onPressed: () {
-                        getMessages();
-                        // _switchCamera();
+                        // getMessages();
+                        _switchCamera();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black26,
@@ -356,10 +405,10 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     }
   }
 
-  Widget _sentMessage(Message data) {
+  Widget _sentMessage(ChatMessage data) {
     Widget child;
     switch (data.type) {
-      case Message.IMAGE:
+      case ChatMessage.IMAGE:
         child = InkWell(
             onTap: () {
               String ext = data.message.split('.').last != ''
@@ -370,7 +419,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
             },
             child: Image.network(data.message));
         break;
-      case Message.FILE:
+      case ChatMessage.FILE:
         child = InkWell(
             onTap: () {
               String ext = data.message.split('.').last;
@@ -412,13 +461,13 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     );
   }
 
-  Widget _recievedMessage(Message data) {
+  Widget _recievedMessage(ChatMessage data) {
     Widget child;
     switch (data.type) {
-      case Message.IMAGE:
+      case ChatMessage.IMAGE:
         child = Image.network(data.message);
         break;
-      case Message.FILE:
+      case ChatMessage.FILE:
         child = Icon(
           Icons.file_copy_rounded,
           size: 32,
@@ -482,8 +531,21 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                               itemBuilder: (ctx, idx) {
                                 List<DataSnapshot> obj =
                                     event.data!.snapshot.children.toList();
-                                Message msg = Message.fromMap(
+                                ChatMessage msg = ChatMessage.fromMap(
                                     obj[idx].value as Map<dynamic, dynamic>);
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  if (_messageScrollController.hasClients) {
+                                    _messageScrollController.animateTo(
+                                      _messageScrollController
+                                          .position.maxScrollExtent,
+                                      duration: Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                    setState(() {});
+                                  }
+                                });
+
                                 if (msg.from == LocalUser.TYPE_PATIENT) {
                                   return _sentMessage(msg);
                                 } else {
@@ -513,7 +575,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  enabled: messageType != Message.TEXT,
+                                  enabled: messageType != ChatMessage.TEXT,
                                   controller: messageController,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.fromLTRB(
@@ -587,7 +649,7 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                           var t = await dbRef.get();
                           await dbRef.push().set({
                             "from": LocalUser.TYPE_PATIENT,
-                            "type": Message.TEXT,
+                            "type": ChatMessage.TEXT,
                             "message": messageController.text,
                           });
                           messageController.text = "";

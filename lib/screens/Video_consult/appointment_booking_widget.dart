@@ -78,7 +78,7 @@ class _AppointmentBookingWidgetState extends State<AppointmentBookingWidget> {
                 },
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(

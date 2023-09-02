@@ -73,17 +73,6 @@ class QueryController extends GetxController {
     }
   }
 
-  // void getQueryPageData() async {
-  //   QueryScreen? res = await _provider.getQueryScreenData();
-  //   if (res != null) {
-  //     queryScreen = res;
-  //     isLoaded.value = true;
-  //   } else {
-  //     emptyScreen = true;
-  //   }
-  //   update();
-  // }
-
   void generateQuery() async {
     Map<String, dynamic> formData = {};
     Map<String, dynamic> responseData = {};
@@ -129,18 +118,6 @@ class QueryController extends GetxController {
       bool res = await _provider.postQueryGenerationData(formData);
       if (res) {
         Get.offNamed(Routes.startQuery);
-        // switch (currentStep) {
-        //   case QueryStep.doctorResponse:
-        //     Get.toNamed(Routes.activeQueryTermsConditions);
-        //     break;
-        //   case QueryStep.documentForVisa:
-        //   case QueryStep.payment:
-        //   case QueryStep.ticketsAndVisa:
-        //     Get.toNamed(Routes.activeQueryProcessing);
-        //     break;
-        //   default:
-        //     Get.to(() => const QuerySubmissionSuccess());
-        // }
       }
     } catch (e) {
       Loaders.errorDialog(e.toString());

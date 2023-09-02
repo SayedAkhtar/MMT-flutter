@@ -170,9 +170,9 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                       ),);
                       return;
                     }
-                    if(attendantPassport.isEmpty){
+                    if(patientPassport.isEmpty){
                       Get.showSnackbar(GetSnackBar(
-                        message: "Attendant's passport is mandatory".tr,
+                        message: "Patient's passport is mandatory".tr,
                         duration: Duration(milliseconds: 1000),
                       ));
                       return;
@@ -289,18 +289,12 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
               }
               if (name == 'attendant_passport') {
                 if (attendantPassport.isNotEmpty) {
-                  // if(attendant_passport.split('.').last == 'pdf'){
                   return Image.asset('assets/icons/pdf_file.png');
-                  // }
-                  // return Image.file(File(attendant_passport));
                 }
               }
               if (name == 'second_attendant_passport') {
                 if (attendantPassport.asMap().containsKey(1)) {
-                  // if(second_attendant_passport.split('.').last == 'pdf'){
                   return Image.asset('assets/icons/pdf_file.png');
-                  // }
-                  // return Image.file(File(second_attendant_passport));
                 }
               }
               return Icon(Icons.add);

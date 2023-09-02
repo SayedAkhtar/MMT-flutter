@@ -36,6 +36,7 @@ class _QueryFormState extends State<QueryForm> {
   bool loading = false;
   bool isEditable = false;
   DateTime? currentBackPressTime;
+  List<int> editableSteps = [];
 
   List<String> stepName = [
     "Doctor\'s \nReply",
@@ -63,12 +64,13 @@ class _QueryFormState extends State<QueryForm> {
       paymentRequired = res.paymentRequired!;
       nextQueryStep = res.nextStep!;
       loading = false;
+      editableSteps = res.editableSteps!;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // print()
+    // print(response!.editableSteps);
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Query Form",
@@ -81,7 +83,7 @@ class _QueryFormState extends State<QueryForm> {
         onWillPop: ()async {
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+              now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
             currentBackPressTime = now;
             Get.showSnackbar(const GetSnackBar(title: "Are you sure to you want to exit ?", message: "Press back button twice to close the app.",duration: Duration(milliseconds: 2),));
             return Future.value(false);
@@ -117,12 +119,12 @@ class _QueryFormState extends State<QueryForm> {
                             : const SizedBox(),
                         CustomStep(
                             stepName: stepName[1],
-                            isActive: (currentQueryStep >= QueryStep.documentForVisa) || isEditable,
+                            isActive: (currentQueryStep >= QueryStep.documentForVisa) || editableSteps.contains(QueryStep.doctorResponse),
                             isLast: false,
                             function: () {
                               setState(() {
                                 currentQueryStep = QueryStep.documentForVisa;
-                                isEditable = true;
+                                // isEditable = true;
                                 loading = true;
                               });
                               fetchStepData(widget.queryId!, QueryStep.documentForVisa);
@@ -141,7 +143,7 @@ class _QueryFormState extends State<QueryForm> {
                         CustomStep(
                             stepName: stepName[3],
                             isActive:
-                            (currentQueryStep >= QueryStep.ticketsAndVisa) || isEditable,
+                            (currentQueryStep >= QueryStep.ticketsAndVisa) || editableSteps.contains(QueryStep.ticketsAndVisa),
                             isLast: true,
                             function: () {
                               setState(() {

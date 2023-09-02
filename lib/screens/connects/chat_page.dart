@@ -45,7 +45,7 @@ class _Chat_pageState extends State<Chat_page> {
                         itemCount: event.data?.snapshot.children.length,
                         itemBuilder: (_, idx) {
                           List<DataSnapshot> _currentMsg = event.data!.snapshot.children.toList();
-                          Message _msg = Message.fromMap(_currentMsg[idx].value as Map<dynamic, dynamic>);
+                          ChatMessage _msg = ChatMessage.fromMap(_currentMsg[idx].value as Map<dynamic, dynamic>);
 
                           return Wrap(
                             children: [

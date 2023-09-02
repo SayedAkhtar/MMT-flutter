@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
@@ -59,79 +60,70 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
         children: [
           Visibility(
             visible: files.isNotEmpty,
-            child: SizedBox(
-              height: 110,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: files.length,
-                  itemBuilder: (_, i) {
-                    print((files[i].split('?')[0]).split('.').last);
-                    return Stack(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        children: [
-                          Utils.getFirebaseFileExt(files[i]) == 'pdf'?
-                          Container(
-                            margin:
-                            EdgeInsets.only(right: CustomSpacer.S, top: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(
-                                  color: MYcolors.blackcolor, width: 0.2),
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      'assets/icons/pdf_file.png'
+            child: Column(
+              children: [
+                Text("Uploaded Files:"),
+                SizedBox(
+                  height: 110,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: files.length,
+                      itemBuilder: (_, i) {
+                        return Stack(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            children: [
+
+                              Utils.getFirebaseFileExt(files[i]) == 'pdf'?
+                              GestureDetector(
+                                onTap: (){
+                                  files.removeAt(i);
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  margin:
+                                  EdgeInsets.only(right: CustomSpacer.S, top: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    border: Border.all(
+                                        color: MYcolors.blackcolor, width: 0.2),
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/icons/pdf_file.png'
+                                        ),
+                                        fit: BoxFit.cover),
                                   ),
-                                  fit: BoxFit.cover),
-                            ),
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: const SizedBox(),
-                          ):
-                          Container(
-                            margin:
-                                EdgeInsets.only(right: CustomSpacer.S, top: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(
-                                  color: MYcolors.blackcolor, width: 0.2),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Image.network(
-                              files[i],
-                              fit: BoxFit.fill,
-                              loadingBuilder: (BuildContext context, Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                        : null,
+                                  height: MediaQuery.of(context).size.height * 0.1,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+                                  child: Icon(Icons.remove_circle),
+                                ),
+                              ):
+                              GestureDetector(
+                                onTap: (){
+                                  files.removeAt(i);
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.only(right: CustomSpacer.S, top: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    border: Border.all(
+                                        color: MYcolors.blackcolor, width: 0.2),
+                                    image: DecorationImage(image: NetworkImage(
+                                      files[i],
+                                    ))
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                          // Positioned(
-                          //   right: -8,
-                          //   top: -12,
-                          //   child: IconButton(
-                          //     color: Colors.white,
-                          //     onPressed: () {
-                          //       files.removeAt(i);
-                          //       setState(() {});
-                          //     },
-                          //     icon: Icon(
-                          //       Icons.remove_circle,
-                          //       color: Colors.redAccent,
-                          //     ),
-                          //   ),
-                          // ),
-                        ]);
-                  }),
+                                  clipBehavior: Clip.hardEdge,
+                                  height: MediaQuery.of(context).size.height * 0.1,
+                                  width: MediaQuery.of(context).size.width * 0.2,
+                                  child: Icon(Icons.remove_circle, color: Colors.redAccent,),
+                                ),
+                              ),
+
+                            ]);
+                      }),
+                ),
+              ],
             ),
           ),
           CustomSpacer.s(),
@@ -264,7 +256,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                                 dialogTitle: "Upload medical visa",
                                 type: FileType.custom,
                                 allowMultiple: true,
-                                allowedExtensions: ['pdf', 'docx'],
+                                allowedExtensions: ['pdf'],
                               );
                               if (result != null) {
                                 var path = result.files.single.path!;
@@ -319,7 +311,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
             onPressed: () async{
 
               QueryResponse data = widget.response!;
-              Map<String, dynamic> response = widget.response.response!;
+              Map<dynamic, dynamic> response = widget.response.response!;
               data.currentStep = QueryStep.ticketsAndVisa;
               if(visa.isNotEmpty){
                 response['visa'] = visa;

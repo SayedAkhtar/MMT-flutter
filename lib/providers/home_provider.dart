@@ -22,11 +22,9 @@ class HomeProvider extends BaseProvider {
       var body = await responseHandler(response);
       Home data = Home.fromJson(body);
       return data;
-
     } catch (error) {
       Loaders.errorDialog("${error}", title: "Error");
       printError(info: error.toString());
-      // throw const HttpException("Could not process request");
     }
     return null;
   }

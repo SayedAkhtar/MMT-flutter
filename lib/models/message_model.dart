@@ -1,4 +1,4 @@
-class Message {
+class ChatMessage {
   final String type;
   final String message;
   final int from;
@@ -7,7 +7,7 @@ class Message {
   static const TEXT = "text";
   static const FILE = "file";
 
-  const Message({
+  const ChatMessage({
     required this.type,
     required this.message,
     required this.from,
@@ -21,8 +21,8 @@ class Message {
     };
   }
 
-  factory Message.fromMap(Map<dynamic, dynamic> map) {
-    return Message(
+  factory ChatMessage.fromMap(Map<dynamic, dynamic> map) {
+    return ChatMessage(
       type: map['type'] as String,
       message: map['message'] as String,
       from: map['from'] as int,

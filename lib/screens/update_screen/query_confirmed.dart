@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:math';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/foundation.dart';
@@ -178,10 +179,12 @@ class QueryConfirmed extends GetView<QueryController> {
               ),
             ),
 
-            kDebugMode?
+
             ElevatedButton(
               onPressed: () {
-                Get.to(NoCoordinator());
+                Get.to(NoCoordinator(
+                  phoneNumber: Get.find<UserController>().user?.phoneNo,
+                ));
               },
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -206,7 +209,7 @@ class QueryConfirmed extends GetView<QueryController> {
                   textAlign: TextAlign.center,
                 ),
               ),
-            ):SizedBox()
+            )
           ],
         ),
       ),

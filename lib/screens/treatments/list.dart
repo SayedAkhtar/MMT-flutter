@@ -10,6 +10,7 @@ import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
 class TreatmentsList extends StatefulWidget {
@@ -159,13 +160,13 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                 TableRow(
                                   children: [
                                     Text("Maximum Price (USD):"),
-                                    Text(allData![i]!.maxPrice.toString())
+                                    Text("\$ ${allData![i]!.maxPrice}")
                                   ]
                                 ),
                                 TableRow(
                                     children: [
                                       Text("Minimum Price (USD):"),
-                                      Text(allData![i]!.minPrice.toString())
+                                      Text("\$ ${allData![i]!.minPrice}")
                                     ]
                                 ),
                                 TableRow(
@@ -189,13 +190,14 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                 TableRow(
                                     children: [
                                       Text("Covered:"),
-                                      Text(allData![i]!.covered.toString())
+                                      // Html(data: data)
+                                      Html(data: allData![i]!.covered.toString())
                                     ]
                                 ),
                                 TableRow(
                                     children: [
-                                      Text("Not Covered:"),
-                                      Text("${allData![i]!.notCovered ?? 'N/A'}")
+                                      const Text("Not Covered:"),
+                                      Html(data: allData![i]!.notCovered ?? 'N/A')
                                     ]
                                 ),
 

@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
-import 'package:MyMedTrip/screens/TestCallScreen.dart';
-import 'package:MyMedTrip/screens/connects/chat_page.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -18,6 +16,8 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/login/loading_page.dart';
 import 'package:path_provider_android/path_provider_android.dart';
 import 'package:path_provider_ios/path_provider_ios.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+// import 'package:wakelock/wakelock.dart';
 import 'bindings/InitialBinding.dart';
 
 @pragma('vm:entry-point')

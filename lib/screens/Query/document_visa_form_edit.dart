@@ -2,8 +2,10 @@
 
 import 'dart:io';
 
+import 'package:MyMedTrip/components/FileViewerScreen.dart';
 import 'package:MyMedTrip/constants/constants.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,14 +36,14 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
   String secondAttendantPassport = "";
   String selectedCountry = "";
   String selectedCity = "";
-  String? vil = "";
+  List? vil = [];
   List<String> cityNames = [];
   @override
   void initState() {
     // TODO: implement initState
     selectedCountry = widget.response.response!['country'];
     patientPassport = widget.response.response!['passport'];
-    attendantPassport = widget.response.response!['attendant_passport'];
+    attendantPassport = widget.response.response!['attendant_passport'] ?? [];
     selectedCity = widget.response.response!['city'];
     vil = widget.response.response!['vil'];
     buildCountryOption(Constants.countryIdMap[selectedCountry.toLowerCase()]!);
@@ -75,46 +77,46 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
       body: SingleChildScrollView(
         child: Builder(builder: (ctrl) {
           return Padding(
-            padding: const EdgeInsets.all(CustomSpacer.S),
+            padding: const EdgeInsets.symmetric(horizontal: CustomSpacer.S),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Visibility(
-                  visible: vil!=null && vil!.isNotEmpty,
-                  child: GestureDetector(
-                      onTap: () async {
-                        if (Platform.isIOS) {
-                          // for iOS phone only
-                          if (await canLaunchUrl(Uri.parse(vil!))) {
-                            await launchUrl(Uri.parse(
-                              vil!,
-                            ));
-                          } else {
-                            Get.snackbar("Cannot Open","",
-                                snackPosition: SnackPosition.BOTTOM);
-                          }
-                        } else {
-                          // android , web
-                          if (await canLaunchUrl(Uri.parse(vil!))) {
-                            await launchUrl(Uri.parse(vil!));
-                          } else {
-                            Get.snackbar("Cannot Open","",
-                                snackPosition: SnackPosition.BOTTOM);
-                          }
-                        }
-                      },
-                      child: Container(margin: EdgeInsets.only(bottom: CustomSpacer.L),child: Image.asset('assets/icons/pdf_file.png'))
-                  ),
-                ),
-                _documentUploadListTile(
-                    title: "Upload Edit Patient's Passport here",
-                    name: 'patient_passport'),
-                _documentUploadListTile(
-                    title: "Upload Attendant's Passport here",
-                    name: 'attendant_passport'),
-                _documentUploadListTile(
-                    title: "Upload Second Attendant's Passport here, (If any)",
-                    name: 'second_attendant_passport'),
+                (vil != null && vil!.isNotEmpty)
+                    ? GridView(
+                  shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisSpacing: CustomSpacer.S, crossAxisSpacing: CustomSpacer.S),
+                        children: vil!
+                            .map(
+                              (e) => GestureDetector(
+                                onTap: () async {
+                                  Get.to(() => FileViewerScreen(fileUrl: e!));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(CustomSpacer.XS),
+                                  // decoration: BoxDecoration(
+                                  //   border: Border.fromBorderSide(BorderSide(color: Colors.black54)),
+                                  //   borderRadius: BorderRadius.circular(CustomSpacer.S)
+                                  // ),
+                                  margin:
+                                      EdgeInsets.only(bottom: CustomSpacer.L),
+                                  child:
+                                  Column(
+                                    children: [
+                                      Flexible(
+                                        flex: 2,
+                                        child: e!.endsWith('.pdf') ?  Image.asset('assets/icons/pdf_file.png') : Image.network(
+                                            e!,),
+                                      ),
+                                      CustomSpacer.xs(),
+                                      Flexible(child: Text(e!.split('/').last, style: AppStyle.txtUrbanistRegular16.copyWith(color: Colors.black),)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : const SizedBox(),
                 CustomSpacer.m(),
                 FormLabel(
                   "Where will you be applying for \nyour visa ?".tr,
@@ -124,64 +126,31 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                   "Country".tr,
                 ),
                 Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.only(
+                      left: 15, bottom: 15, top: 11, right: 15),
                   decoration: BoxDecoration(
-                      border: Border.all(color: MYcolors.greycolor),
-                      borderRadius: BorderRadius.circular(8)),
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: CustomSpacer.XS),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    underline: const Divider(
-                      height: 0,
-                      thickness: 0,
-                      color: Colors.transparent,
-                    ),
-                    items: <String>['India'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    value: selectedCountry.isNotEmpty ? selectedCountry : "",
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCountry = value!;
-                      });
-                      buildCountryOption(
-                          Constants.countryIdMap[value!.toLowerCase()]!);
-                    },
+                      border: Border.all(color: Colors.grey.withAlpha(60)),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    selectedCountry.isNotEmpty ? selectedCountry : "",
+                    style: const TextStyle(fontSize: 16.0),
                   ),
                 ),
                 CustomSpacer.s(),
                 FormLabel(
                   "City".tr,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    SelectDialog.showModal<String>(
-                      context,
-                      label: "Select City",
-                      selectedValue: selectedCountry,
-                      items: List.generate(
-                          cityNames.length, (index) => cityNames[index]),
-                      onChange: (String selected) {
-                        setState(() {
-                          selectedCity = selected;
-                        });
-                      },
-                    );
-                  },
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.only(
-                        left: 15, bottom: 15, top: 11, right: 15),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.withAlpha(60)),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      selectedCity.isEmpty ? "Select City".tr : selectedCity,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
+                Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.only(
+                      left: 15, bottom: 15, top: 11, right: 15),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.withAlpha(60)),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    selectedCity.isEmpty ? "Select City".tr : selectedCity,
+                    style: const TextStyle(fontSize: 16.0),
                   ),
                 ),
               ],

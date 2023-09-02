@@ -87,7 +87,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                       ['is_active']) {
                                     Get.showSnackbar(GetSnackBar(
                                       title: "Consultation not yet active",
-                                      message: "Scheduled at :" + _schedule,
+                                      message: "Scheduled at :$_schedule",
                                       duration: Duration(seconds: 5),
                                       showProgressIndicator: true,
                                       onTap: (event){
@@ -134,7 +134,17 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Doctor",
+                                              "TELE-${_controller.consultationList[idx]['id']}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  // fontFamily: "Brandon",
+                                                  fontSize: 15,
+                                                  color:
+                                                  MYcolors.blacklightcolors),
+                                            ),
+                                            Text(
+                                              "${_controller.consultationList[idx]
+                                              ['doctor_name'] ?? 'Doctor'}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   // fontFamily: "Brandon",

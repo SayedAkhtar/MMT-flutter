@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
+import 'package:MyMedTrip/components/FileViewerScreen.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
@@ -71,16 +72,22 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
                 children: responses.asMap().entries.map(
                   (e) {
                     String? html = e.value['doctor'];
-                    if(e.value['proforma_invoice'].isNotEmpty){
-                      html = '$html <a href="${e.value['proforma_invoice']}" target="_blank" rel="nofollow">Proforma Invoice</a>';
-                    }
-                    return SingleChildScrollView(
-                      child: Html(
-                        data: html,
-                        onAnchorTap: (String? url, Map<String, String> attributes, element) async {
-                          launchUrl(Uri.parse(url!));
-                        },
-                      ),
+                    print(e.value['proforma_invoice']);
+                    return Column(
+                      children: [
+                        SingleChildScrollView(
+                          child: Html(
+                            data: html
+                          ),
+                        ),
+                        (e.value['proforma_invoice'] != null && e.value['proforma_invoice'].isNotEmpty)?
+                        TextButton(onPressed: () async {
+                          Get.to(() => FileViewerScreen(fileUrl: e.value['proforma_invoice']));
+
+                          // Response res = await GetConnect().get(e.value['proforma_invoice']);
+                          // print(res.body.toString());
+                        }, child: Text('Proforma Invoice'),): const SizedBox()
+                      ],
                     );
                   },
                 ).toList(),
@@ -88,157 +95,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
             ),
           ]),
         )),
-        // Expanded(
-        //   child: SingleChildScrollView(
-        //       child: Html(
-        //     data: widget.response.response!['doctor'],
-        //   )),
-        // ),
-        // Builder(builder: (con) {
-        //   if (widget.response.response!['patient'] == null) {
-        //     return SizedBox();
-        //   }
-        //   return Column(
-        //     mainAxisAlignment: MainAxisAlignment.start,
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Text(
-        //         "Uploaded documents: ".tr,
-        //         style: AppStyle.txtSourceSansProSemiBold18,
-        //       ),
-        //       Container(
-        //         height: 50,
-        //         margin: EdgeInsets.only(top: CustomSpacer.XS),
-        //         child: ListView.builder(
-        //             scrollDirection: Axis.horizontal,
-        //             shrinkWrap: true,
-        //             itemCount: widget.response.response!['patient']?.length,
-        //             itemBuilder: (_, i) {
-        //               return Container(
-        //                 height: 50,
-        //                 width: 50,
-        //                 padding: EdgeInsets.all(CustomSpacer.XS),
-        //                 margin: EdgeInsets.only(right: CustomSpacer.XS),
-        //                 decoration: BoxDecoration(
-        //                   borderRadius: BorderRadius.circular(7),
-        //                   border: Border.all(
-        //                       color: MYcolors.blackcolor, width: 0.2),
-        //                   image: DecorationImage(
-        //                       image: AssetImage('assets/icons/pdf_file.png'),
-        //                       fit: BoxFit.scaleDown,
-        //                       onError: (_, stackTrace) {
-        //                         print(stackTrace);
-        //                       }),
-        //                 ),
-        //               );
-        //             }),
-        //       ),
-        //     ],
-        //   );
-        // }),
-        // SizedBox(
-        //   height: MediaQuery.of(context).size.height * 0.02,
-        // ),
-        // Builder(builder: (context) {
-        //   if (documentRequired) {
-        //     return Row(
-        //       children: [
-        //         GestureDetector(
-        //           onTap: () {
-        //             showAdaptiveActionSheet(
-        //               context: context,
-        //               actions: <BottomSheetAction>[
-        //                 BottomSheetAction(
-        //                   title: const Text('Choose from Library'),
-        //                   onPressed: (_) async {
-        //                     FilePickerResult? result =
-        //                         await FilePicker.platform.pickFiles(
-        //                       allowMultiple: true,
-        //                       dialogTitle: "Upload medical documents",
-        //                       type: FileType.custom,
-        //                       allowedExtensions: [
-        //                         'jpeg',
-        //                         'jpg',
-        //                         'heic',
-        //                         'png',
-        //                         'pdf'
-        //                       ],
-        //                     );
-        //
-        //                     if (result != null) {
-        //                       List<File> files = [];
-        //                       result.files.forEach((element) {
-        //                         files.add(File(element.path!));
-        //                       });
-        //                       List<String>? filesPaths =
-        //                           await FirebaseFunctions.uploadMultipleFiles(
-        //                               files,
-        //                               title:
-        //                                   "Uploading documents. Please wait.");
-        //                       setState(() {
-        //                         docPath = filesPaths!;
-        //                       });
-        //                     } else {
-        //                       // User canceled the picker
-        //                     }
-        //                     Get.back();
-        //                   },
-        //                 ),
-        //                 BottomSheetAction(
-        //                   title: const Text('Remove Photo',
-        //                       style: TextStyle(color: MYcolors.redcolor)),
-        //                   onPressed: (_) {
-        //                     setState(() {
-        //                       docPath = [];
-        //                     });
-        //                     Get.back();
-        //                   },
-        //                 ),
-        //               ],
-        //               cancelAction: CancelAction(
-        //                   title: Text(
-        //                 'Cancel',
-        //                 style: TextStyle(color: MYcolors.redcolor),
-        //               )),
-        //             );
-        //           },
-        //           child: Container(
-        //               decoration: BoxDecoration(
-        //                 borderRadius: BorderRadius.circular(7),
-        //                 border:
-        //                     Border.all(color: MYcolors.blackcolor, width: 0.2),
-        //               ),
-        //               height: 100,
-        //               width: 100,
-        //               child: Builder(builder: (context) {
-        //                 if (docPath.isNotEmpty) {
-        //                   return Image.asset('assets/icons/pdf_file.png');
-        //                 }
-        //                 return Icon(Icons.add);
-        //               })
-        //
-        //               // controller.medicalVisaPath != ""? Image.file(File(controller.medicalVisaPath)):Icon(Icons.add),
-        //               ),
-        //         ),
-        //         SizedBox(
-        //           width: MediaQuery.of(context).size.width * 0.03,
-        //         ),
-        //         Flexible(
-        //           child: Text(
-        //             docPath.isNotEmpty
-        //                 ? "${docPath.length} documents uploaded"
-        //                 : "Upload the document here".tr,
-        //             style: TextStyle(
-        //               fontWeight: FontWeight.bold,
-        //               fontSize: 18,
-        //             ),
-        //           ),
-        //         )
-        //       ],
-        //     );
-        //   }
-        //   return SizedBox();
-        // }),
+
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.02,
         ),

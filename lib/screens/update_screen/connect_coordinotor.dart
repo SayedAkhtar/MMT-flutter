@@ -3,138 +3,16 @@ import 'dart:async';
 
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_callkit_incoming/entities/entities.dart';
-import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
 
 import '../../providers/query_provider.dart';
-
-// class NoCoordinator extends StatefulWidget {
-//   const NoCoordinator({super.key});
-//
-//   @override
-//   State<StatefulWidget> createState() {
-//     return NoCoordinatorState();
-//   }
-// }
-//
-// class NoCoordinatorState extends State<NoCoordinator> {
-//   late CallKitParams? calling;
-//
-//   Timer? _timer;
-//   int _start = 0;
-//
-//   void startTimer() {
-//     const oneSec = Duration(seconds: 1);
-//     _timer = Timer.periodic(
-//       oneSec,
-//           (Timer timer) {
-//         setState(() {
-//           _start++;
-//         });
-//       },
-//     );
-//   }
-//
-//   String intToTimeLeft(int value) {
-//     int h, m, s;
-//     h = value ~/ 3600;
-//     m = ((value - h * 3600)) ~/ 60;
-//     s = value - (h * 3600) - (m * 60);
-//     String hourLeft = h.toString().length < 2 ? '0$h' : h.toString();
-//     String minuteLeft = m.toString().length < 2 ? '0$m' : m.toString();
-//     String secondsLeft = s.toString().length < 2 ? '0$s' : s.toString();
-//     String result = "$hourLeft:$minuteLeft:$secondsLeft";
-//     return result;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     var timeDisplay = intToTimeLeft(_start);
-//
-//     return Scaffold(
-//       appBar: CustomAppBarSecondary(
-//         height: getHorizontalSize(60),
-//         leading: IconButton(
-//             icon: Icon(Icons.chevron_left, color: Colors.black,),
-//           onPressed: () {
-//               Get.back();
-//           },
-//         ),
-//       ),
-//       body: SizedBox(
-//         height: MediaQuery.of(context).size.height,
-//         width: double.infinity,
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               Text(timeDisplay),
-//               const Text('Calling...'),
-//               TextButton(
-//                 style: ButtonStyle(
-//                   foregroundColor:
-//                   MaterialStateProperty.all<Color>(Colors.blue),
-//                 ),
-//                 onPressed: () async {
-//                   if (calling != null) {
-//                     await makeFakeConnectedCall(calling!.id!);
-//                     startTimer();
-//                   }
-//                 },
-//                 child: const Text('Fake Connected Call'),
-//               ),
-//               ElevatedButton(
-//                 style: ButtonStyle(
-//                   foregroundColor:
-//                   MaterialStateProperty.all<Color>(Colors.blue),
-//                 ),
-//                 onPressed: () async {
-//                   if (calling != null) {
-//                     await makeEndCall(calling!.id!);
-//                     calling = null;
-//                   }
-//
-//                   await requestHttp('END_CALL');
-//                 },
-//                 child: const Text('End Call'),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Future<void> makeFakeConnectedCall(id) async {
-//     await FlutterCallkitIncoming.setCallConnected(id);
-//   }
-//
-//   Future<void> makeEndCall(id) async {
-//     await FlutterCallkitIncoming.endCall(id);
-//   }
-//
-//   //check with https://webhook.site/#!/2748bc41-8599-4093-b8ad-93fd328f1cd2
-//   Future<void> requestHttp(content) async {
-//     get(Uri.parse(
-//         'https://webhook.site/2748bc41-8599-4093-b8ad-93fd328f1cd2?data=$content'));
-//   }
-//
-//   @override
-//   void dispose() {
-//     super.dispose();
-//     _timer?.cancel();
-//     if (calling != null) FlutterCallkitIncoming.endCall(calling!.id!);
-//   }
-// }
 
 const APP_ID = "20971648246c496fa6e2a8856c4e0d1e";
 class NoCoordinator extends StatefulWidget {
@@ -153,12 +31,18 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   late RtcEngine? _engine;
   late String callToken;
   String callState = "";
+  bool _enableInEarMonitoring = false;
+  double _inEarMonitoringVolume = 100;
+  bool _isNear = false;
+  late StreamSubscription<dynamic> _streamSubscription;
 
   @override
   void initState() {
     callToken = idGenerator();
     provider = Get.put(QueryProvider());
+    // listenSensor();
     initiateCall();
+    _toggleScreenOnOff();
     super.initState();
 
   }
@@ -166,6 +50,20 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _streamSubscription.cancel();
+  }
+
+  Future<void> listenSensor() async {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (kDebugMode) {
+        FlutterError.dumpErrorToConsole(details);
+      }
+    };
+    _streamSubscription = ProximitySensor.events.listen((int event) {
+      setState(() {
+        _isNear = (event > 0) ? true : false;
+      });
+    });
   }
 
   void initiateCall() async {
@@ -224,12 +122,19 @@ class _NoCoordinatorState extends State<NoCoordinator> {
           onError: (ErrorCodeType codeType, message){
             debugPrint("$codeType : $message");
             _startCallTimer();
+          },
+          onFacePositionChanged: (int imageWidth, int imageHeight, List<Rectangle> vecRectangle,
+              List<int> vecDistance, int numFaces){
+            print(vecDistance);
+            Logger().d(vecDistance[0]);
           }
+
       ),
     );
     await _engine!.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await _engine!.enableAudio();
     await _engine!.setDefaultAudioRouteToSpeakerphone(false);
+    // await _engine!.
     await joinChannel();
   }
 
@@ -259,8 +164,8 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     const oneSecond = Duration(seconds: 1);
     Future.delayed(oneSecond, () {
       setState(() {
-        _callDuration = _callDuration + oneSecond;
         if(callState == "Connected"){
+        _callDuration = _callDuration + oneSecond;
           _startCallTimer();
         }
       });
@@ -268,17 +173,17 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   }
 
   void _toggleSpeaker() async{
-    await _engine!.setEnableSpeakerphone(_isSpeakerOn);
     setState(() {
       _isSpeakerOn = !_isSpeakerOn;
     });
+    await _engine!.setEnableSpeakerphone(_isSpeakerOn);
   }
 
   void _toggleMute() async{
-    await _engine!.muteLocalAudioStream(_isMuted);
     setState(() {
       _isMuted = !_isMuted;
     });
+    await _engine!.muteLocalAudioStream(_isMuted);
   }
 
   void _hangUp() async{
@@ -287,6 +192,22 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     setState(() {
       _isCallActive = false;
     });
+  }
+
+  _onChangeInEarMonitoringVolume(double value) async {
+    _inEarMonitoringVolume = value;
+    await _engine!.setInEarMonitoringVolume(_inEarMonitoringVolume.toInt());
+    setState(() {});
+  }
+
+  _toggleInEarMonitoring(value) async {
+    _enableInEarMonitoring = value;
+    await _engine!.enableInEarMonitoring(enabled: _enableInEarMonitoring, includeAudioFilters: EarMonitoringFilterType.earMonitoringFilterNoiseSuppression);
+    setState(() {});
+  }
+
+  _toggleScreenOnOff() async{
+    await _engine!.enableFaceDetection(true);
   }
 
   @override
@@ -331,17 +252,17 @@ class _NoCoordinatorState extends State<NoCoordinator> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: Icon(_isSpeakerOn ? Icons.volume_up : Icons.volume_off),
+                    icon: _isSpeakerOn ? const Icon(Icons.volume_up): const Icon(Icons.volume_off, ),
                     onPressed: _toggleSpeaker,
                   ),
                   const SizedBox(width: 20),
                   IconButton(
-                    icon: Icon(_isMuted ? Icons.mic_off : Icons.mic),
+                    icon: _isMuted ? const Icon( Icons.mic_off) : const Icon(Icons.mic),
                     onPressed: _toggleMute,
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   IconButton(
-                    icon: Icon(Icons.call_end),
+                    icon: const Icon(Icons.call_end, color: Colors.redAccent,),
                     onPressed: _hangUp,
                   ),
                 ],

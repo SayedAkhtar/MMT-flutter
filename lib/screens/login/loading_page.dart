@@ -25,7 +25,7 @@ class Loading_page extends StatefulWidget {
 class _Loading_pageState extends State<Loading_page> with TickerProviderStateMixin {
   late AnimationController _animationController;
   final LocalStorageController _storage = Get.find<LocalStorageController>();
-  late AuthController _authController;
+  final AuthController _authController = Get.find<AuthController>();
 
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
@@ -35,7 +35,6 @@ class _Loading_pageState extends State<Loading_page> with TickerProviderStateMix
     // TODO: implement initState
     super.initState();
     _animationController = AnimationController(duration: Duration(seconds: 5), vsync: this);
-    _authController = Get.put(AuthController());
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
@@ -55,7 +54,6 @@ class _Loading_pageState extends State<Loading_page> with TickerProviderStateMix
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      log('Couldn\'t check connectivity status', error: e);
       return;
     }
 

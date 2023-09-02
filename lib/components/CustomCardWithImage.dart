@@ -46,44 +46,35 @@ class CustomCardWithImage extends StatelessWidget {
           width: width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                  flex: 2,
-                  child: CustomImageView(
-                    // color: bgColor?? Colors.transparent,
-                    url: imageUri,
-                    fit: BoxFit.fitWidth,
-                    height: getVerticalSize(imageHeight ?? 100),
-                    margin: imagePadding ?? const EdgeInsets.all(0),
-                  )),
-              Expanded(
+                flex: 3,
+                child: CustomImageView(
+                  url: imageUri,
+                  fit: BoxFit.fitWidth,
+                  height: getVerticalSize(imageHeight ?? 100),
+                  margin: imagePadding ?? const EdgeInsets.all(0),
+                ),
+              ),
+              Flexible(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
-                  constraints: const BoxConstraints.expand(width: 180),
-                  child: Column(
-                    crossAxisAlignment: align == TextAlign.center
-                        ? CrossAxisAlignment.center
-                        : CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Flexible(
-                        // constraints: BoxConstraints(maxHeight: getVerticalSize(40)),
-                        // height: getVerticalSize(20),
-                        child: Text(
-                          title,
-                          style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
-                          textAlign: align ?? TextAlign.start,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      bodyText != null ? buildCardBody(icon) : const SizedBox(),
-                      body ?? const SizedBox()
-                    ],
+                  child: Text(
+                    title,
+                    style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
+                    textAlign: align ?? TextAlign.start,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
+                child:
+                    bodyText != null ? buildCardBody(icon) : const SizedBox(),
+              ),
+              body ?? const SizedBox()
             ],
           ),
         ),
@@ -117,14 +108,12 @@ class CustomCardWithImage extends StatelessWidget {
         ],
       );
     } else {
-      return Expanded(
-        child: Text(
-          bodyText!,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: bstyle,
-          textAlign: align ?? TextAlign.start,
-        ),
+      return Text(
+        bodyText!,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: bstyle,
+        textAlign: align ?? TextAlign.start,
       );
     }
   }

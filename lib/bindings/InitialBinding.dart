@@ -11,7 +11,6 @@ class InitialBinding implements Bindings{
   @override
   void dependencies() {
     Get.put(LocalStorageController());
-    // Get.lazyPut<UserProvider>(() => UserProvider(), fenix: true);
     Get.lazyPut<AuthController>(() => AuthController());
     // Get.lazyPut<UserController>(() => UserController(), fenix: true);
     // Get.lazyPut<HomeProvider>(() => HomeProvider());

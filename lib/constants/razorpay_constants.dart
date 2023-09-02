@@ -16,10 +16,10 @@ class RazorpayConstants {
   };
   static getOptionsForQueryConfirmation({String? phoneNumber, String? name}){
     var currentOption = RazorpayConstants()._options;
-    if(kDebugMode){
+    // if(kDebugMode){
       currentOption['currency'] = 'INR';
       currentOption['amount'] = '100';
-    }
+    // }
     currentOption['name'] = name!;
     currentOption['prefill'] = {'contact': phoneNumber ?? '8888888888'};
     return currentOption;
@@ -28,15 +28,15 @@ class RazorpayConstants {
   static getOptionsForTeleconsultation({required int amount, String? description, String? phoneNumber, String? name}){
     var currentOption = RazorpayConstants()._options;
 
-    currentOption['amount'] = amount * 1000;
+    currentOption['amount'] = amount * 100;
     currentOption['description'] = description??'Payment for Teleconsultation confirmation';
     currentOption['currency'] = "USD";
     currentOption['name'] = name!;
     currentOption['prefill'] = {'contact': phoneNumber ?? '8888888888'};
-    if(kDebugMode){
+    // if(kDebugMode){
       currentOption['currency'] = 'INR';
       currentOption['amount'] = '100';
-    }
+    // }
     return currentOption;
   }
 }

@@ -7,14 +7,13 @@ import 'package:MyMedTrip/providers/home_provider.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_doctors.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_hospitals.dart';
 import 'package:MyMedTrip/screens/Medical_visa/medical_visa_form.dart';
-import 'package:MyMedTrip/screens/Query/document_visa_form.dart';
 import 'package:MyMedTrip/screens/treatments/list.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/MarginBox.dart';
-import 'package:MyMedTrip/constants/query_step_name.dart';
-import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
@@ -22,9 +21,10 @@ import 'package:MyMedTrip/models/blog.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
-import 'package:MyMedTrip/screens/Query/query_form.dart';
 import 'package:MyMedTrip/screens/connects/support_connect.dart';
 import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
+
+import '../update_screen/connect_coordinotor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,10 +34,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late UserController _userController;
+  final UserController _userController = Get.find<UserController>();
   late DateTime currentBackPressTime;
 
-  late HomeProvider homeProvider;
+  final HomeProvider homeProvider = Get.put(HomeProvider());
 
   List<Hospitals> hospitals = [];
   List<DoctorsHome> doctors = [];
@@ -51,8 +51,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _userController = Get.find<UserController>();
-    homeProvider = Get.put(HomeProvider());
     fetchHomeData();
     fetchBlogData();
   }
@@ -64,27 +62,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   void fetchHomeData() async {
-    Home? data = await homeProvider.getHomeData();
-    if (data != null) {
-      setState(() {
-        hospitals = data.hospitals!;
-        doctors = data.doctors!;
-        faqs = data.faqs!;
-        banners = data.banners!;
-        stories = data.stories!;
-        isLoading = false;
-      });
+    try{
+      Home? data = await homeProvider.getHomeData();
+      if (data != null) {
+        setState(() {
+          hospitals = data.hospitals!;
+          doctors = data.doctors!;
+          faqs = data.faqs!;
+          banners = data.banners!;
+          stories = data.stories!;
+          isLoading = false;
+        });
+      }
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+      }
     }
+
   }
 
   void fetchBlogData() async {
-    List<Blog> blogData = await homeProvider.fetchBlogData();
-    if(context.mounted) {
-      setState(() {
-        blogs = blogData;
-        blogLoading = false;
-      });
+    try{
+      List<Blog> blogData = await homeProvider.fetchBlogData();
+      if(context.mounted) {
+        setState(() {
+          blogs = blogData;
+          blogLoading = false;
+        });
+      }
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+      }
     }
+
   }
 
   @override
@@ -306,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                       CustomSpacer.s(),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => MedicalVisaForm());
+                          Get.to(() => const MedicalVisaForm());
                         },
                         child: Container(
                           width: (MediaQuery.of(context).size.width - 48) / 2,
@@ -374,7 +386,9 @@ class _HomePageState extends State<HomePage> {
                       SuggestedDoctors(data: doctors),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => const SupportConnect());
+                          Get.to(() => NoCoordinator(
+                            phoneNumber: Get.find<UserController>().user?.phoneNo,
+                          ));
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -399,36 +413,36 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: CustomSpacer.XS),
-                        decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                MYcolors.greenlightcolor,
-                                MYcolors.bluecolor,
-                              ],
-                            ),
-                            color: MYcolors.whitecolor,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                blurRadius: 2,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 1),
-                              )
-                            ]),
-                        height: 60,
-                        child: Text(
-                          "Wellness Centers".tr,
-                          style: AppStyle.txtUrbanistRomanBold20
-                              .copyWith(color: Colors.white),
-                        ),
-                      ),
+                      // Container(
+                      //   alignment: Alignment.centerLeft,
+                      //   padding: const EdgeInsets.symmetric(
+                      //       horizontal: CustomSpacer.XS),
+                      //   decoration: BoxDecoration(
+                      //       gradient: const LinearGradient(
+                      //         begin: Alignment.topRight,
+                      //         end: Alignment.bottomLeft,
+                      //         colors: [
+                      //           MYcolors.greenlightcolor,
+                      //           MYcolors.bluecolor,
+                      //         ],
+                      //       ),
+                      //       color: MYcolors.whitecolor,
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //           color: Colors.grey.withOpacity(0.5),
+                      //           blurRadius: 2,
+                      //           spreadRadius: 0,
+                      //           offset: const Offset(0, 1),
+                      //         )
+                      //       ]),
+                      //   height: 60,
+                      //   child: Text(
+                      //     "Wellness Centers".tr,
+                      //     style: AppStyle.txtUrbanistRomanBold20
+                      //         .copyWith(color: Colors.white),
+                      //   ),
+                      // ),
                       // _rowHeader(context, "Our latest blog", () {
                       //   _homeController.getBlogData();
                       // }),
@@ -579,19 +593,22 @@ class _HomePageState extends State<HomePage> {
                               }),
                         ),
                       ),
+                      Visibility(
+                        visible: stories.isNotEmpty,
+                          child:
                       Text(
                         "Not convinced ?\nCheck out some of our Patient's stories."
                             .tr,
                         style: AppStyle.txtUrbanistRomanBold24,
-                      ),
+                      ))
+                      ,
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Wrap(
                           runSpacing: 8.0,
                           spacing: 8.0,
                           children: List.generate(stories.length, (index) {
-                            return Container(
-                              // color: MYcolors.greencolor,
+                            return SizedBox(
                               height: MediaQuery.of(context).size.height * 0.10,
                               width: MediaQuery.of(context).size.width * 0.22,
                               child: CustomImageView(
@@ -621,9 +638,9 @@ class _HomePageState extends State<HomePage> {
                                   style: AppStyle.txtUrbanistRomanBold18,
                                 ),
                                 children: [
-                                  Text(
-                                    faqs[index].answer!,
-                                    style: AppStyle.txtUrbanistRegular18,
+                                  Html(
+                                    data: faqs[index].answer!,
+                                    // style: AppStyle.txtUrbanistRegular18,
                                   ),
                                 ],
                               );
