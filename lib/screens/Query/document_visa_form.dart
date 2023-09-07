@@ -39,6 +39,8 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   String secondAttendantPassport = "";
   String selectedCountry = "";
   String selectedCity = "";
+  String fromCountry = "";
+  String fromCity = "";
   List<String> cityNames = [];
   bool formSubmitted = false;
   @override
@@ -95,9 +97,67 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     name: 'second_attendant_passport'),
                 CustomSpacer.m(),
                 FormLabel(
-                  "Where will you be applying for \nyour visa ?".tr,
+                  "From which country will you be applying \nfor the visa?".tr,
                 ),
                 CustomSpacer.m(),
+                FormLabel(
+                  "Country".tr,
+                ),
+                TextFormField(
+                  validator: (text){
+                    if(text == null || text.isEmpty){
+                      return 'Required';
+                    }
+                  },
+                  onFieldSubmitted: (String? name){
+                  },
+                  onChanged: (String? country){
+                    setState(() {
+                      fromCountry = country!;
+                    });
+                  },
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                  ),
+                ),
+                CustomSpacer.s(),
+                FormLabel(
+                  "City".tr,
+                ),
+                TextFormField(
+                  validator: (text){
+                    if(text == null || text.isEmpty){
+                      return 'Required';
+                    }
+                  },
+                  onFieldSubmitted: (String? name){
+
+                  },
+                  onChanged: (String? city){
+                    setState(() {
+                      fromCity = city!;
+                    });
+                  },
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                  ),
+                ),
+                CustomSpacer.s(),
+                FormLabel(
+                  "From which country will you be applying \nfor the visa?".tr,
+                ),
+                CustomSpacer.m(),
+                FormLabel(
+                  "To which country will you be applying \nfor the visa?".tr,
+                ),
                 FormLabel(
                   "Country".tr,
                 ),
@@ -136,6 +196,13 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 ),
                 GestureDetector(
                   onTap: () {
+                    if(selectedCountry.isEmpty){
+                      Get.showSnackbar(GetSnackBar(
+                        message: "Please select the country first".tr,
+                        duration: Duration(seconds: 2),
+                      ));
+                      return;
+                    }
                     SelectDialog.showModal<String>(
                       context,
                       label: "Select City",
@@ -184,6 +251,8 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     response['attendant_passport'] = attendantPassport;
                     response['country'] = selectedCountry;
                     response['city'] = selectedCity;
+                    response['from_country'] = selectedCountry;
+                    response['from_city'] = fromCity;
                     data.response = response;
                     bool res = await Get.put(QueryProvider())
                         .postQueryGenerationData(data.toJson());

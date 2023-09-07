@@ -25,7 +25,11 @@ class QueryConfirmed extends GetView<QueryController> {
   Widget build(BuildContext context) {
     QueryProvider _provider = Get.put(QueryProvider());
     return Scaffold(
-      appBar: CustomAppBar(pageName: "Confirmed details".tr, showDivider: false, showBack: false, ),
+      appBar: CustomAppBar(
+        pageName: "Confirmed details".tr,
+        showDivider: false,
+        showBack: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
         child: Column(
@@ -37,149 +41,167 @@ class QueryConfirmed extends GetView<QueryController> {
                   children: [
                     TabBar(
                       tabs: [
-                        Text("Status".tr, style: AppStyle.txtUrbanistRomanBold20Cyan60001,),
-                        Text("Quick Information".tr, style: AppStyle.txtUrbanistRomanBold20Cyan60001,)
+                        Text(
+                          "Status".tr,
+                          style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                        ),
+                        Text(
+                          "Quick Information".tr,
+                          style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                        )
                       ],
                     ),
                     Expanded(
                       child: FutureBuilder<ConfirmedQuery?>(
-                          future: _provider.getConfirmedQueryDetail(controller.selectedQuery),
-                          builder: (context, AsyncSnapshot<ConfirmedQuery?> data) {
+                          future: _provider.getConfirmedQueryDetail(
+                              controller.selectedQuery),
+                          builder:
+                              (context, AsyncSnapshot<ConfirmedQuery?> data) {
                             if (data.hasData) {
-                              return TabBarView(
-                                  children: [
-                                    Builder(
-                                      builder: (ctx){
-                                        if(data.data!.statuses == null || data.data!.statuses!.isEmpty){
-                                          return Center(child: Text("No Status Updated yet"));
-                                        }
-                                        return ListView.builder(
-                                          itemCount: data.data!.statuses!.length,
-                                          itemBuilder: (context, index) {
-                                            return TimelineItem(
-                                              event: data.data!.statuses![index].status!,
-                                              timestamp: data.data!.statuses![index].timestamp!,
-                                              isFirst: index == 0,
-                                              isLast: index == data.data!.statuses!.length - 1,
-                                            );
-                                          },
+                              return TabBarView(children: [
+                                Builder(
+                                  builder: (ctx) {
+                                    if (data.data!.statuses == null ||
+                                        data.data!.statuses!.isEmpty) {
+                                      return Center(
+                                          child: Text("No Status Updated yet"));
+                                    }
+                                    return ListView.builder(
+                                      itemCount: data.data!.statuses!.length,
+                                      itemBuilder: (context, index) {
+                                        return TimelineItem(
+                                          event: data
+                                              .data!.statuses![index].status!,
+                                          timestamp: data.data!.statuses![index]
+                                              .timestamp!,
+                                          isFirst: index == 0,
+                                          isLast: index ==
+                                              data.data!.statuses!.length - 1,
+                                          file:
+                                              data.data!.statuses![index].file,
                                         );
                                       },
+                                    );
+                                  },
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Hotel Details".tr,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Hotel Details".tr,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${data.data?.accommodation?.name} \n${data.data?.accommodation?.address}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        CustomSpacer.m(),
-                                        Text(
-                                          "Cab Details".tr,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          data.data?.cab?.name == null?"Not Assigned":"${data.data?.cab?.name}\n${data.data?.cab?.type} \n${data.data?.cab?.number}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        CustomSpacer.m(),
-                                        Text(
-                                          "Coordinator details",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height * 0.15,
-                                          width: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.4,
-                                          child: Image.network(data.data!.coordinator!.image!),
-                                        ),
-                                        Text(
-                                          "Name : ${data.data?.coordinator?.name}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${'Phone Number'.tr} : ${data.data?.coordinator?.phone}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Get.to(NoCoordinator(phoneNumber: data.data?.coordinator?.phone,));
-                                          },
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(100),
-                                                ),
-                                              ),
-                                              backgroundColor: MaterialStateProperty.all<Color?>(
-                                                  MYcolors.bluecolor
-                                              )
-                                          ),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                            width: double.infinity,
-                                            child: Text(
-                                              "Connect to Coordinator".tr,
-                                              style: TextStyle(
-                                                color: MYcolors.whitecolor,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.center,
+                                    Text(
+                                      "${data.data?.accommodation?.name} \n${data.data?.accommodation?.address}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    CustomSpacer.m(),
+                                    Text(
+                                      "Cab Details".tr,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      data.data?.cab?.name == null
+                                          ? "Not Assigned"
+                                          : "${data.data?.cab?.name}\n${data.data?.cab?.type} \n${data.data?.cab?.number}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    CustomSpacer.m(),
+                                    Text(
+                                      "Coordinator details",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: Image.network(
+                                          data.data!.coordinator!.image!),
+                                    ),
+                                    Text(
+                                      "Name : ${data.data?.coordinator?.name}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${'Phone Number'.tr} : ${data.data?.coordinator?.phone}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.to(NoCoordinator(
+                                          phoneNumber:
+                                              data.data?.coordinator?.phone,
+                                        ));
+                                      },
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
                                             ),
                                           ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color?>(
+                                                  MYcolors.bluecolor)),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16.0),
+                                        width: double.infinity,
+                                        child: Text(
+                                          "Connect to Coordinator".tr,
+                                          style: TextStyle(
+                                            color: MYcolors.whitecolor,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        CustomSpacer.xs(),
-                                      ],
-                                    )
-                                  ]);
-                            }
-                            else if(data.connectionState == ConnectionState.done && !data.hasData){
-                              return Center(child: Text("No Coordinator Data"),);
-                            }
-                            else {
+                                      ),
+                                    ),
+                                    CustomSpacer.xs(),
+                                  ],
+                                )
+                              ]);
+                            } else if (data.connectionState ==
+                                    ConnectionState.done &&
+                                !data.hasData) {
+                              return Center(
+                                child: Text("No Coordinator Data"),
+                              );
+                            } else {
                               return Center(child: CircularProgressIndicator());
                             }
-                          }
-                      ),
+                          }),
                     ),
                   ],
                 ),
               ),
             ),
-
-
             ElevatedButton(
               onPressed: () {
                 Get.to(NoCoordinator(
@@ -192,10 +214,8 @@ class QueryConfirmed extends GetView<QueryController> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  backgroundColor: MaterialStateProperty.all<Color?>(
-                      MYcolors.blueGray400
-                  )
-              ),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color?>(MYcolors.blueGray400)),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,
@@ -222,26 +242,23 @@ class TimelineItem extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final int timestamp;
+  final List<String>? file;
 
-  const TimelineItem({
-    required this.event,
-    required this.isFirst,
-    required this.isLast,
-    required this.timestamp,
-  });
+  const TimelineItem(
+      {required this.event,
+      required this.isFirst,
+      required this.isLast,
+      required this.timestamp,
+      this.file});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 50,
-          width: 2,
-          color: Colors.blue,
-        ),
-        Container(
           padding: EdgeInsets.all(16),
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -255,19 +272,68 @@ class TimelineItem extends StatelessWidget {
             ],
           ),
           child: Column(
+
             children: [
-              Text(event, style: AppStyle.txtUrbanistRomanBold20,),
-              Text(Utils.formatDateWithTime(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false)), style: AppStyle.txtSourceSansProSemiBold18),
+              Text(
+                event,
+                style: AppStyle.txtUrbanistRomanBold20,
+              ),
+              Text(
+                  Utils.formatDateWithTime(DateTime.fromMillisecondsSinceEpoch(
+                      timestamp * 1000,
+                      isUtc: false)),
+                  style: AppStyle.txtSourceSansProSemiBold18, textAlign: TextAlign.left,),
+              if(file != null && file!.isNotEmpty)
+                ElevatedButton(onPressed: (){
+                  Get.defaultDialog(
+                    title: "Uploaded Images",
+                    content: showImages(file)
+                  );
+                }, child: Text("Show Images"))
             ],
           ),
         ),
-        if (!isLast)
-          Container(
-            height: 50,
-            width: 2,
-            color: Colors.blue,
-          ),
       ],
     );
   }
+}
+
+Widget showImages(List<String>? file){
+  return Builder(builder: (context) {
+    if (file != null && (file!.isNotEmpty)) {
+      return ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: file!.length, itemBuilder: (ctx, idx) {
+        return Image.network(
+          file![idx],
+          height: 300,
+          width: 200,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.low,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              height: 200,
+              width: 200,
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.error);
+          },
+        );
+      });
+      return SizedBox();
+    } else {
+      return SizedBox();
+    }
+  });
 }

@@ -39,7 +39,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 onTap: backFunction?? () {
                   Get.back(closeOverlays: true);
                 },
-                icon: Icons.arrow_back_ios_new_outlined
+                icon: Icons.arrow_back_rounded
+
             ):SizedBox(),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.02,

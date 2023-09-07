@@ -50,6 +50,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    leaveChannel();
     _streamSubscription.cancel();
   }
 
@@ -70,9 +71,9 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     // Loaders.loadingDialog(title: "Calling Support");
     try{
       callState = "Finding Available HCF";
-      bool res = await provider.placeCall(callToken, userId: widget.phoneNumber);
+      bool res = await provider.placeCall(callToken, userId: widget.phoneNumber, type: "connect");
       if(!res){
-        Loaders.errorDialog("Call Could not be placed");
+        Loaders.errorDialog("It seems that all our HCF is busy at the moment. Please Call back again after sometime.", title: "Call Could not be placed",);
       }
       initializeAgora();
       return;
@@ -109,12 +110,13 @@ class _NoCoordinatorState extends State<NoCoordinator> {
             });
             _startCallTimer();
           },
-          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
             debugPrint("remote user $remoteUid left channel");
-            setState(() {
-              callState = "Reconnecting";
-            });
+            // setState(() {
+            //   callState = "Reconnecting";
+            // });
             _startCallTimer();
+            await leaveChannel();
           },
           onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
             debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
@@ -144,11 +146,17 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   }
 
   Future<void> leaveChannel() async {
-    await _engine!.leaveChannel();
-    // _startCallTimer();
     setState(() {
       callState = "Disconnected";
     });
+    try{
+      bool res = await provider.placeCall(callToken, userId: widget.phoneNumber, type: 'disconnect');
+    }catch(e){
+      Logger().e(e);
+    }
+    disposeAgora();
+    // _startCallTimer();
+
   }
 
   Future<void> disposeAgora() async {
@@ -156,7 +164,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
       await _engine!.leaveChannel();
       await _engine!.release();
     }
-
+    Get.offAllNamed('/home');
   }
 
 
@@ -187,11 +195,12 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   }
 
   void _hangUp() async{
-    // initiateCall();
-    await leaveChannel();
     setState(() {
       _isCallActive = false;
     });
+    await leaveChannel();
+    await Future.delayed(const Duration(seconds: 2));
+    Get.offAndToNamed('/home');
   }
 
   _onChangeInEarMonitoringVolume(double value) async {
@@ -265,6 +274,13 @@ class _NoCoordinatorState extends State<NoCoordinator> {
                     icon: const Icon(Icons.call_end, color: Colors.redAccent,),
                     onPressed: _hangUp,
                   ),
+                  // IconButton(
+                  //   icon: const Icon(Icons.call_end, color: Colors.redAccent,),
+                  //   onPressed: ()async{
+                  //
+                  //     // print(await d.getRecordingDevice());
+                  //   },
+                  // ),
                 ],
               ),
             ],

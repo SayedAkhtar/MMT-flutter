@@ -1,3 +1,6 @@
+import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:intl/intl.dart';
+
 import '../constants/query_type.dart';
 
 class QueryScreen {
@@ -79,7 +82,7 @@ class ActiveQuery {
     isConfirmed = json['is_confirmed'];
     currentStep = json['current_step'];
     nextStep = json['next_step'];
-    createdAt = json['created_at'];
+    createdAt = Utils.localDateTimeFromTimestamp(json['created_at']);
     type = json['type'] == 2? QueryType.medicalVisa : QueryType.query;
   }
 
@@ -91,7 +94,7 @@ class ActiveQuery {
     data['doctor_response'] = doctorResponse;
     data['is_payment_required'] = isPaymentRequired;
     data['is_payment_done'] = isPaymentDone;
-    data['created_at'] = createdAt;
+    // data['created_at'] = createdAt;
     data['current_step'] = currentStep;
     return data;
   }

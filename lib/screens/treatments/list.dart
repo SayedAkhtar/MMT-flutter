@@ -5,6 +5,7 @@ import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Debouncer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/treatment.dart';
 import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
@@ -147,7 +148,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                     controller: scrollController,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
+                            crossAxisCount: 2),
                     itemCount: allData!.length,
                     itemBuilder: (_, i) {
                       return CustomCardWithImage(
@@ -155,53 +156,100 @@ class _TreatmentsListState extends State<TreatmentsList> {
                         onTap: () {
                           Get.defaultDialog(
                             title: allData![i]!.name!,
-                            content: Table(
-                              children : [
-                                TableRow(
-                                  children: [
-                                    Text("Maximum Price (USD):"),
-                                    Text("\$ ${allData![i]!.maxPrice}")
+                            content: Container(
+                              constraints: BoxConstraints(
+                                maxHeight: MediaQuery.of(context).size.height * 0.8
+                              ),
+                              child: SingleChildScrollView(
+                                child: Table(
+                                  // border: TableBorder.all(color: Colors.black12,width: 1),
+                                  children : [
+                                    TableRow(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("Maximum Price (USD):"),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("\$ ${allData![i]!.maxPrice}"),
+                                        )
+                                      ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Minimum Price (USD):"),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("\$ ${allData![i]!.minPrice}"),
+                                          )
+                                        ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Days Required :"),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(allData![i]!.daysRequired.toString()),
+                                          )
+                                        ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Recovery Time:"),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(allData![i]!.recoveryTime.toString()),
+                                          )
+                                        ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Success Rate:"),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(allData![i]!.successRate.toString()),
+                                          )
+                                        ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Covered:"),
+                                          ),
+                                          // Html(data: data)
+                                          Text( Utils.stripHtmlIfNeeded(allData![i]!.covered!))
+                                        ]
+                                    ),
+                                    TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Not Covered:"),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(Utils.stripHtmlIfNeeded(allData![i]!.notCovered ?? "")),
+                                          )
+                                        ]
+                                    ),
+
                                   ]
                                 ),
-                                TableRow(
-                                    children: [
-                                      Text("Minimum Price (USD):"),
-                                      Text("\$ ${allData![i]!.minPrice}")
-                                    ]
-                                ),
-                                TableRow(
-                                    children: [
-                                      Text("Days Required :"),
-                                      Text(allData![i]!.daysRequired.toString())
-                                    ]
-                                ),
-                                TableRow(
-                                    children: [
-                                      Text("Recovery Time:"),
-                                      Text(allData![i]!.recoveryTime.toString())
-                                    ]
-                                ),
-                                TableRow(
-                                    children: [
-                                      Text("Success Rate:"),
-                                      Text(allData![i]!.successRate.toString())
-                                    ]
-                                ),
-                                TableRow(
-                                    children: [
-                                      Text("Covered:"),
-                                      // Html(data: data)
-                                      Html(data: allData![i]!.covered.toString())
-                                    ]
-                                ),
-                                TableRow(
-                                    children: [
-                                      const Text("Not Covered:"),
-                                      Html(data: allData![i]!.notCovered ?? 'N/A')
-                                    ]
-                                ),
-
-                              ]
+                              ),
                             )
                           );
                         },
@@ -209,6 +257,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                         title: allData![i]!.name!,
                         titleStyle: AppStyle.txtUrbanistRomanBold10
                             .copyWith(fontSize: 11),
+                        textLines: 2,
                         bgColor: MYcolors.bluecolor,
                         imageHeight: 40,
                         // bodyText: hospitals[i]!.address,

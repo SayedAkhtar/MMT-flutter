@@ -35,6 +35,8 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
   String secondAttendantPassport = "";
   String selectedCountry = "";
   String selectedCity = "";
+  String fromCountry = "";
+  String fromCity = "";
   List<String> cityNames = [];
   @override
   void initState() {
@@ -88,7 +90,62 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                   name: 'second_attendant_passport'),
               CustomSpacer.m(),
               FormLabel(
-                "Where will you be applying for \nyour visa ?".tr,
+                "From which country will you be applying \nfor the visa?".tr,
+              ),
+              CustomSpacer.m(),
+              FormLabel(
+                "Country".tr,
+              ),
+              TextFormField(
+                validator: (text){
+                  if(text == null || text.isEmpty){
+                    return 'Required';
+                  }
+                },
+                onFieldSubmitted: (String? name){
+                },
+                onChanged: (String? country){
+                  setState(() {
+                    fromCountry = country!;
+                  });
+                },
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: "",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                ),
+              ),
+              CustomSpacer.s(),
+              FormLabel(
+                "City".tr,
+              ),
+              TextFormField(
+                validator: (text){
+                  if(text == null || text.isEmpty){
+                    return 'Required';
+                  }
+                },
+                onFieldSubmitted: (String? name){
+
+                },
+                onChanged: (String? city){
+                  setState(() {
+                    fromCity = city!;
+                  });
+                },
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: "",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
+                ),
+              ),
+              CustomSpacer.m(),
+              FormLabel(
+                "To which country will you be applying \nfor the visa?".tr,
               ),
               CustomSpacer.m(),
               FormLabel(
@@ -170,19 +227,21 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                     ), );
                     return;
                   }
-                  if(attendantPassport.isEmpty){
-                    Get.showSnackbar(GetSnackBar(
-                      message: "Attendant's passport is mandatory".tr,
-                      duration: Duration(seconds: 2),
-                    ));
-                    return;
-                  }
+                  // if(attendantPassport.isEmpty){
+                  //   Get.showSnackbar(GetSnackBar(
+                  //     message: "Attendant's passport is mandatory".tr,
+                  //     duration: Duration(seconds: 2),
+                  //   ));
+                  //   return;
+                  // }
                   Map<String, dynamic> data = {};
                   Map<String, dynamic> query = {};
                   query['passport'] = patientPassport;
                   query['attendant_passport'] = attendantPassport;
                   query['country'] = selectedCountry;
                   query['city'] = selectedCity;
+                  query['from_country'] = fromCountry;
+                  query['from_city'] = fromCity;
                   data['response'] = query;
                   data['current_step'] = QueryStep.documentForVisa;
                   data['type'] = QueryType.medicalVisa;
@@ -322,6 +381,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
               secondAttendantPassport = "";
             });
           }
+
         },
         style: IconButton.styleFrom(
           padding: EdgeInsets.all(CustomSpacer.S),

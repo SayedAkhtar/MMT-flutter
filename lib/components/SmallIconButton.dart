@@ -12,9 +12,9 @@ class SmallIconButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
           height: 40,
-          width: 50,
+          // width: 50,
           decoration: BoxDecoration(
-            color: MYcolors.greycolor,
+            // color: MYcolors.greycolor,
             borderRadius: BorderRadius.circular(7),
           ),
           child: Icon(icon,

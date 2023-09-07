@@ -19,7 +19,7 @@ class _Messages_pagesState extends State<Messages_pages> {
     return Column(children: [
       GestureDetector(
         onTap: () {
-          Get.to(Chat_page());
+          // Get.to(Chat_page());
         },
         child: Container(
           // color: MYcolors.bluecolor,

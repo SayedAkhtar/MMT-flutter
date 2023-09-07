@@ -124,7 +124,11 @@ void main() async {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (payload) {});
 
+    if(message.data.isNotEmpty && message.data['page_action'] == 'active_chat'){
+      return;
+    }
     if (message.notification != null) {
+      print("Also here");
       _showNotification(message);
     }
   });

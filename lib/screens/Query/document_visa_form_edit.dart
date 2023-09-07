@@ -36,6 +36,8 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
   String secondAttendantPassport = "";
   String selectedCountry = "";
   String selectedCity = "";
+  String fromCountry = "";
+  String fromCity = "";
   List? vil = [];
   List<String> cityNames = [];
   @override
@@ -45,6 +47,8 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
     patientPassport = widget.response.response!['passport'];
     attendantPassport = widget.response.response!['attendant_passport'] ?? [];
     selectedCity = widget.response.response!['city'];
+    fromCountry = widget.response.response!['from_country'] ?? '';
+    fromCity = widget.response.response!['from_city'] ?? '';
     vil = widget.response.response!['vil'];
     buildCountryOption(Constants.countryIdMap[selectedCountry.toLowerCase()]!);
     super.initState();
@@ -119,7 +123,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                     : const SizedBox(),
                 CustomSpacer.m(),
                 FormLabel(
-                  "Where will you be applying for \nyour visa ?".tr,
+                  "From which country will you be applying for the visa?".tr,
                 ),
                 CustomSpacer.m(),
                 FormLabel(
@@ -153,6 +157,53 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                     style: const TextStyle(fontSize: 16.0),
                   ),
                 ),
+                Builder(builder: (ctx){
+                  if(fromCountry.isNotEmpty && fromCity.isNotEmpty){
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomSpacer.m(),
+                        FormLabel(
+                          "From which country will you be applying for the visa?".tr,
+                        ),
+                        CustomSpacer.m(),
+                        FormLabel(
+                          "Country".tr,
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          padding: const EdgeInsets.only(
+                              left: 15, bottom: 15, top: 11, right: 15),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.withAlpha(60)),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            fromCountry.isNotEmpty ? fromCountry : "",
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                        CustomSpacer.s(),
+                        FormLabel(
+                          "City".tr,
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          padding: const EdgeInsets.only(
+                              left: 15, bottom: 15, top: 11, right: 15),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.withAlpha(60)),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            fromCity.isEmpty ? "Select City".tr : fromCity,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return SizedBox();
+                }),
+
               ],
             ),
           );

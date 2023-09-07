@@ -19,7 +19,8 @@ class CustomCardWithImage extends StatelessWidget {
       this.titleStyle,
       this.bodyStyle,
       this.bgColor,
-      this.imageHeight})
+      this.imageHeight,
+      this.textLines})
       : super(key: key);
   final onTap;
   final String? imageUri;
@@ -34,6 +35,7 @@ class CustomCardWithImage extends StatelessWidget {
   final TextStyle? titleStyle;
   final TextStyle? bodyStyle;
   final Color? bgColor;
+  final int? textLines;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -64,7 +66,7 @@ class CustomCardWithImage extends StatelessWidget {
                     title,
                     style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
                     textAlign: align ?? TextAlign.start,
-                    maxLines: 2,
+                    maxLines: textLines ?? 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

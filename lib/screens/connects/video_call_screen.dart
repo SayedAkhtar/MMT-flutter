@@ -2,26 +2,25 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
+import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
+import 'package:MyMedTrip/screens/connects/chat_page.dart';
+import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/message_model.dart';
-import 'package:MyMedTrip/models/user_model.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-
-import '../../constants/colors.dart';
 
 class Video_Call_Screen extends StatefulWidget {
   const Video_Call_Screen({super.key});
@@ -44,16 +43,12 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
   late FirebaseDatabase database;
   late DatabaseReference dbRef;
   late String storageRef;
-  late Stream<DatabaseEvent> messageStream;
-  late StreamSubscription<DatabaseEvent> streamSubscription;
 
-  final ScrollController _messageScrollController = ScrollController();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
-  int messageFrom = 1;
-  String messageType = "image";
-  TextEditingController messageController = TextEditingController();
-
-  late List<ChatMessage> messages;
+  List<ChatMessage> messages = [];
+  int newMessageCount = 0;
 
   @override
   void initState() {
@@ -64,19 +59,33 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     database = FirebaseDatabase.instance;
     dbRef = FirebaseDatabase.instance
         .ref("messages/${argumentData['channelName']}/");
-    storageRef = "messages/${argumentData['channelName']}";
+    newMessageCount = 0;
     getMessages();
     WakelockPlus.enable();
-    messageStream = dbRef.onValue;
-    startListening();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+
+      const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/launcher_icon');
+      const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings();
+
+      const InitializationSettings initializationSettings =
+      InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin);
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onDidReceiveNotificationResponse: (payload) {});
+
+      if(message.data.isNotEmpty && message.data['page_action'] == 'active_chat'){
+        setState(() {
+          newMessageCount = newMessageCount+1;
+        });
+        return;
+      }
+    });
     super.initState();
   }
 
-  void startListening() {
-    streamSubscription = messageStream.listen((DatabaseEvent event) {
-      // print(event.snapshot.children.last);
-    });
-  }
 
 
 
@@ -85,7 +94,6 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     // TODO: implement dispose
     super.dispose();
     disposeAgora();
-    messageController.dispose();
     // database.goOffline();
   }
 
@@ -203,35 +211,6 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
     }
   }
 
-  Future<void> _showNotification(title, body) async {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      Random.secure().nextInt(1000).toString(),
-      'Your Channel Name',
-      channelDescription: 'Your Channel Description',
-      importance: Importance.high,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-    DarwinNotificationDetails darwinNotificationDetails = const DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    final NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      platformChannelSpecifics,
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -336,27 +315,39 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
                       child: Icon(Icons.cameraswitch_rounded),
                     ),
                     CustomSpacer.s(),
-                    ElevatedButton(
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            isDismissible: true,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30.0),
-                                  topRight: Radius.circular(30.0)),
-                            ),
-                            builder: (BuildContext context) {
-                              return chatContainer();
+
+                    Stack(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              newMessageCount = 0;
                             });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black26,
-                        shape: CircleBorder(),
-                        padding: EdgeInsets.all(14),
-                      ),
-                      child: Icon(Icons.messenger_outline_outlined),
+                            Get.to(() => ChatPage(previousMessage: messages, channelName: argumentData['channelName'],));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MYcolors.bluecolor,
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(14),
+                          ),
+                          child: const Icon(Icons.messenger_outline_outlined),
+                        ),
+                        Visibility(
+                          visible: newMessageCount.isGreaterThan(0),
+                          child: Positioned(
+                            right: 0,
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(100)
+                              ),
+                              child: Center(child: Text(newMessageCount.toString(), style: AppStyle.txtSourceSansProSemiBold14.copyWith(color: Colors.white),)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -367,7 +358,6 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
       ),
     );
   }
-
   // Display remote user's video
   Widget _remoteVideo() {
     List<AgoraVideoView> _child = [];
@@ -403,276 +393,5 @@ class _Video_Call_ScreenState extends State<Video_Call_Screen> {
         textAlign: TextAlign.center,
       );
     }
-  }
-
-  Widget _sentMessage(ChatMessage data) {
-    Widget child;
-    switch (data.type) {
-      case ChatMessage.IMAGE:
-        child = InkWell(
-            onTap: () {
-              String ext = data.message.split('.').last != ''
-                  ? data.message.split('.').last
-                  : 'jpg';
-              Utils.saveFileToDevice(
-                  "mmt_${DateTime.now().microsecond}.$ext", data.message);
-            },
-            child: Image.network(data.message));
-        break;
-      case ChatMessage.FILE:
-        child = InkWell(
-            onTap: () {
-              String ext = data.message.split('.').last;
-              Utils.saveFileToDevice(
-                  "mmt_${DateTime.now().microsecond}.$ext", data.message);
-            },
-            child: Icon(
-              Icons.file_copy_rounded,
-              size: 32,
-            ));
-        break;
-      default:
-        child = Text(
-          data.message,
-          style: TextStyle(
-            fontSize: 15,
-          ),
-        );
-    }
-    return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8.0),
-          margin: EdgeInsets.only(bottom: 16.0),
-          decoration: BoxDecoration(
-            color: MYcolors.greycolor,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(0),
-                topRight: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10)),
-          ),
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.65,
-          ),
-          child: child,
-        ),
-      ],
-    );
-  }
-
-  Widget _recievedMessage(ChatMessage data) {
-    Widget child;
-    switch (data.type) {
-      case ChatMessage.IMAGE:
-        child = Image.network(data.message);
-        break;
-      case ChatMessage.FILE:
-        child = Icon(
-          Icons.file_copy_rounded,
-          size: 32,
-        );
-        break;
-      default:
-        child = Text(
-          data.message,
-          style: TextStyle(
-            fontSize: 15,
-          ),
-        );
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.only(bottom: 16.0),
-            decoration: BoxDecoration(
-              color: MYcolors.greenlightcolor,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
-            ),
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.65,
-            ),
-            child: child),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.04,
-        ),
-      ],
-    );
-  }
-
-  Widget chatContainer() {
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.6,
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(CustomSpacer.S),
-                  child: StreamBuilder<DatabaseEvent>(
-                      stream: dbRef.onValue,
-                      builder: (context, AsyncSnapshot<DatabaseEvent> event) {
-                        if (event.hasData &&
-                            event.connectionState == ConnectionState.active) {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              controller: _messageScrollController,
-                              itemCount: event.data!.snapshot.children.length,
-                              itemBuilder: (ctx, idx) {
-                                List<DataSnapshot> obj =
-                                    event.data!.snapshot.children.toList();
-                                ChatMessage msg = ChatMessage.fromMap(
-                                    obj[idx].value as Map<dynamic, dynamic>);
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  if (_messageScrollController.hasClients) {
-                                    _messageScrollController.animateTo(
-                                      _messageScrollController
-                                          .position.maxScrollExtent,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.easeOut,
-                                    );
-                                    setState(() {});
-                                  }
-                                });
-
-                                if (msg.from == LocalUser.TYPE_PATIENT) {
-                                  return _sentMessage(msg);
-                                } else {
-                                  return _recievedMessage(msg);
-                                }
-                              });
-                        }
-                        if (ConnectionState.waiting == event.connectionState) {
-                          return Text("Loading messages");
-                        }
-                        return Text("No Messages yet");
-                      }),
-                ),
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Colors.black12, width: 1.5),
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  enabled: messageType != ChatMessage.TEXT,
-                                  controller: messageController,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(
-                                        20.0, 5.0, 20.0, 5.0),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                  onPressed: () async {
-                                    FilePickerResult? result =
-                                        await FilePicker.platform.pickFiles(
-                                      dialogTitle: "Upload documents",
-                                      type: FileType.custom,
-                                      allowedExtensions: [
-                                        'jpeg',
-                                        'jpg',
-                                        'heic',
-                                        'png'
-                                      ],
-                                    );
-
-                                    if (result != null) {
-                                      File file =
-                                          File(result.files.single.path!);
-                                      String ext = result.files.single.path!
-                                          .split('.')
-                                          .last;
-                                      try {
-                                        String fileName = DateTime.now()
-                                            .millisecondsSinceEpoch
-                                            .toString();
-                                        final String? filePath =
-                                            await FirebaseFunctions.uploadImage(
-                                                file,
-                                                ref: storageRef,
-                                                title:
-                                                    "Uploading Image Please Wait.");
-                                        if (filePath != null) {
-                                          await dbRef.push().set({
-                                            "from": LocalUser.TYPE_PATIENT,
-                                            "type": messageType,
-                                            "message": filePath,
-                                          });
-                                          Get.back();
-                                          _messageScrollController.animateTo(
-                                              _messageScrollController
-                                                  .position.maxScrollExtent,
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              curve: Curves.ease);
-                                        } else {
-                                          throw Exception(
-                                              "File not uploaded. Please try again");
-                                        }
-                                      } on FirebaseException catch (e) {
-                                        Loaders.errorDialog(e.toString());
-                                      } catch (e, stacktrace) {
-                                        Loaders.errorDialog(e.toString(),
-                                            stackTrace: stacktrace);
-                                      }
-                                    }
-                                  },
-                                  icon: Icon(Icons.image_outlined))
-                            ],
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          var t = await dbRef.get();
-                          await dbRef.push().set({
-                            "from": LocalUser.TYPE_PATIENT,
-                            "type": ChatMessage.TEXT,
-                            "message": messageController.text,
-                          });
-                          messageController.text = "";
-                          _messageScrollController.animateTo(
-                              _messageScrollController.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.ease);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(14),
-                        ),
-                        child: Icon(Icons.send),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

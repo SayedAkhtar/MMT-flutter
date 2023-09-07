@@ -157,10 +157,10 @@ class QueryProvider extends BaseProvider {
     return false;
   }
 
-  Future<bool> placeCall(String uuid, {String? userId}) async{
+  Future<bool> placeCall(String uuid, {String? userId, String? type}) async{
     try{
       // Loaders.loadingDialog(title: "Calling");
-      Response response = await post('/trigger-support-call', {'uuid': uuid, 'user_id': userId}, headers: _headers);
+      Response response = await post('/trigger-support-call', {'uuid': uuid, 'user_id': userId, 'type': type ?? 'connect'}, headers: _headers);
       responseHandler(response);
       if(response.isOk){
         // Loaders.closeLoaders();

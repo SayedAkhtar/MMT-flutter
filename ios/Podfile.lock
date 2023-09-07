@@ -70,8 +70,6 @@ PODS:
   - DKPhotoGallery/Resource (0.0.17):
     - SDWebImage
     - SwiftyGif
-  - easy_pdf_viewer (1.0.7):
-    - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -92,7 +90,7 @@ PODS:
   - Firebase/Storage (10.12.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.12.0)
-  - firebase_auth (4.8.0):
+  - firebase_auth (4.9.0):
     - Firebase/Auth (= 10.12.0)
     - firebase_core
     - Flutter
@@ -256,7 +254,6 @@ DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
-  - easy_pdf_viewer (from `.symlinks/plugins/easy_pdf_viewer/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -324,8 +321,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
-  easy_pdf_viewer:
-    :path: ".symlinks/plugins/easy_pdf_viewer/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_auth:
@@ -386,10 +381,9 @@ SPEC CHECKSUMS:
   CryptoSwift: d3d18dc357932f7e6d580689e065cf1f176007c1
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  easy_pdf_viewer: 87ea0602930e7b1c8eecd36b362604254d2ad018
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
-  firebase_auth: 604e47908bc2dcd7baa113bbd37ab74000bff488
+  firebase_auth: 097a2440d40bed75f4dfe4cb91b4d98349509b47
   firebase_core: 4a3246a02f828a01c74a2c26427037786d90f17f
   firebase_crashlytics: df144edf7d04ace42beb3a3e29d825bfa49dd04b
   firebase_database: ae8b70d7f5867c5f65a08353d81521896d850771
