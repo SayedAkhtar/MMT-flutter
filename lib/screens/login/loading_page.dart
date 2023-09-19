@@ -37,6 +37,7 @@ class _Loading_pageState extends State<Loading_page> with TickerProviderStateMix
     _animationController = AnimationController(duration: Duration(seconds: 5), vsync: this);
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    print("Check Call State");
   }
 
   @override

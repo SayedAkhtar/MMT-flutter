@@ -29,11 +29,12 @@ class HomeProvider extends BaseProvider {
     return null;
   }
   
-  Future<dynamic> fetchBlogData() async{
+  Future<dynamic> fetchBlogData({int page = 1}) async{
     List<Blog> blogs= [];
     try{
-      Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts');
+      Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts?page=${page}');
       if(res.status.code == 200){
+        print(res.headers);
         List<dynamic> json = res.body;
         for (var element in json) {
           blogs.add(Blog.fromJson(element));

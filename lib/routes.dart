@@ -1,5 +1,7 @@
 import 'package:MyMedTrip/bindings/ConsultationBinding.dart';
 import 'package:MyMedTrip/bindings/HospitalBinding.dart';
+import 'package:MyMedTrip/bindings/UserBinding.dart';
+import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
 import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -87,6 +89,7 @@ class Routes {
   static String teleconsultationConnect = '/teleconsultation_connect';
   static String videoChat = '/video_chat';
   static String supportCall = '/support_call';
+  static String supportChat = '/support_chat';
 }
 
 final getPages = [
@@ -129,7 +132,7 @@ final getPages = [
     binding: ConsultationBinding(),
   ),
   GetPage(name: Routes.chat, page: () => const Messages_pages()),
-  GetPage(name: Routes.blogs, page: () => const Trending_blog_page()),
+  GetPage(name: Routes.blogs, page: () => const TrendingBlogs()),
   // GetPage(
   //     name: Routes.blogDetails,
   //     page: () => ReadBlogPage("title", "description")
@@ -172,5 +175,5 @@ final getPages = [
       name: Routes.teleconsultationConnect,
       page: () => const Doctor_call_page()),
   GetPage(name: Routes.videoChat, page: () => const Video_Call_Screen()),
-  GetPage(name: Routes.supportCall, page: () => const SupportConnect()),
+  GetPage(name: Routes.supportCall, page: () => const SupportConnect(), binding: UserBinding()),
 ];

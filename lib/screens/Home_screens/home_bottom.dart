@@ -14,6 +14,7 @@ import 'package:MyMedTrip/screens/update_screen/query_confirmed.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';
+import '../connects/support_connect.dart';
 
 class Home_screen extends StatefulWidget {
   const Home_screen({super.key});
@@ -26,9 +27,32 @@ class _Home_screenState extends State<Home_screen> {
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     if (index == 2) {
-      openWhatsapp(
-          text: "Hello, I have query regarding MyMedTrip.",
-          number: WHATSAPP_NUMBER);
+
+      Get.bottomSheet(
+        Container(
+          // Customize your bottom sheet content here
+          height: 120,
+          color: Colors.white,
+          child: Column(
+            children: [
+              ListTile(
+                leading: SvgPicture.asset('assets/icons/bottom-nav-whatsapp.svg'),
+                title: Text("Whatsapp Chat".tr),
+                onTap: (){
+                  openWhatsapp(
+                      text: "Hello, I have query regarding MyMedTrip.",
+                      number: WHATSAPP_NUMBER);
+                },
+              ),
+              ListTile(
+                leading: const Icon( Icons.support_agent_outlined),
+                title: Text("Live Chat".tr),
+                onTap: () => Get.to(() =>  SupportConnect()),
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       setState(() {
         _selectedIndex = index;
@@ -96,7 +120,7 @@ class _Home_screenState extends State<Home_screen> {
           colorFilter:
               ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
         ),
-        label: 'Whatsapp'.tr,
+        label: 'Support'.tr,
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset('assets/icons/bottom-nav-updates.svg'),
@@ -114,7 +138,7 @@ class _Home_screenState extends State<Home_screen> {
           colorFilter:
               ColorFilter.mode(context.theme.primaryColor, BlendMode.srcIn),
         ),
-        label: 'Connect'.tr,
+        label: 'Consultation'.tr,
       ),
     ],
     currentIndex: _selectedIndex,

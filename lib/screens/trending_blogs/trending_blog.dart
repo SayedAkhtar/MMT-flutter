@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:MyMedTrip/providers/home_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,599 +9,237 @@ import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
 
-class Trending_blog_page extends StatefulWidget {
-  const Trending_blog_page({super.key});
+import '../../components/CustomAppAbrSecondary.dart';
+import '../../components/CustomImageView.dart';
+import '../../constants/size_utils.dart';
+import '../../helper/CustomSpacer.dart';
+import '../../helper/Utils.dart';
+import '../../models/blog.dart';
+import '../../theme/app_style.dart';
+
+class TrendingBlogs extends StatefulWidget {
+  const TrendingBlogs({super.key});
 
   @override
-  State<Trending_blog_page> createState() => _Trending_blog_pageState();
+  State<TrendingBlogs> createState() => _TrendingBlogsState();
 }
 
-class _Trending_blog_pageState extends State<Trending_blog_page> {
+class _TrendingBlogsState extends State<TrendingBlogs> {
+  bool blogLoading = true;
+  List blogs = [];
+  int currPage = 1;
+  bool noBlogs = false;
+  ScrollController lazyScrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchBlogData(1);
+    lazyScrollController.addListener(() {
+      if(lazyScrollController.position.pixels == lazyScrollController.positions.last.maxScrollExtent){
+        fetchBlogData(currPage);
+      }
+    });
+    super.initState();
+  }
+
+  void fetchBlogData(int page) async {
+    try{
+      if(!noBlogs){
+        List<Blog> blogData = await Get.put(HomeProvider()).fetchBlogData(page: page);
+        print(blogData);
+        if(context.mounted) {
+          if(blogData.isEmpty){
+            setState(() {
+              noBlogs = true;
+            });
+          }else{
+            setState(() {
+              blogs.addAll(blogData);
+              // blogs = ;
+              blogLoading = false;
+              currPage = currPage+1;
+            });
+          }
+        }
+      }
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // backgroundColor: MYcolors.blackcolor,
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: CustomAppBarSecondary(
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        ),
+        leadingWidth: 64,
+        height: getVerticalSize(kToolbarHeight),
+        title: Text("Trending Blogs".tr, style: AppStyle.txtUrbanistRomanBold20),
+        centerTitle: true,
+      ),
+      // backgroundColor: MYcolors.blackcolor,
+      body: blogs.isNotEmpty ?ListView.builder(
+          controller: lazyScrollController,
           scrollDirection: Axis.vertical,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          shrinkWrap: true,
+          itemCount: blogLoading ? (blogs.length + 1) : blogs.length,
+          itemBuilder: (_, index) {
+            Blog currBlog = blogs[index];
+            RegExp exp = RegExp(r"<[^>]*>",
+                multiLine: true, caseSensitive: true);
+            if(blogLoading){
+              return
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Get.back();
-                },
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    Container(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        width: MediaQuery.of(context).size.width * 0.1,
-                        decoration: BoxDecoration(
-                          color: MYcolors.greycolor,
-                          borderRadius: BorderRadius.circular(10),
+                child: Center(child: CircularProgressIndicator(),),
+              );
+            }
+            // return Text(index.toString());
+            return GestureDetector(
+              onTap: () {
+                Get.to(() => ReadBlogPage(currBlog.title!,
+                    currBlog.content!, currBlog.thumbnail!));
+              },
+              child: SizedBox(
+                height: 350,
+                child: Card(
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(10)),
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.end,
+                    mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: CustomImageView(
+                          url: currBlog.thumbnail!,
+                          fit: BoxFit.cover,
+                          height: getVerticalSize(150),
+                          width: MediaQuery.of(context).size.width,
                         ),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                        )),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.04,
-                    ),
-                    Text(
-                      "Trending Blogs",
-                      style: TextStyle(
-                        fontFamily: "Brandon",
-                        fontSize: 25,
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: EdgeInsets.all(CustomSpacer.XS),
+                        child: Row(
+                          children: [
+                            Container(
+                                margin: const EdgeInsets.only(
+                                    right: CustomSpacer.XS,
+                                    left: CustomSpacer.XS),
+                                decoration: BoxDecoration(
+                                    color: MYcolors.bluecolor,
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey
+                                            .withOpacity(0.5),
+                                        blurRadius: 2,
+                                        spreadRadius: 0,
+                                        offset:
+                                        const Offset(0, 1),
+                                      )
+                                    ]),
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context)
+                                    .size
+                                    .width *
+                                    0.20,
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${currBlog.getFormattedDate().day}",
+                                      style: AppStyle
+                                          .txtUrbanistRomanBold32
+                                          .copyWith(
+                                          color:
+                                          Colors.white),
+                                    ),
+                                    Text(
+                                      Utils.getMonthShortName(
+                                          currBlog
+                                              .getFormattedDate()
+                                              .month),
+                                      style: AppStyle
+                                          .txtUrbanistRomanBold20
+                                          .copyWith(
+                                          color:
+                                          Colors.white),
+                                    ),
+                                  ],
+                                )),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${currBlog.title}",
+                                    maxLines: 3,
+                                    style: AppStyle
+                                        .txtUrbanistRomanBold20
+                                        .copyWith(
+                                        overflow:
+                                        TextOverflow
+                                            .ellipsis),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "${currBlog.excerpt?.replaceAll(exp, '')}",
+                                      maxLines: 3,
+                                      style: AppStyle
+                                          .txtUrbanistRegular18
+                                          .copyWith(
+                                          overflow:
+                                          TextOverflow
+                                              .ellipsis),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(
+                            right: CustomSpacer.XS),
+                        child: TextButton(
+                          onPressed: () {
+                            Get.to(() => ReadBlogPage(
+                                currBlog.title!,
+                                currBlog.content!,
+                                currBlog.thumbnail!));
+                          },
+                          child: Text(
+                            'Explore'.tr,
+                            style: AppStyle
+                                .txtUrbanistRomanBold18Cyan60001,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.49,
-                    width: MediaQuery.of(context).size.width * 0.92,
-                    decoration: BoxDecoration(
-                        //
-                        color: MYcolors.whitecolor,
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: MYcolors.blackcolor),
-                        boxShadow: [
-                          BoxShadow(
-                            // /color: Color.fromARGB(255, 189, 181, 181),
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 2,
-                            spreadRadius: 0,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
-                    child: Column(
-                      children: [
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.01,
-                        // ),
-                        Container(
-                          // alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            // image: DecorationImage(image: ),
-                            color: MYcolors.greycolor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Image.asset(
-                            "Images/hos.png",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.bluecolor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // /color: Color.fromARGB(255, 189, 181, 181),
-                                        color: Colors.grey.withOpacity(0.5),
-                                        blurRadius: 2,
-                                        spreadRadius: 0,
-                                        offset: Offset(0, 1),
-                                      )
-                                    ]),
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                width: MediaQuery.of(context).size.width * 0.20,
-                                // color: MYcolors.greencolor,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.01,
-                                    ),
-                                    Text(
-                                      "03",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                    Text(
-                                      "Oct",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                  ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.07,
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "Our latest blog",
-                                      style: TextStyle(
-                                          fontFamily: "Brandon",
-                                          fontSize: 19,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    // height: MediaQuery.of(context).size.height * 0.10,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "lorem ipsum is simply dummy text of the printing and typesetting industry ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "BrandonReg",
-                                          fontSize: 14,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // Get.to(ReadBlogPage("title", "description"));
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                width: MediaQuery.of(context).size.width * 0.18,
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.whitecolor,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                        color: MYcolors.blacklightcolors),
-                                    boxShadow: [
-                                      // BoxShadow(
-                                      //   // /color: Color.fromARGB(255, 189, 181, 181),
-                                      //   color: Colors.grey.withOpacity(0.5),
-                                      //   blurRadius: 2,
-                                      //   spreadRadius: 0,
-                                      //   offset: Offset(0, 1),
-                                      // )
-                                    ]),
-                                child: Text("Read"),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.49,
-                    width: MediaQuery.of(context).size.width * 0.92,
-                    decoration: BoxDecoration(
-                        //
-                        color: MYcolors.whitecolor,
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: MYcolors.blackcolor),
-                        boxShadow: [
-                          BoxShadow(
-                            // /color: Color.fromARGB(255, 189, 181, 181),
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 2,
-                            spreadRadius: 0,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
-                    child: Column(
-                      children: [
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.01,
-                        // ),
-                        Container(
-                          // alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            // image: DecorationImage(image: ),
-                            color: MYcolors.greycolor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Image.asset(
-                            "Images/hos.png",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.bluecolor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // /color: Color.fromARGB(255, 189, 181, 181),
-                                        color: Colors.grey.withOpacity(0.5),
-                                        blurRadius: 2,
-                                        spreadRadius: 0,
-                                        offset: Offset(0, 1),
-                                      )
-                                    ]),
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                width: MediaQuery.of(context).size.width * 0.20,
-                                // color: MYcolors.greencolor,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.01,
-                                    ),
-                                    Text(
-                                      "03",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                    Text(
-                                      "Oct",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                  ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.07,
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "Our latest blog",
-                                      style: TextStyle(
-                                          fontFamily: "Brandon",
-                                          fontSize: 19,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    // height: MediaQuery.of(context).size.height * 0.10,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "lorem ipsum is simply dummy text of the printing and typesetting industry ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "BrandonReg",
-                                          fontSize: 14,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // Get.to(Read_blog_page());
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                width: MediaQuery.of(context).size.width * 0.18,
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.whitecolor,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                        color: MYcolors.blacklightcolors),
-                                    boxShadow: [
-                                      // BoxShadow(
-                                      //   // /color: Color.fromARGB(255, 189, 181, 181),
-                                      //   color: Colors.grey.withOpacity(0.5),
-                                      //   blurRadius: 2,
-                                      //   spreadRadius: 0,
-                                      //   offset: Offset(0, 1),
-                                      // )
-                                    ]),
-                                child: Text("Read"),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.49,
-                    width: MediaQuery.of(context).size.width * 0.92,
-                    decoration: BoxDecoration(
-                        //
-                        color: MYcolors.whitecolor,
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: MYcolors.blackcolor),
-                        boxShadow: [
-                          BoxShadow(
-                            // /color: Color.fromARGB(255, 189, 181, 181),
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 2,
-                            spreadRadius: 0,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
-                    child: Column(
-                      children: [
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.01,
-                        // ),
-                        Container(
-                          // alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            // image: DecorationImage(image: ),
-                            color: MYcolors.greycolor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Image.asset(
-                            "Images/hos.png",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.bluecolor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // /color: Color.fromARGB(255, 189, 181, 181),
-                                        color: Colors.grey.withOpacity(0.5),
-                                        blurRadius: 2,
-                                        spreadRadius: 0,
-                                        offset: Offset(0, 1),
-                                      )
-                                    ]),
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                width: MediaQuery.of(context).size.width * 0.20,
-                                // color: MYcolors.greencolor,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.01,
-                                    ),
-                                    Text(
-                                      "03",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                    Text(
-                                      "Oct",
-                                      style: TextStyle(
-                                          fontFamily: "BrandonMed",
-                                          fontSize: 19,
-                                          color: MYcolors.whitecolor),
-                                    ),
-                                  ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.07,
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "Our latest blog",
-                                      style: TextStyle(
-                                          fontFamily: "Brandon",
-                                          fontSize: 19,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    // height: MediaQuery.of(context).size.height * 0.10,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.50,
-                                    child: Text(
-                                      "lorem ipsum is simply dummy text of the printing and typesetting industry ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "BrandonReg",
-                                          fontSize: 14,
-                                          color: MYcolors.blackcolor),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // Get.to(Read_blog_page());
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                width: MediaQuery.of(context).size.width * 0.18,
-                                decoration: BoxDecoration(
-                                    //
-                                    color: MYcolors.whitecolor,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                        color: MYcolors.blacklightcolors),
-                                    boxShadow: [
-                                      // BoxShadow(
-                                      //   // /color: Color.fromARGB(255, 189, 181, 181),
-                                      //   color: Colors.grey.withOpacity(0.5),
-                                      //   blurRadius: 2,
-                                      //   spreadRadius: 0,
-                                      //   offset: Offset(0, 1),
-                                      // )
-                                    ]),
-                                child: Text("Read"),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.02,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
-              )
-            ],
-          ),
+            );
+          }): Center(
+        child: SizedBox(
+          child: noBlogs ? Center(child: Text("No Blogs Data Available"),):Center(child: CircularProgressIndicator(),),
         ),
       ),
     );

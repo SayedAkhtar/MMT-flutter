@@ -16,8 +16,9 @@ import '../../providers/query_provider.dart';
 
 const APP_ID = "20971648246c496fa6e2a8856c4e0d1e";
 class NoCoordinator extends StatefulWidget {
-  const NoCoordinator({super.key, this.phoneNumber});
+  const NoCoordinator({super.key, this.phoneNumber, this.callToken});
   final String? phoneNumber;
+  final String? callToken;
   @override
   _NoCoordinatorState createState() => _NoCoordinatorState();
 }
@@ -41,6 +42,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     callToken = idGenerator();
     provider = Get.put(QueryProvider());
     // listenSensor();
+
     initiateCall();
     _toggleScreenOnOff();
     super.initState();
@@ -69,6 +71,11 @@ class _NoCoordinatorState extends State<NoCoordinator> {
 
   void initiateCall() async {
     // Loaders.loadingDialog(title: "Calling Support");
+    if(widget.callToken != null ){
+      callToken = widget.callToken!;
+      initializeAgora();
+      return;
+    }
     try{
       callState = "Finding Available HCF";
       bool res = await provider.placeCall(callToken, userId: widget.phoneNumber, type: "connect");
@@ -145,7 +152,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     // _startCallTimer();
   }
 
-  Future<void> leaveChannel() async {
+  Future<void> leaveChannel({bool calledFromDispose = false}) async {
     setState(() {
       callState = "Disconnected";
     });
@@ -154,9 +161,11 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     }catch(e){
       Logger().e(e);
     }
-    disposeAgora();
+    await disposeAgora();
+    if(!calledFromDispose){
+      await Get.offAllNamed('/home');
+    }
     // _startCallTimer();
-
   }
 
   Future<void> disposeAgora() async {
@@ -164,7 +173,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
       await _engine!.leaveChannel();
       await _engine!.release();
     }
-    Get.offAllNamed('/home');
+
   }
 
 

@@ -1,5 +1,16 @@
 package com.app.MyMedTrip
 
+import io.flutter.embedding.android.FlutterFragmentActivity
+
+class MainActivity: FlutterFragmentActivity() {
+}
+
+
+//------ Code For Screen Dimming ------ //
+
+/*
+package com.app.MyMedTrip
+
 import io.flutter.embedding.android.FlutterActivity
 import android.content.Context
 import android.hardware.Sensor
@@ -67,3 +78,5 @@ class MainActivity: FlutterActivity(), SensorEventListener {
         wakeLock.release()
     }
 }
+
+ */

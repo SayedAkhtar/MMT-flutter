@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
+import 'package:MyMedTrip/screens/update_screen/connect_coordinotor.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_callkit_incoming/entities/call_event.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -26,34 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
-Future<void> _showNotification(RemoteMessage message) async {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  final AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
-    Random.secure().nextInt(1000).toString(),
-    'Your Channel Name',
-    channelDescription: 'Your Channel Description',
-    importance: Importance.high,
-    priority: Priority.high,
-    ticker: 'ticker',
-  );
-  DarwinNotificationDetails darwinNotificationDetails = const DarwinNotificationDetails(
-    presentAlert: true,
-    presentBadge: true,
-    presentSound: true,
-  );
-
-  final NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  await flutterLocalNotificationsPlugin.show(
-    0,
-    message.notification?.title,
-    message.notification?.body,
-    platformChannelSpecifics,
-  );
-}
+FirebaseFunctions firebaseFunctions = FirebaseFunctions();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,31 +45,7 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  //=========== Firebase CrashAnalytics Code ==============//
-  const fatalError = true;
-  // Non-async exceptions
-  FlutterError.onError = (errorDetails) {
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      // ignore: dead_code
-    } else {
-      // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    }
-  };
-  // Async exceptions
-  PlatformDispatcher.instance.onError = (error, stack) {
-    if (fatalError) {
-      // If you want to record a "fatal" exception
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      // ignore: dead_code
-    } else {
-      // If you want to record a "non-fatal" exception
-      FirebaseCrashlytics.instance.recordError(error, stack);
-    }
-    return true;
-  };
+  firebaseFunctions.initCrashAnalytics();
 
   //=========== Firebase Messaging Code ==============//
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -107,31 +60,23 @@ void main() async {
     sound: true,
   );
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
-    const DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings();
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: initializationSettingsAndroid,
-            iOS: initializationSettingsDarwin);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (payload) {});
-
-    if(message.data.isNotEmpty && message.data['page_action'] == 'active_chat'){
-      return;
-    }
-    if (message.notification != null) {
-      print("Also here");
-      _showNotification(message);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
+    await firebaseFunctions.handleOnMessage(message);
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async{
+    await firebaseFunctions.handleOnMessageOpened(message);
+  });
+  FlutterCallkitIncoming.onEvent.listen((call) {
+    print(call?.event);
+    print(call?.body);
+    if(call?.event == Event.actionCallAccept){
+      Map body = call!.body;
+      Get.to(() => NoCoordinator(callToken: body['id'],));
     }
   });
+  await firebaseFunctions.getCurrentCall();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -149,5 +94,7 @@ void main() async {
       fontFamily: AppStyle.txtUrbanistRegular16.fontFamily,
       fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!],
     ),
+    smartManagement: SmartManagement.keepFactory,
+
   ));
 }

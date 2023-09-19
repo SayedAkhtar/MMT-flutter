@@ -8,10 +8,12 @@ import 'package:MyMedTrip/screens/Home_screens/widget/suggested_doctors.dart';
 import 'package:MyMedTrip/screens/Home_screens/widget/suggested_hospitals.dart';
 import 'package:MyMedTrip/screens/Medical_visa/medical_visa_form.dart';
 import 'package:MyMedTrip/screens/treatments/list.dart';
+import 'package:MyMedTrip/screens/trending_blogs/trending_blog.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_tawk/flutter_tawk.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/MarginBox.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
@@ -24,6 +26,7 @@ import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
 import 'package:MyMedTrip/screens/connects/support_connect.dart';
 import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
 
+import '../../components/RowHeader.dart';
 import '../update_screen/connect_coordinotor.dart';
 
 class HomePage extends StatefulWidget {
@@ -84,7 +87,7 @@ class _HomePageState extends State<HomePage> {
 
   void fetchBlogData() async {
     try{
-      List<Blog> blogData = await homeProvider.fetchBlogData();
+      List<Blog> blogData = await homeProvider.fetchBlogData(page: 1);
       if(context.mounted) {
         setState(() {
           blogs = blogData;
@@ -413,38 +416,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      // Container(
-                      //   alignment: Alignment.centerLeft,
-                      //   padding: const EdgeInsets.symmetric(
-                      //       horizontal: CustomSpacer.XS),
-                      //   decoration: BoxDecoration(
-                      //       gradient: const LinearGradient(
-                      //         begin: Alignment.topRight,
-                      //         end: Alignment.bottomLeft,
-                      //         colors: [
-                      //           MYcolors.greenlightcolor,
-                      //           MYcolors.bluecolor,
-                      //         ],
-                      //       ),
-                      //       color: MYcolors.whitecolor,
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       boxShadow: [
-                      //         BoxShadow(
-                      //           color: Colors.grey.withOpacity(0.5),
-                      //           blurRadius: 2,
-                      //           spreadRadius: 0,
-                      //           offset: const Offset(0, 1),
-                      //         )
-                      //       ]),
-                      //   height: 60,
-                      //   child: Text(
-                      //     "Wellness Centers".tr,
-                      //     style: AppStyle.txtUrbanistRomanBold20
-                      //         .copyWith(color: Colors.white),
-                      //   ),
-                      // ),
-                      // _rowHeader(context, "Our latest blog", () {
-                      //   _homeController.getBlogData();
+                      RowHeader(
+                          heading: "Our latest blog",
+                          action: () {
+                            // Get.to(const TrendingBlogs());
+                            Get.toNamed(Routes.blogs);
+                          }),
+                      // _rowHeader(context, "", () {
+                      //   // _homeController.getBlogData();
                       // }),
                       Visibility(
                         visible: blogs.isNotEmpty,

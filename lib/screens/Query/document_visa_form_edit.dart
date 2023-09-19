@@ -112,7 +112,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                                             e!,),
                                       ),
                                       CustomSpacer.xs(),
-                                      Flexible(child: Text(e!.split('/').last, style: AppStyle.txtUrbanistRegular16.copyWith(color: Colors.black),)),
+                                      Flexible(child: Text(e!.split('/').last, style: AppStyle.txtUrbanistRegular16.copyWith(color: Colors.black), overflow: TextOverflow.ellipsis, maxLines: 1,)),
                                     ],
                                   ),
                                 ),
