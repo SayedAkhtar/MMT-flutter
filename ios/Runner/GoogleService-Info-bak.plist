@@ -3,11 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>922681658193-tvqot0hdeccgp8abcnsk5gj2o6jfh3od.apps.googleusercontent.com</string>
+	<string>922681658193-fhui2l8k8lunrj57a7epknoal0q6th87.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.922681658193-tvqot0hdeccgp8abcnsk5gj2o6jfh3od</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>922681658193-j8uguecjpnb79npuc27uge71pm3o3vcb.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.922681658193-fhui2l8k8lunrj57a7epknoal0q6th87</string>
 	<key>API_KEY</key>
 	<string>AIzaSyASWXIHAXY3_pVZntIq7XQcR2IDSKlEihM</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.app.MyMedTrip</string>
+	<string>com.example.mmt</string>
 	<key>PROJECT_ID</key>
 	<string>mymedtrip-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:922681658193:ios:a8e00069dab802396aa170</string>
+	<string>1:922681658193:ios:ceef44b3da9aa9e86aa170</string>
 	<key>DATABASE_URL</key>
 	<string>https://mymedtrip-app-default-rtdb.firebaseio.com</string>
 </dict>
