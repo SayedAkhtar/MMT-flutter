@@ -9,7 +9,6 @@ import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
-import 'package:MyMedTrip/models/user_model.dart';
 import 'package:logger/logger.dart';
 import 'package:pattern_formatter/date_formatter.dart';
 import 'package:select_dialog/select_dialog.dart';
@@ -59,7 +58,7 @@ class _Add_family_pageState extends State<Add_family_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Add Friends or Family",
+        pageName: "Add Friends or Family".tr,
         showDivider: true,
       ),
       body: Form(
@@ -93,17 +92,18 @@ class _Add_family_pageState extends State<Add_family_page> {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 15, bottom: 11, top: 11, right: 15),
-                      hintText: "mm/dd/yyyy",
+                      hintText: "dd/mm/yyyy",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     validator: (String? date){
                       if(date== null || date.isEmpty ){
-                        return "Date of birth is required";
+                        return "Date of birth is required".tr;
                       }
                       int day = int.parse(date.split('/')[0]);
                       int month = int.parse(date.split('/')[1]);
                       int year = int.parse(date.split('/')[2]);
+                      return null;
                       // if(day > 31 || month > 12 ){
                       //   return "Please enter a valid date";
                       // }
@@ -111,19 +111,19 @@ class _Add_family_pageState extends State<Add_family_page> {
                   ),
                   DropdownButtonFormField(
                     value: familyMember?.gender,
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: 'male',
                         enabled: true,
-                        child: Text('Male'),
+                        child: Text('Male'.tr),
                       ),
                       DropdownMenuItem(
                         value: 'female',
-                        child: Text('Female'),
+                        child: Text('Female'.tr),
                       ),
                       DropdownMenuItem(
                         value: 'other',
-                        child: Text('Other'),
+                        child: Text('Other'.tr),
                       ),
                     ],
                     onChanged: (String? value) {
@@ -142,7 +142,7 @@ class _Add_family_pageState extends State<Add_family_page> {
                       prefixIcon: Icon(Icons.call),
                       contentPadding: EdgeInsets.only(
                           left: 15, bottom: 11, top: 11, right: 15),
-                      hintText: "Phone",
+                      hintText: "Phone".tr,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -169,7 +169,7 @@ class _Add_family_pageState extends State<Add_family_page> {
                     onTap: () {
                       SelectDialog.showModal<String>(
                         context,
-                        label: "Select Country",
+                        label: "Select Country".tr,
                         selectedValue: countryPreference,
                         items:
                             List.generate(countryName.length, (index) => countryName[index]),
@@ -191,7 +191,7 @@ class _Add_family_pageState extends State<Add_family_page> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10)),
                       child: Text(
-                        countryPreference.isEmpty ? "Select Country" : countryPreference,
+                        countryPreference.isEmpty ? "Select Country".tr : countryPreference,
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ),

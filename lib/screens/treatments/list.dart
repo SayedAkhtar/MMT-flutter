@@ -1,6 +1,5 @@
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/CustomCardWithImage.dart';
-import 'package:MyMedTrip/components/MarginBox.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
@@ -8,11 +7,10 @@ import 'package:MyMedTrip/helper/Debouncer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/treatment.dart';
 import 'package:MyMedTrip/providers/hospital_provider.dart';
-import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 class TreatmentsList extends StatefulWidget {
   const TreatmentsList({super.key});
@@ -38,6 +36,12 @@ class _TreatmentsListState extends State<TreatmentsList> {
     scrollController.addListener(onScroll);
     super.initState();
   }
+  @override
+  void dispose() {
+    treatmentSearchController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
 
   void onScroll() async {
     if (scrollController.position.pixels ==
@@ -47,10 +51,11 @@ class _TreatmentsListState extends State<TreatmentsList> {
         return;
       }
       List<Treatment?>? temp = await provider.getAllTreatments(
-          query: treatmentSearchController.text, page: currentPage);
+          query: treatmentSearchController.text, page: currentPage+1);
       setState(() {
         if (temp.length == 25) {
           currentPage = currentPage + 1;
+        }else{
           reachedEnd = true;
         }
         allData!.addAll(temp);
@@ -89,7 +94,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
         ),
         leadingWidth: 64,
         height: getVerticalSize(kToolbarHeight),
-        title: Text("Treatments List", style: AppStyle.txtUrbanistRomanBold20),
+        title: Text("Treatments List".tr, style: AppStyle.txtUrbanistRomanBold20),
         centerTitle: true,
       ),
       body: Padding(
@@ -133,8 +138,8 @@ class _TreatmentsListState extends State<TreatmentsList> {
             Expanded(
               child: Builder(builder: (_) {
                 if(allData!.isEmpty){
-                  return const Center(
-                    child: Text("No Treatment to show"),
+                  return Center(
+                    child: Text("No Treatment to show".tr),
                   );
                 }
                 if(searching){
@@ -166,9 +171,9 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                   children : [
                                     TableRow(
                                       children: [
-                                        const Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text("Maximum Price (USD):"),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Maximum Price (USD):".tr),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -180,7 +185,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Minimum Price (USD):"),
+                                            child: Text("Minimum Price (USD):".tr),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -192,7 +197,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Days Required :"),
+                                            child: Text("Days Required :".tr),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -204,7 +209,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Recovery Time:"),
+                                            child: Text("Recovery Time:".tr),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -216,7 +221,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Success Rate:"),
+                                            child: Text("Success Rate:".tr),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -228,7 +233,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Covered:"),
+                                            child: Text("Covered:".tr),
                                           ),
                                           // Html(data: data)
                                           Text( Utils.stripHtmlIfNeeded(allData![i]!.covered!))
@@ -238,7 +243,7 @@ class _TreatmentsListState extends State<TreatmentsList> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("Not Covered:"),
+                                            child: Text("Not Covered:".tr),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),

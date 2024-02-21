@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/colors.dart';
@@ -27,7 +26,8 @@ class _Language_pageState extends State<Language_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MYcolors.whitecolor,
+      // backgroundColor: MYcolors.whitecolor,
+      backgroundColor: Color(0xFFFCFDFC),
       body: Padding(
     padding: const EdgeInsets.all(CustomSpacer.S),
     child: SafeArea(
@@ -36,16 +36,20 @@ class _Language_pageState extends State<Language_page> {
           Spacer(),
           SizedBox(
             height: 120,
-            child: AnimatedTextKit(
-              repeatForever: true,
-              animatedTexts: [
-                RotateAnimatedText('Welcome to MyMedTrip',textStyle: TextStyle(fontSize: 32)),
-                RotateAnimatedText('Добро пожаловать в MyMedTrip',textStyle: TextStyle(fontSize: 32)),
-                RotateAnimatedText('مرحبًا بك في MyMedTrip',textStyle: TextStyle(fontSize: 32)),
-                RotateAnimatedText('मायमेडट्रिप में आपका स्वागत है',textStyle: TextStyle(fontSize: 32)),
-              ],
-            ),
+            child: Image.asset('assets/language.gif')
           ),
+          // SizedBox(
+          //   height: 120,
+          //   child: AnimatedTextKit(
+          //     repeatForever: true,
+          //     animatedTexts: [
+          //       FadeAnimatedText('Welcome to MyMedTrip',textStyle: TextStyle(fontSize: 32)),
+          //       FadeAnimatedText('Добро пожаловать в MyMedTrip',textStyle: TextStyle(fontSize: 32)),
+          //       FadeAnimatedText('مرحبًا بك في MyMedTrip',textStyle: TextStyle(fontSize: 32)),
+          //       FadeAnimatedText('मायमेडट्रिप में आपका स्वागत है',textStyle: TextStyle(fontSize: 32)),
+          //     ],
+          //   ),
+          // ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
@@ -90,7 +94,7 @@ class _Language_pageState extends State<Language_page> {
                     color: selectedLanguage == 'ar' ? MYcolors.greylightcolor : MYcolors.greycolor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("إنجليزي"),
+                  child: Text("عربي"),
                 ),
               )
             ],
@@ -111,7 +115,7 @@ class _Language_pageState extends State<Language_page> {
                     color: selectedLanguage == 'ru' ? MYcolors.greylightcolor : MYcolors.greycolor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text("Английский"),
+                  child: Text("русский"),
                 ),
               ),
               GestureDetector(
@@ -174,7 +178,7 @@ class _Language_pageState extends State<Language_page> {
   }
 
   void selectLanguage(String lang){
-    Locale locale = new Locale(lang);
+    Locale locale = Locale(lang);
     Get.updateLocale(locale);
     setState(() {
       selectedLanguage = lang;

@@ -16,18 +16,24 @@ class DoctorProvider extends BaseProvider {
     httpClient.baseUrl = api_uri;
     _token = _storage.get('token');
     super.onInit();
+    httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
   }
 
   Future<List<Doctor?>> getDoctorsByHospital(id) async{
     _headers['Authorization'] = "Bearer $_token";
     _headers['Accept'] = "application/json";
-    List<Doctor?> _doctor = [];
+    List<Doctor?> doctor = [];
     try{
       String uri = '/hospitals/$id/doctors';
       Response response = await get(uri, contentType: 'application/json', headers: _headers);
       if (response.statusCode == 200) {
         List jsonString = await response.body["DATA"];
-        jsonString.forEach((element) => _doctor.add(Doctor.fromJson(element)));
+        for (var element in jsonString) {
+          doctor.add(Doctor.fromJson(element));
+        }
       }
       if (response.statusCode! >= 400) {
         var jsonString = await response.body;
@@ -41,7 +47,7 @@ class DoctorProvider extends BaseProvider {
       Loaders.errorDialog(error.toString(), title: "Error");
       throw const HttpException("Could not process request");
     }
-    return _doctor;
+    return doctor;
   }
 
   Future<Doctor?> getDoctorById(id) async{
@@ -57,20 +63,20 @@ class DoctorProvider extends BaseProvider {
     return null;
   }
 
-  Future<List<Doctor?>> getAllDoctors({String? parameter}) async{
+  Future<List<Doctor>> getAllDoctors({String? parameter}) async{
     List<Doctor> doctor = [];
-    try{
+    // try{
       String uri = '/doctors';
       if(parameter != null){
-        uri = "$uri${parameter}";
+        uri = "$uri$parameter";
       }
       Response response = await get(uri, contentType: 'application/json', headers: _headers);
       var jsonString = await responseHandler(response);
       jsonString.forEach((element) => doctor.add(Doctor.fromJson(element)));
-    } catch (error) {
-      Loaders.errorDialog(error.toString(), title: "Error");
-      throw const HttpException("Could not process request");
-    }
+    // } catch (error) {
+    //   Loaders.errorDialog(error.toString(), title: "Error");
+    //   throw const HttpException("Could not process request");
+    // }
     return doctor;
   }
 }

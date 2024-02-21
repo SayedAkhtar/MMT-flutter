@@ -2,7 +2,6 @@ import 'package:MyMedTrip/models/user_family_model.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/models/error_model.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
 import 'package:logger/logger.dart';
 
@@ -14,8 +13,12 @@ class UserProvider extends BaseProvider {
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   @override
   void onInit() {
-    this.token = _storage.get('token');
+    token = _storage.get('token');
     super.onInit();
+    httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
   }
 
 
@@ -23,6 +26,12 @@ class UserProvider extends BaseProvider {
     final response = await get('/users/$id');
     var jsonBody = await responseHandler(response);
     print(jsonBody);
+    return LocalUser.fromJson(jsonBody);
+  }
+
+  Future<LocalUser?> getCurrentUser() async {
+    final response = await get('/current_user');
+    var jsonBody = await responseHandler(response);
     return LocalUser.fromJson(jsonBody);
   }
 
@@ -113,8 +122,21 @@ class UserProvider extends BaseProvider {
 
   Future<bool> updateUserLanguage({required language}) async{
     try {
-      // Response response = await post('/update-language', {'language': language});
-      // var jsonString = await responseHandler(response);
+      token = _storage.get("token");
+      Response response = await post('/update-language', {'language': language});
+      var jsonString = await responseHandler(response);
+      return true;
+    } catch (error) {
+      Loaders.errorDialog(error.toString(), title: "Error");
+    }
+    return false;
+  }
+
+  Future<bool> changeFamilyNotificationStatus(familyId) async{
+    try {
+      token = _storage.get("token");
+      Response response = await post('/update-family-notification', {'family_id': familyId});
+      var jsonString = await responseHandler(response);
       return true;
     } catch (error) {
       Loaders.errorDialog(error.toString(), title: "Error");

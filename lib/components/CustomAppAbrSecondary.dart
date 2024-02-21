@@ -5,7 +5,7 @@ import '../constants/size_utils.dart';
 // ignore: must_be_immutable
 class CustomAppBarSecondary extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBarSecondary(
-      {required this.height,
+      {super.key, required this.height,
         this.leadingWidth,
         this.leading,
         this.title,

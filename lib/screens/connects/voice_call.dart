@@ -27,12 +27,13 @@ class _CoordinatorCallPageState extends State<CoordinatorCallPage> with SingleTi
   @override
   void initState() {
     // TODO: implement initState
-    callState = "Calling....";
+    callState = "Calling....".tr;
     elapsed = Duration.zero;
     super.initState();
     initializeAgora();
   }
 
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -52,7 +53,7 @@ class _CoordinatorCallPageState extends State<CoordinatorCallPage> with SingleTi
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("local user ${connection.localUid} joined");
           setState(() {
-            callState = "Connecting...";
+            callState = "Connecting...".tr;
             state = CallState.connecting;
           });
         },
@@ -60,7 +61,7 @@ class _CoordinatorCallPageState extends State<CoordinatorCallPage> with SingleTi
           debugPrint("remote user $remoteUid joined");
           startCountTimer();
           setState(() {
-            callState = "Connected";
+            callState = "Connected".tr;
             state = CallState.connected;
           });
         },
@@ -101,7 +102,6 @@ class _CoordinatorCallPageState extends State<CoordinatorCallPage> with SingleTi
   }
 
   void startCountTimer(){
-    print("called");
     _ticker = createTicker((elapsed) {
       print(elapsed);
       setState(() {
@@ -129,9 +129,9 @@ class _CoordinatorCallPageState extends State<CoordinatorCallPage> with SingleTi
         imagePath: "Images/rrr.png",
         height: getHorizontalSize(150),
       ),
-      const Text(
-        "Coordinator name",
-        style: TextStyle(
+      Text(
+        "Coordinator name".tr,
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
         ),

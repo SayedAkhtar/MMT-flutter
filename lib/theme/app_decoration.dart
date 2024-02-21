@@ -63,7 +63,7 @@ class AppDecoration {
       ),
     ),
   );
-  static BoxDecoration get fillWhiteA700 => BoxDecoration(
+  static BoxDecoration get fillWhiteA700 => const BoxDecoration(
     color: Colors.black87,
   );
   static BoxDecoration get fillBluegray900 => BoxDecoration(
@@ -80,11 +80,11 @@ class AppDecoration {
   );
   static BoxDecoration get gradientGray80000Gray90096 => BoxDecoration(
     gradient: LinearGradient(
-      begin: Alignment(
+      begin: const Alignment(
         0.5,
         0,
       ),
-      end: Alignment(
+      end: const Alignment(
         0.5,
         1,
       ),
@@ -111,11 +111,11 @@ class AppDecoration {
   );
   static BoxDecoration get gradientGray80000Gray90002 => BoxDecoration(
     gradient: LinearGradient(
-      begin: Alignment(
+      begin: const Alignment(
         0.5,
         -0.78,
       ),
-      end: Alignment(
+      end: const Alignment(
         0.5,
         1,
       ),
@@ -136,7 +136,7 @@ class AppDecoration {
         blurRadius: getHorizontalSize(
           2,
         ),
-        offset: Offset(
+        offset: const Offset(
           0,
           0,
         ),
@@ -154,7 +154,7 @@ class AppDecoration {
         blurRadius: getHorizontalSize(
           2,
         ),
-        offset: Offset(
+        offset: const Offset(
           0,
           4,
         ),

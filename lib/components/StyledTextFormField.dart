@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StyledTextFormField extends StatelessWidget {
-  const StyledTextFormField({Key? key, this.controller, this.initialValue, this.hintText, this.validator}) : super(key: key);
+  const StyledTextFormField({super.key, this.controller, this.initialValue, this.hintText, this.validator});
   final TextEditingController? controller;
   final String? initialValue;
   final String? hintText;

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,11 +43,11 @@ class Loaders {
     
   }
 
-  static void successDialog(String message, {String title="Success"}){
+  static void successDialog(String message, {String title="Success", bool barrierDismissible=true}){
     if(Get.isDialogOpen!){
       Get.back(closeOverlays: true);
     }
-    Get.defaultDialog(title:title, content: Text(message));
+    Get.defaultDialog(title:title, content: Text(message),barrierDismissible: barrierDismissible);
   }
 
   static void responseNull(){

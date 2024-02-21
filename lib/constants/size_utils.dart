@@ -19,8 +19,8 @@ get width {
 ///This method is used to get device viewport height.
 get height {
   num statusBar =
-      MediaQueryData.fromWindow(WidgetsBinding.instance.window).viewPadding.top;
-  num bottomBar = MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+      MediaQueryData.fromView(WidgetsBinding.instance.window).viewPadding.top;
+  num bottomBar = MediaQueryData.fromView(WidgetsBinding.instance.window)
       .viewPadding
       .bottom;
   num screenHeight = size.height - statusBar - bottomBar;

@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:MyMedTrip/screens/connects/AgoraVideoChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/connects/chat_page.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/colors.dart';
@@ -41,7 +41,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Teleconsultation History",
+        pageName: "Teleconsultation History".tr,
         showDivider: true,
         showBack: false,
       ),
@@ -71,14 +71,14 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                         }
                         if (_controller.consultationList.isEmpty &&
                             _controller.consultationsLoaded) {
-                          return Text("No Consultation to show");
+                          return Text("No Consultation to show".tr);
                         }
                         return ListView.builder(
                             itemCount: _controller.consultationList.length,
                             itemBuilder: (ctx, idx) {
-                              var _schedule = _controller.consultationList[idx]
+                              var schedule = _controller.consultationList[idx]
                                   ['scheduled_at'];
-                              var _time = DateFormat('yyyy-MM-dd \nhh:mm a')
+                              var time = DateFormat('yyyy-MM-dd \nhh:mm a')
                                   .format(DateTime.parse(_controller
                                       .consultationList[idx]['updated_at']));
                               return GestureDetector(
@@ -86,8 +86,8 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                   if (!_controller.consultationList[idx]
                                       ['is_active']) {
                                     Get.showSnackbar(GetSnackBar(
-                                      title: "Consultation not yet active",
-                                      message: "Scheduled at :$_schedule",
+                                      title: "Consultation not yet active".tr,
+                                      message: "Scheduled at :".tr +schedule,
                                       duration: Duration(seconds: 5),
                                       showProgressIndicator: true,
                                       onTap: (event){
@@ -95,7 +95,12 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                       },
                                     ));
                                   } else {
-                                    print(_controller.consultationList[idx]);
+                                    // Get.to(AgoraVideoChatScreen(
+                                    //     channelName: _controller.consultationList[idx]['channel_name'],
+                                    //     appId: _controller.consultationList[idx]['agora_id']
+                                    // ));
+
+
                                     Get.toNamed(
                                       Routes.videoChat,
                                       arguments: {
@@ -156,7 +161,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                               _controller.consultationList[idx]
                                                       ['is_active']
                                                   ? "Active Consultation Call".tr
-                                                  : "Waiting for call to become active",
+                                                  : "Waiting for call to become active".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 15,
@@ -170,7 +175,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                         ),
                                       ),
                                       Text(
-                                        _time,
+                                        time,
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold),

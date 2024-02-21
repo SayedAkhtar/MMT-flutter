@@ -1,12 +1,10 @@
+
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/models/error_model.dart';
 import 'package:MyMedTrip/models/user_model.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
 
@@ -17,7 +15,6 @@ class AuthProvider extends BaseProvider {
   void onInit() {
     httpClient.baseUrl = api_uri;
     allowAutoSignedCert = true;
-
     super.onInit();
   }
 
@@ -40,11 +37,13 @@ class AuthProvider extends BaseProvider {
   Future<LocalUser?> login(
       {required String phone,
       required String password,
+      required int role,
       String? language}) async {
     Map<String, dynamic> body = {
       "phone": phone,
       "password": password,
-      "language": language
+      "language": language,
+      "role": role
     };
     try {
       Loaders.loadingDialog();
@@ -90,9 +89,11 @@ class AuthProvider extends BaseProvider {
     return false;
   }
 
-  Future<bool> resendOtp() async {
+  Future<bool> resendOtp({required String phone}) async {
     try {
-      Response response = await post("/resend-otp", {},
+      Response response = await post("/resend-otp", {
+        "phone": phone
+      },
           contentType: "application/json");
       var jsonString = await responseHandler(response);
       return true;
@@ -104,7 +105,7 @@ class AuthProvider extends BaseProvider {
 
   Future<LocalUser?> validateOtp(String otp, String phone, String type, {String? password }) async {
     try {
-      Loaders.loadingDialog();
+      // Loaders.loadingDialog();
       Response? response = await post(
           "/check-otp", {'otp': otp, 'phone': phone, 'type': type, 'password': password});
       var jsonString = await responseHandler(response);
@@ -115,13 +116,13 @@ class AuthProvider extends BaseProvider {
     return null;
   }
 
-  Future<bool> updateFirebase(String uid, String fcm) async {
+  Future<bool> updateFirebase(String uid, String fcm, {String? apnToken}) async {
     token = _storage.get("token");
     try {
-      Loaders.loadingDialog();
+      // Loaders.loadingDialog();
       Response? response = await post(
         "/update-firebase",
-        {'uid': uid, 'token': fcm},
+        {'uid': uid, 'token': fcm, 'voip_apn_token': apnToken, 'device_type': Platform.isIOS ? 'ios' : 'android'},
         contentType: "application/json",
       );
       await responseHandler(response);
@@ -151,14 +152,11 @@ class AuthProvider extends BaseProvider {
   }
 
   Future<bool> resetPassword(
-      {required String phone,
-        required String password}) async {
+      {required String phone}) async {
     Map<String, dynamic> body = {
       "phone": phone
     };
     try {
-      Loaders.loadingDialog();
-      print(body);
       Response? response = await post("/forgot-password", body);
       var jsonString = await responseHandler(response);
       return true;

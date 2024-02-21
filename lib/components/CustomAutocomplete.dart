@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Debouncer.dart';
 import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 
 import '../helper/Utils.dart';
 
@@ -19,7 +16,7 @@ class CustomAutocomplete extends StatefulWidget  {
   String? hintText;
   bool isRequired;
   int? patientId;
-  static String _displayStringForOption(Result option) => option.name!;
+  static String _displayStringForOption(Result option) => option.name;
 
   @override
   State<CustomAutocomplete> createState() => _CustomAutocompleteState();
@@ -44,9 +41,6 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
     // TODO: implement dispose
     super.dispose();
   }
-@override
-  // TODO: implement mounted
-  bool get mounted => super.mounted;
 
   Future search(term) async{
     if(mounted){
@@ -54,8 +48,8 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
         isSearching = true;
       });
       debouncer.run(() async {
-        print("$base_uri/ajax-search/${widget.searchTable}?term=${term}&?patient_id=${widget.patientId}");
-        Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=${term}&?patient_id=${widget.patientId}", headers: {"Accepts": "application/json"});
+        print("$base_uri/ajax-search/${widget.searchTable}?term=$term&?patient_id=${widget.patientId}");
+        Response res = await GetConnect().get("$base_uri/ajax-search/${widget.searchTable}?term=$term&?patient_id=${widget.patientId}", headers: {"Accepts": "application/json"});
         if(res.isOk){
           var json = res.body['data'];
           if(json.isNotEmpty) {
@@ -116,8 +110,7 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
           }
           return [Result(id: 0, name: "Searching....")];
         }
-        return searchResult.where((option) => option.name!
-            .toLowerCase()
+        return searchResult.where((option) => option.name.toLowerCase()
             .contains(textEditingValue.text.toLowerCase()));
         return searchResult;
       },
@@ -137,7 +130,7 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
                 itemCount: options.length,
                 shrinkWrap: false,
                 itemBuilder: (BuildContext context, int index) {
-                  final String option = options.elementAt(index).name!;
+                  final String option = options.elementAt(index).name;
                   return InkWell(
                     onTap: () {
                       FocusManager.instance.primaryFocus?.unfocus();
@@ -171,7 +164,7 @@ class _CustomAutocompleteState extends State<CustomAutocomplete> {
           fieldTextEditingController.text = widget.initialValue!;
         }
         if(selectedOption != null){
-          fieldTextEditingController.text = selectedOption!.name!;
+          fieldTextEditingController.text = selectedOption!.name;
         }
         return TextFormField(
           controller: fieldTextEditingController,

@@ -1,13 +1,8 @@
-import 'dart:io';
 
 import 'package:MyMedTrip/models/treatment.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/models/error_model.dart';
-import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
-import '../constants/api_constants.dart';
 import '../controller/controllers/local_storage_controller.dart';
 import '../models/hospital_model.dart';
 
@@ -15,6 +10,15 @@ class HospitalProvider extends BaseProvider {
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   final Map<String, String> _headers = {};
   String? _token;
+
+  @override
+  void onInit(){
+    super.onInit();
+    httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
+  }
 
   Future<Hospital?> getHospitalById(id) async {
     try {

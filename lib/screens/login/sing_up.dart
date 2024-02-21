@@ -45,7 +45,7 @@ class _SignupHerePageState extends State<SignupHerePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Sign Up",
+        pageName: "Sign Up".tr,
         showDivider: true,
         showBack: true,
       ),
@@ -67,7 +67,7 @@ class _SignupHerePageState extends State<SignupHerePage> {
                         controller: _nameController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Mobile number is required';
+                            return 'Mobile number is required'.tr;
                           }
                           return null;
                         },
@@ -134,10 +134,10 @@ class _SignupHerePageState extends State<SignupHerePage> {
                         controller: _passwordController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Please input your password';
+                            return 'Please input your password'.tr;
                           }
                           if (val.length < 8) {
-                            return "Password must be least 8 characters";
+                            return "Password must be least 8 characters".tr;
                           }
                           return null;
                         },
@@ -155,10 +155,10 @@ class _SignupHerePageState extends State<SignupHerePage> {
                         style: AppStyle.txtUrbanistRegular16WhiteA700,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Please confirm your password';
+                            return 'Please confirm your password'.tr;
                           }
                           if (_passwordController.text != val) {
-                            return "Confirm password and Password must be same";
+                            return "Confirm password and Password must be same".tr;
                           }
                           return null;
                         },

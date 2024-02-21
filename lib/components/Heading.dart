@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 
 class Heading extends StatelessWidget {
-  const Heading({Key? key, required this.heading}) : super(key: key);
+  const Heading({super.key, required this.heading});
   final String heading;
   @override
   Widget build(BuildContext context) {

@@ -16,15 +16,7 @@ class HospitalController extends GetxController {
     _provider = Get.put(HospitalProvider());
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   Future<Hospital?> getHospitalById(id) async{
     // openHospitalID = id;
@@ -44,18 +36,12 @@ class HospitalController extends GetxController {
   }
 
   void getAllHospitals() async{
-    var _hospital = _provider.getAllHospitals();
+    var hospital = _provider.getAllHospitals();
   }
 
   Future<List<Hospital?>?> getHospitals() async{
     List<Hospital?>? temp = await _provider.getAllHospitals(params: searchText.value);
     hospital.value = _provider.getAllHospitals(params: searchText.value);
-    // if(temp != null){
-    //   for (var element in temp) {
-    //     hospitals?.add(element!);
-    //   }
-    //   // hospitals!.value = temp;
-    // }
     return temp;
   }
 }

@@ -3,7 +3,6 @@ import 'package:MyMedTrip/components/RowHeader.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +15,7 @@ class SuggestedDoctors extends StatelessWidget {
     return Column(
       children: [
         RowHeader(
-            heading: "Suggested Doctors",
+            heading: "Suggested Doctors".tr,
             action: () {
               Get.toNamed(Routes.doctors, arguments: {'type': 'allDoctor'});
             }),
@@ -28,6 +27,7 @@ class SuggestedDoctors extends StatelessWidget {
               itemBuilder: (_, index) {
                 return CustomCardWithImage(
                   width: getHorizontalSize(160),
+                  imageAlign: Alignment.topCenter,
                   onTap: () {
                     Get.toNamed(Routes.doctorPreviewNew, arguments: {
                       'id': data[index].id,

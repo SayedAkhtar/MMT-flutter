@@ -27,7 +27,7 @@ class ShimmerLoader extends StatelessWidget {
                     color: Colors.black26,
                     width: double.maxFinite,
                     height: 100.0,
-                    child: Text(''),
+                    child: const Text(''),
                   )),
             ),
             ...List<Widget>.generate(5, (int index) {

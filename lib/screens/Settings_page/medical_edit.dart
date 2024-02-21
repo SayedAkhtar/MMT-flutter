@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 import '../../constants/colors.dart';
@@ -72,7 +70,7 @@ class _Medical_Edit_pageState extends State<Medical_Edit_page> {
                 borderRadius: BorderRadius.circular(10)),
             height: MediaQuery.of(context).size.height * 0.6,
             width: MediaQuery.of(context).size.width * 0.9,
-            child: Container(
+            child: SizedBox(
               // color: MYcolors.blacklightcolors,
               height: MediaQuery.of(context).size.height * 0.55,
               width: MediaQuery.of(context).size.width * 0.85,

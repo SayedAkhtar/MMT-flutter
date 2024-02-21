@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
+import 'package:get/get.dart';
 
 class AboutApp extends StatelessWidget {
-  const AboutApp({Key? key}) : super(key: key);
+  const AboutApp({super.key});
   static const htmlData = """<div class="entry-content">
 <p>Terms of Use<br>Effective Date: March 11, 2022</p>
 <p><br>Welcome to the MyMedTrip website! MyMedTrip maintains this website (“Website”) for your<br>personal information, education and communication. Your access to and use of this Website is<br>subject to the following Terms of Use. Please read these Terms of Use carefully before<br>accessing or using the Website, so that you fully understand your rights and responsibilities.</p>
@@ -48,7 +49,7 @@ class AboutApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Terms of usage",
+        pageName: "Terms of usage".tr,
         showDivider: true,
       ),
       body: SafeArea(

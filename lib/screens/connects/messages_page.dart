@@ -1,8 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
-import 'package:MyMedTrip/screens/connects/chat_page.dart';
 
 import '../../constants/colors.dart';
 
@@ -21,7 +17,7 @@ class _Messages_pagesState extends State<Messages_pages> {
         onTap: () {
           // Get.to(Chat_page());
         },
-        child: Container(
+        child: SizedBox(
           // color: MYcolors.bluecolor,
           height: MediaQuery.of(context).size.height * 0.07,
           // width: MediaQuery.of(context).size.width * 0.38,
@@ -45,10 +41,10 @@ class _Messages_pagesState extends State<Messages_pages> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Madhu",
                     style: TextStyle(
@@ -74,7 +70,7 @@ class _Messages_pagesState extends State<Messages_pages> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("05:02 PM"),
+                  const Text("05:02 PM"),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),
@@ -91,7 +87,7 @@ class _Messages_pagesState extends State<Messages_pages> {
         onTap: () {
           // Get.to(Chat_page());
         },
-        child: Container(
+        child: SizedBox(
           // color: MYcolors.bluecolor,
           height: MediaQuery.of(context).size.height * 0.07,
           // width: MediaQuery.of(context).size.width * 0.38,
@@ -115,10 +111,10 @@ class _Messages_pagesState extends State<Messages_pages> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Madhu",
                     style: TextStyle(
@@ -144,7 +140,7 @@ class _Messages_pagesState extends State<Messages_pages> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("05:02 PM"),
+                  const Text("05:02 PM"),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),
@@ -161,7 +157,7 @@ class _Messages_pagesState extends State<Messages_pages> {
         onTap: () {
           // Get.to(Chat_page());
         },
-        child: Container(
+        child: SizedBox(
           // color: MYcolors.bluecolor,
           height: MediaQuery.of(context).size.height * 0.07,
           // width: MediaQuery.of(context).size.width * 0.38,
@@ -185,10 +181,10 @@ class _Messages_pagesState extends State<Messages_pages> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Madhu",
                     style: TextStyle(
@@ -214,7 +210,7 @@ class _Messages_pagesState extends State<Messages_pages> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("05:02 PM"),
+                  const Text("05:02 PM"),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),
@@ -231,7 +227,7 @@ class _Messages_pagesState extends State<Messages_pages> {
         onTap: () {
           // Get.to(Chat_page());
         },
-        child: Container(
+        child: SizedBox(
           // color: MYcolors.bluecolor,
           height: MediaQuery.of(context).size.height * 0.07,
           // width: MediaQuery.of(context).size.width * 0.38,
@@ -255,10 +251,10 @@ class _Messages_pagesState extends State<Messages_pages> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Madhu",
                     style: TextStyle(
@@ -284,7 +280,7 @@ class _Messages_pagesState extends State<Messages_pages> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("05:02 PM"),
+                  const Text("05:02 PM"),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),
@@ -301,7 +297,7 @@ class _Messages_pagesState extends State<Messages_pages> {
         onTap: () {
           // Get.to(Chat_page());
         },
-        child: Container(
+        child: SizedBox(
           // color: MYcolors.bluecolor,
           height: MediaQuery.of(context).size.height * 0.07,
           // width: MediaQuery.of(context).size.width * 0.38,
@@ -325,10 +321,10 @@ class _Messages_pagesState extends State<Messages_pages> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Madhu",
                     style: TextStyle(
@@ -354,7 +350,7 @@ class _Messages_pagesState extends State<Messages_pages> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("05:02 PM"),
+                  const Text("05:02 PM"),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.005,
                   ),

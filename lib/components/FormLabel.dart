@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 
 class FormLabel extends StatelessWidget {
-  const FormLabel(this.label, {Key? key}) : super(key: key);
+  const FormLabel(this.label, {super.key});
   final String label;
   @override
   Widget build(BuildContext context) {

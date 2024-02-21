@@ -1,8 +1,8 @@
 import 'package:MyMedTrip/bindings/ConsultationBinding.dart';
 import 'package:MyMedTrip/bindings/HospitalBinding.dart';
 import 'package:MyMedTrip/bindings/UserBinding.dart';
-import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
+import 'package:MyMedTrip/screens/auth/forgot_password.dart';
 import 'package:MyMedTrip/screens/doctor/doctor_details_new.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:MyMedTrip/bindings/AuthBinding.dart';
@@ -39,7 +39,6 @@ import 'package:MyMedTrip/screens/login/login_fingerprint.dart';
 import 'package:MyMedTrip/screens/auth/login.dart';
 import 'package:MyMedTrip/screens/login/sing_up.dart';
 import 'package:MyMedTrip/screens/login/verify.dart';
-import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
 import 'package:MyMedTrip/screens/trending_blogs/trending_blog.dart';
 import 'package:MyMedTrip/screens/update_screen/connect_coordinotor.dart';
 import 'package:MyMedTrip/screens/update_screen/query_confirmed.dart';
@@ -47,6 +46,7 @@ import 'package:MyMedTrip/screens/update_screen/query_confirmed.dart';
 class Routes {
   static String languageSelector = '/language_selector';
   static String login = '/login';
+  static String forgotPassword = '/forgot_password';
   static String registerFirstStep = '/register_first_step';
   static String registerSecondStep = '/register';
   static String otpVerify = '/otp_verify';
@@ -102,6 +102,7 @@ final getPages = [
       page: () => const LoginPage(),
       bindings: [AuthBinding(), InitialBinding()]),
   GetPage(name: Routes.registerFirstStep, page: () => const SignupHerePage()),
+  GetPage(name: Routes.forgotPassword, page: () => const ForgotPasswordPage()),
   GetPage(
       name: Routes.registerSecondStep,
       page: () => const Complete_Sign_Up_Page()),
@@ -113,7 +114,7 @@ final getPages = [
   ]),
   GetPage(name: Routes.faq, page: () => const FAQS_Page()),
   GetPage(name: Routes.setting, page: () => const User_Profile()),
-  GetPage(name: Routes.addPersonalDetail, page: () => Profile_edit_page()),
+  GetPage(name: Routes.addPersonalDetail, page: () => const Profile_edit_page()),
   GetPage(name: Routes.addMedicalDetail, page: () => const Medical_Edit_page()),
   GetPage(name: Routes.support, page: () => const Need_Help_page()),
   GetPage(name: Routes.addFamily, page: () => const Add_family_page()),
@@ -150,7 +151,7 @@ final getPages = [
   GetPage(
       name: Routes.treatmentsAvailable,
       page: () => const Available_Treatment()),
-  GetPage(name: Routes.patientTestimony, page: () => const Patient_page()),
+  GetPage(name: Routes.patientTestimony, page: () => Patient_page()),
   GetPage(
     name: Routes.doctors,
     page: () => const Doctors_list_page(),
@@ -163,7 +164,7 @@ final getPages = [
   ),
   GetPage(
     name: Routes.doctorPreviewNew,
-    page: () => DoctorDetailScreen(),
+    page: () => const DoctorDetailScreen(),
   ),
   GetPage(
       name: Routes.teleconsultationSchedule,

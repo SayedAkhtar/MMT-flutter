@@ -23,7 +23,7 @@ class QueryResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> formData = new Map<String, dynamic>();
+    final Map<String, dynamic> formData = <String, dynamic>{};
     formData["current_step"] = currentStep;
     formData["type"] = queryType;
     formData['response'] = response;

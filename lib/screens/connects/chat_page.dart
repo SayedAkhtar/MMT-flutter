@@ -32,7 +32,9 @@ class _ChatPageState extends State<ChatPage> {
   late Stream<DatabaseEvent> messageStream;
   late StreamSubscription<DatabaseEvent> streamSubscription;
   late String storageRef;
-
+  final double toolbarHeight = CustomAppBar(pageName: '',).height;
+  final double messageBarHeight = 76;
+  bool _keyboardOpen = false;
   @override
   void initState() {
     messages = widget.previousMessage;
@@ -42,15 +44,22 @@ class _ChatPageState extends State<ChatPage> {
         .onValue;
     startListening();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    stopListening();
+    _messageScrollController.dispose();
+    super.dispose();
+  }
 
   void startListening() {
     streamSubscription = messageStream.listen((DatabaseEvent event) {
       List<ChatMessage> fromServer = [];
-      event.snapshot.children.forEach((element) {
+      for (var element in event.snapshot.children) {
         ChatMessage temp = ChatMessage.fromMap(
             element.value as Map<dynamic, dynamic>);
         fromServer.add(temp);
-      });
+      }
       setState(() {
         messages = fromServer;
       });
@@ -68,31 +77,42 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void stopListening() {
-    if (streamSubscription != null) {
-      streamSubscription.cancel();
-    }
+    streamSubscription.cancel();
+  }
+
+  void scrollToBottom(ScrollController controller){
+    Future.delayed(const Duration(milliseconds: 100), (){
+      controller.animateTo(
+          controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+      _keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
-        pageName: "Messages",
+        pageName: "Messages".tr,
         showDivider: true,
       ),
       body: Padding(
         padding: MediaQuery.of(context).viewInsets,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Stack(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
+            SizedBox(
+              height: MediaQuery.of(context).size.height - ((messageBarHeight)+ toolbarHeight),
               child: Padding(
                   padding: const EdgeInsets.all(CustomSpacer.S),
                   child: ListView.builder(
                       shrinkWrap: true,
                       controller: _messageScrollController,
                       itemCount: messages.length,
+                      padding: _keyboardOpen ? EdgeInsets.only(bottom: messageBarHeight) :EdgeInsets.zero,
                       itemBuilder: (ctx, idx) {
                         ChatMessage msg = messages[idx];
                         if (msg.from == LocalUser.TYPE_PATIENT) {
@@ -102,117 +122,130 @@ class _ChatPageState extends State<ChatPage> {
                         }
                       })),
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 16.0),
-              height: 50,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Colors.black12, width: 1.5),
-                          borderRadius: BorderRadius.circular(100)),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              enabled: messageType != ChatMessage.TEXT,
-                              controller: messageController,
-                              decoration: const InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                                border: InputBorder.none,
+            Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              child: Container(
+                padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 16.0),
+                // margin: const EdgeInsets.only(bottom: 16.0),
+                height: messageBarHeight,
+                decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(color: Colors.black12, offset: Offset.fromDirection(-0.1, 10.0), blurRadius: 10.0)],
+                  color: Colors.white
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.black12, width: 1.5),
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                enabled: messageType != ChatMessage.TEXT,
+                                controller: messageController,
+                                decoration: const InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                                  border: InputBorder.none,
+                                ),
+                                onTap: (){
+                                  scrollToBottom(_messageScrollController);
+                                },
                               ),
                             ),
-                          ),
-                          IconButton(
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles(
-                                  dialogTitle: "Upload documents",
-                                  type: FileType.custom,
-                                  allowedExtensions: [
-                                    'jpeg',
-                                    'jpg',
-                                    'heic',
-                                    'png'
-                                  ],
-                                );
+                            IconButton(
+                                onPressed: () async {
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
+                                    dialogTitle: "Upload documents".tr,
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                      'jpeg',
+                                      'jpg',
+                                      'heic',
+                                      'png'
+                                    ],
+                                  );
 
-                                if (result != null) {
-                                  File file = File(result.files.single.path!);
-                                  String ext = result.files.single.path!
-                                      .split('.')
-                                      .last;
-                                  try {
-                                    String fileName = DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString();
-                                    final String? filePath =
-                                        await FirebaseFunctions.uploadImage(
-                                            file,
-                                            ref: storageRef,
-                                            title:
-                                                "Uploading Image Please Wait.");
-                                    if (filePath != null) {
-                                      await FirebaseDatabase.instance
-                                          .ref(
-                                              "messages/${widget.channelName}/")
-                                          .push()
-                                          .set({
-                                        "from": LocalUser.TYPE_PATIENT,
-                                        "type": messageType,
-                                        "message": filePath,
-                                      });
-                                      _messageScrollController.animateTo(
-                                          _messageScrollController
-                                              .position.maxScrollExtent,
-                                          duration: const Duration(
-                                              milliseconds: 500),
-                                          curve: Curves.ease);
-                                    } else {
-                                      throw Exception(
-                                          "File not uploaded. Please try again");
+                                  if (result != null) {
+                                    File file = File(result.files.single.path!);
+                                    String ext = result.files.single.path!
+                                        .split('.')
+                                        .last;
+                                    try {
+                                      String fileName = DateTime.now()
+                                          .millisecondsSinceEpoch
+                                          .toString();
+                                      final String? filePath =
+                                          await FirebaseFunctions.uploadImage(
+                                              file,
+                                              ref: storageRef,
+                                              title:
+                                                  "Uploading Image Please Wait.".tr);
+                                      if (filePath != null) {
+                                        await FirebaseDatabase.instance
+                                            .ref(
+                                                "messages/${widget.channelName}/")
+                                            .push()
+                                            .set({
+                                          "from": LocalUser.TYPE_PATIENT,
+                                          "type": messageType,
+                                          "message": filePath,
+                                        });
+                                        _messageScrollController.animateTo(
+                                            _messageScrollController
+                                                .position.maxScrollExtent,
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            curve: Curves.ease);
+                                      } else {
+                                        throw Exception(
+                                            "File not uploaded. Please try again".tr);
+                                      }
+                                    } on FirebaseException catch (e) {
+                                      Loaders.errorDialog(e.toString());
+                                    } catch (e, stacktrace) {
+                                      Loaders.errorDialog(e.toString(),
+                                          stackTrace: stacktrace);
                                     }
-                                  } on FirebaseException catch (e) {
-                                    Loaders.errorDialog(e.toString());
-                                  } catch (e, stacktrace) {
-                                    Loaders.errorDialog(e.toString(),
-                                        stackTrace: stacktrace);
                                   }
-                                }
-                              },
-                              icon: const Icon(Icons.image_outlined))
-                        ],
+                                },
+                                icon: const Icon(Icons.image_outlined))
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // var t = await dbRef.get();
-                      await FirebaseDatabase.instance
-                          .ref("messages/${widget.channelName}/")
-                          .push()
-                          .set({
-                        "from": LocalUser.TYPE_PATIENT,
-                        "type": ChatMessage.TEXT,
-                        "message": messageController.text,
-                      });
-                      messageController.text = "";
-                      _messageScrollController.animateTo(
-                          _messageScrollController.position.maxScrollExtent,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.ease);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(14),
+                    ElevatedButton(
+                      onPressed: () async {
+                        // var t = await dbRef.get();
+                        if(messageController.text.trim() == ""){
+                          Loaders.errorDialog("Cannot send message with empty body".tr, title: "Message Error");
+                          return;
+                        }
+                        await FirebaseDatabase.instance
+                            .ref("messages/${widget.channelName}/")
+                            .push()
+                            .set({
+                          "from": LocalUser.TYPE_PATIENT,
+                          "type": ChatMessage.TEXT,
+                          "message": messageController.text.trim(),
+                        });
+                        messageController.text = "";
+                        scrollToBottom(_messageScrollController);
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(14),
+                      ),
+                      child: const Icon(Icons.send),
                     ),
-                    child: const Icon(Icons.send),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           ],

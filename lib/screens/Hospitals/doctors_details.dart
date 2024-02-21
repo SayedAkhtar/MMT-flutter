@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/screens/Hospitals/availble_treatment.dart';
-import 'package:MyMedTrip/screens/Hospitals/patient_stories.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 
 class Doctors_Details_page extends StatefulWidget {
@@ -37,7 +33,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
     //   });
     // }
     return Scaffold(
-      appBar: CustomAppBar(pageName: "Doctor Details", showDivider: true,),
+      appBar: CustomAppBar(pageName: "Doctor Details".tr, showDivider: true,),
       body: SizedBox(
     height: MediaQuery.of(context).size.height,
     width: double.infinity,
@@ -115,7 +111,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
                     ],
                   ),
                   Text(
-                    "Experience: ${controller.selectedDoctor!.experience} Years",
+                    "${"Experience:".tr} ${controller.selectedDoctor!.experience} ${"Years".tr}",
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                         color: MYcolors.blacklightcolors,
@@ -123,7 +119,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
                         fontSize: 20),
                   ),
                   Text(
-                    "Specializations: ${controller.selectedDoctor!.specialization}",
+                    "${"Specializations:".tr} ${controller.selectedDoctor!.specialization}",
                     style: TextStyle(
                         // fontWeight: FontWeight.bold,
                         color: MYcolors.blacklightcolors,
@@ -133,7 +129,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "Designation: ${controller.selectedDoctor!.designation}",
+                      "${"Designation:".tr} ${controller.selectedDoctor!.designation}",
                       style: TextStyle(
                         // fontWeight: FontWeight.bold,
                           color: MYcolors.blacklightcolors,
@@ -142,7 +138,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
                     ),
                   ),
                   Text(
-                    "Qualification: ${controller.selectedDoctor!.qualification}",
+                    "${"Qualification:".tr} ${controller.selectedDoctor!.qualification}",
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                         color: MYcolors.blacklightcolors,
@@ -150,7 +146,7 @@ class _Doctors_Details_pageState extends State<Doctors_Details_page> {
                         fontSize: 16),
                   ),
                   Text(
-                    "Video Consultation Availability: \n${timeSlots.join(', ')}",
+                    "${"Video Consultation Availability:".tr} \n${timeSlots.join(', ')}",
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                         color: MYcolors.blacklightcolors,

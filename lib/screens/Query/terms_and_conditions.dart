@@ -1,7 +1,6 @@
 
 // ignore_for_file: prefer_const_constructors
 
-import 'package:MyMedTrip/constants/query_step_name.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
@@ -18,13 +17,13 @@ class Terms_and_Conditions extends GetView<QueryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(pageName: "Terms and Conditions", showDivider: true,),
+      appBar: CustomAppBar(pageName: "Terms and Conditions".tr, showDivider: true,),
       body: Padding(
     padding: const EdgeInsets.all(CustomSpacer.S),
     child: Column(
       children: [
         Text(
-          "The findings indicate that sequential analysis is appropriate to investigate a health care provider's specific style of responding. Based on the problems emerged during the sequential analysis, further exploration of the method is recommended. Nine consultations of nine different GPs were randomly selected from a sample of 1600 videotaped doctor-patient consultations, that were all rated with the Roter Interaction Analysis",
+          """Thank you for sharing your reports with us. We will be sharing it only with the concerned doctor for their medical opinion and will share with you their reply. We do not share any personal information with anyone apart from the doctor for opinion.""".tr,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 15,

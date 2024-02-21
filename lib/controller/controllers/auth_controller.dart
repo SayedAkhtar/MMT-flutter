@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/providers/auth_provider.dart';
+import 'package:MyMedTrip/providers/auth_provider.dart' as api_auth;
 import 'package:MyMedTrip/routes.dart';
 import 'package:logger/logger.dart';
 
@@ -29,7 +30,7 @@ class AuthController extends GetxController {
   RxBool showNewLoginPassword = false.obs;
   String otpType = 'register'; //TYPE : 'register' | 'forgot_password'
 
-  late AuthProvider _provider;
+  late api_auth.AuthProvider _provider;
   late UserController _user;
   final LocalStorageController _storageController =
       Get.find<LocalStorageController>();
@@ -37,7 +38,7 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _provider = Get.put(AuthProvider());
+    _provider = Get.put(api_auth.AuthProvider());
     _user = Get.put(UserController());
     nameController = TextEditingController();
     phoneController = TextEditingController();
@@ -80,24 +81,33 @@ class AuthController extends GetxController {
     return null;
   }
 
-  void register(String name, String password, String phone, String gender, String countryCode) async {
+  void register(String name, String password, String phone, String gender,
+      String countryCode) async {
     Map<String, dynamic> body = {
-        "username": name,
-        "password": password,
-        "name": name,
-        "phone": phone,
-        "gender": gender.toLowerCase(),
-        "is_active": false,
-        "role": 1,
-        'country_code': countryCode
-      };
+      "username": name,
+      "password": password,
+      "name": name,
+      "phone": phone,
+      "gender": gender.toLowerCase(),
+      "is_active": false,
+      "role": 1,
+      'country_code': countryCode,
+      'user_language': _storageController.get('language') ?? 'en',
+    };
+    try {
       LocalUser? user = await _provider.register(body);
       if (user != null) {
         phoneController.text = phone;
+        _storageController.set(key: "token", value: user.token!);
         otpType = "register";
+        _user.user = user;
         update();
-        Get.toNamed(Routes.otpVerify);
+        Get.offAllNamed(Routes.otpVerify);
       }
+
+    } catch (e) {
+      Logger().d("Unknown error.");
+    }
   }
 
   void login() async {
@@ -127,52 +137,44 @@ class AuthController extends GetxController {
 
   void phoneLogin() async {
     String? language = _storageController.get('language');
-      LocalUser? res = await _provider.login(
-          phone: phoneController.text, password: passwordController.text, language: language);
-      if (res != null) {
-        _user.user = res;
-        _storageController.set(key: "token", value: res.token!);
-        isLoggedIn.value = true;
-        phoneController.text = "";
-        passwordController.text = "";
+    LocalUser? res = await _provider.login(
+        phone: phoneController.text,
+        password: passwordController.text,
+        role: LocalUser.TYPE_PATIENT,
+        language: language);
+    if (res != null) {
+      _user.user = res;
+      _storageController.set(key: "token", value: res.token!);
+      isLoggedIn.value = true;
+      phoneController.text = "";
+      passwordController.text = "";
 
-        try {
-          final userCredential = await FirebaseAuth.instance.signInAnonymously();
-          if(Platform.isAndroid){
-            final fcmToken = await FirebaseMessaging.instance.getToken();
-            await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
-          }
-          // print(fcmToken);
-        } on FirebaseAuthException catch (e) {
-          switch (e.code) {
-            case "operation-not-allowed":
-              Logger().d("Anonymous auth hasn't been enabled for this project.");
-              break;
-            default:
-              Logger().d("Unknown error.");
-          }
-        }
-        finally{
-          update();
-          Get.offAllNamed(Routes.home);
-        }
+      try {
+       await _updateFirebaseCreds();
+      } catch (e) {
+        Logger().d("Unknown error.");
+      } finally {
+        update();
+        Get.offAllNamed(Routes.home);
       }
+    }
   }
 
-  void loginWithBiometric(String id) async{
-    LocalUser? res = await _provider.loginWithBioID(
-        id: id);
+  void loginWithBiometric(String id) async {
+    LocalUser? res = await _provider.loginWithBioID(id: id);
     if (res != null) {
       _user.user = res;
       _storageController.set(key: "token", value: res.token!);
       isLoggedIn.value = true;
       try {
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
-        if(Platform.isAndroid){
-          final fcmToken = await FirebaseMessaging.instance.getToken();
-          print(fcmToken);
-          await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+        String? apnToken;
+        if (Platform.isIOS) {
+          apnToken = await FlutterCallkitIncoming.getDevicePushTokenVoIP();
         }
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        await _provider.updateFirebase(userCredential.user!.uid, fcmToken!,
+            apnToken: apnToken);
         // print(fcmToken);
       } on FirebaseAuthException catch (e) {
         switch (e.code) {
@@ -208,31 +210,74 @@ class AuthController extends GetxController {
   }
 
   void resendOtp() async {
-    await _provider.resendOtp();
+    await _provider.resendOtp(phone: phoneController.text);
   }
 
   void verifyOtp({required String otp}) async {
-    LocalUser? res = await _provider.validateOtp(otp, phoneController.text, otpType, password: otpType == 'forgot_password' ?newPasswordController.text: '');
+    LocalUser? res = await _provider.validateOtp(
+        otp, phoneController.text, otpType,
+        password:
+            otpType == 'forgot_password' ? newPasswordController.text : '');
     if (res != null) {
-      Loaders.successDialog("Phone number verified successfully");
-      if(otpType == "register"){
+      Loaders.successDialog("Phone number verified successfully", barrierDismissible: false);
+      await Future.delayed(const Duration(milliseconds: 2));
+      if (otpType == "register") {
+        _storageController.set(key: "token", value: res.token!);
         _user.user = res;
         update();
-        _storageController.set(key: "token", value: res.token!);
-        Get.toNamed(Routes.home);
+        await _updateFirebaseCreds();
+        Get.offAllNamed(Routes.home);
       }
-      if(otpType == "forgot_password") {
-        Get.toNamed(Routes.login);
+      if (otpType == "forgot_password") {
+        Get.offAllNamed(Routes.login);
       }
     }
   }
 
   void resetPassword() async {
     _storageController.delete(key: "token");
+    if(newPasswordController.text.isEmpty ){
+      Loaders.errorDialog("Please input your password".tr);
+      return;
+    }
+    if(phoneController.text.isEmpty ){
+      Loaders.errorDialog("Please input your password".tr);
+      return;
+    }
     bool res = await _provider.resetPassword(
-        phone: phoneController.text, password: passwordController.text);
-    if(res){
+        phone: phoneController.text);
+    if (res) {
+      otpType = "forgot_password";
       Get.toNamed(Routes.otpVerify);
+    }
+  }
+
+  Future _updateFirebaseCreds() async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      String? apnToken;
+      String? apnsToken;
+      if (Platform.isIOS) {
+        apnToken = await FlutterCallkitIncoming.getDevicePushTokenVoIP();
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      }
+      print(" ======>>>>>>>>> APN Token : $apnToken");
+      // if(Platform.isAndroid){
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      await _provider.updateFirebase(userCredential.user!.uid, fcmToken!,
+          apnToken: apnToken);
+      // }
+      print("============ FCM Token ===========");
+      print(fcmToken);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          Logger().d("Anonymous auth hasn't been enabled for this project.");
+          rethrow;
+        default:
+          Logger().d("Unknown error.");
+          rethrow;
+      }
     }
   }
 }

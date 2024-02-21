@@ -1,11 +1,7 @@
 import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/controller/controllers/doctor_controller.dart';
 import 'package:MyMedTrip/controller/controllers/home_controller.dart';
-import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
-import 'package:MyMedTrip/controller/controllers/query_controller.dart';
-import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 
 class InitialBinding implements Bindings{
   @override

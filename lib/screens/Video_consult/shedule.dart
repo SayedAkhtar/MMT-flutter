@@ -2,8 +2,6 @@
 
 import 'package:MyMedTrip/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -14,8 +12,6 @@ import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
-import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Video_consult/thankyou.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../controller/controllers/user_controller.dart';
@@ -90,11 +86,12 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: MYcolors.greycolor),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.9,
             child: Text(
-              "  Rechedule",
+              "Rechedule".tr,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -110,6 +107,8 @@ class _Schedule_pageState extends State<Schedule_page> with TickerProviderStateM
               _razorpay.open(RazorpayConstants.getOptionsForTeleconsultation(amount:_controller.consultationFees, name: user.name!, phoneNumber: user.phoneNo!));
             },
             style: ElevatedButton.styleFrom(
+              foregroundColor: MYcolors.bluecolor,
+              backgroundColor: MYcolors.bluecolor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100)),
                 minimumSize: Size(double.infinity, 40)),

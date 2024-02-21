@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 
 class PhoneNb_login_page extends StatefulWidget {
   const PhoneNb_login_page({super.key});
@@ -23,10 +21,10 @@ class _PhoneNb_login_pageState extends State<PhoneNb_login_page> {
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.call),
+                prefixIcon: const Icon(Icons.call),
                 contentPadding:
-                    EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-                hintText: "Phone",
+                    const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                hintText: "Phone".tr,
                 // hintStyle: TextStyle(fontSize: 13),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -36,18 +34,18 @@ class _PhoneNb_login_pageState extends State<PhoneNb_login_page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.01,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
               decoration: InputDecoration(
-                hintText: "Password",
+                hintText: "Password".tr,
                 contentPadding:
-                    EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                    const EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                 // hintStyle: TextStyle(fontSize: 13),
                 // prefixText: "Password",
-                prefixIcon: Icon(Icons.key),
-                suffixIcon: Icon(Icons.visibility),
+                prefixIcon: const Icon(Icons.key),
+                suffixIcon: const Icon(Icons.visibility),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),

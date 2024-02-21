@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,14 +25,15 @@ class CustomImageView extends StatelessWidget {
   BoxFit? fit;
   final String placeHolder;
   Alignment? alignment;
+  Alignment? imageAlign;
   VoidCallback? onTap;
   EdgeInsetsGeometry? margin;
-  BorderRadius? radius;
+  BorderRadiusGeometry radius;
   BoxBorder? border;
 
   ///a [CustomImageView] it can be used for showing any type of images
   /// it will shows the placeholder image if image is not found on network image
-  CustomImageView({
+  CustomImageView({super.key, 
     this.url,
     this.imagePath,
     this.svgPath,
@@ -43,8 +43,9 @@ class CustomImageView extends StatelessWidget {
     this.color,
     this.fit,
     this.alignment,
+    this.imageAlign,
     this.onTap,
-    this.radius,
+    this.radius = BorderRadius.zero,
     this.margin,
     this.border,
     this.placeHolder = 'assets/icons/placeholder.png',
@@ -99,7 +100,7 @@ class CustomImageView extends StatelessWidget {
 
   Widget _buildImageView() {
     if (svgPath != null && svgPath!.isNotEmpty) {
-      return Container(
+      return SizedBox(
         height: height,
         width: width,
         child: SvgPicture.asset(
@@ -125,7 +126,8 @@ class CustomImageView extends StatelessWidget {
         fit: fit,
         imageUrl: url!,
         color: color,
-        placeholder: (context, url) => Container(
+        alignment: imageAlign ?? Alignment.topCenter,
+        placeholder: (context, url) => SizedBox(
           height: 30,
           width: 30,
           child: LinearProgressIndicator(

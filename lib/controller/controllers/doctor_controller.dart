@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
-import 'package:MyMedTrip/locale/AppTranslation.dart';
 import 'package:MyMedTrip/models/doctor.dart';
-import 'package:MyMedTrip/models/hospital_model.dart';
 import 'package:MyMedTrip/providers/doctor_provider.dart';
-import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 
 class DoctorController extends GetxController {
@@ -19,10 +16,6 @@ class DoctorController extends GetxController {
     _provider = Get.put(DoctorProvider());
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {

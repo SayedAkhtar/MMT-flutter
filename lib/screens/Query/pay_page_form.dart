@@ -3,15 +3,11 @@
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/razorpay_constants.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/routes.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../constants/colors.dart';
@@ -70,7 +66,7 @@ class _PayPageFormState extends State<PayPageForm> {
                 ),
                 CustomSpacer.s(),
                 Text(
-                  "Please complete the payment to confirm your query and\nbegin the process with MyMedicalTourism",
+                  "Please complete the payment to confirm your query and\nbegin the process with MyMedicalTourism".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,

@@ -6,7 +6,7 @@ import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 
 class ChangeLanguagePage extends StatelessWidget {
-  const ChangeLanguagePage({Key? key}) : super(key: key);
+  const ChangeLanguagePage({super.key});
 
   void selectLanguage(String lang, LocalStorageController str){
     Locale locale = Locale(lang);
@@ -15,46 +15,46 @@ class ChangeLanguagePage extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    final LocalStorageController _storage = Get.find<LocalStorageController>();
+    final LocalStorageController storage = Get.find<LocalStorageController>();
     final provider = Get.put(UserProvider());
     return SafeArea(child: Scaffold(
-      appBar: CustomAppBar(pageName: "Change app language", showDivider: true,),
+      appBar: CustomAppBar(pageName: "Change app language".tr, showDivider: true,),
       body: ListView(
         children: [
           ListTile(
             leading: SvgPicture.asset("assets/icons/us.svg", width: 40,),
             title: Text("English".tr),
-            trailing: _storage.get('language') == "en" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
+            trailing: storage.get('language') == "en" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : const Icon(Icons.check_box_outline_blank),
             onTap: () async{
+              selectLanguage("en", storage);
               await provider.updateUserLanguage(language: "en");
-              selectLanguage("en", _storage);
             },
           ),
           ListTile(
             leading: SvgPicture.asset("assets/icons/sa.svg", width: 40,),
             title: Text("Arabic".tr),
-            trailing: _storage.get('language') == "ar" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
+            trailing: storage.get('language') == "ar" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : const Icon(Icons.check_box_outline_blank),
             onTap: () async {
+              selectLanguage("ar", storage);
               await provider.updateUserLanguage(language: "ar");
-              selectLanguage("ar", _storage);
             },
           ),
           ListTile(
             leading: SvgPicture.asset("assets/icons/ru.svg", width: 40,),
             title: Text("Russian".tr),
-            trailing: _storage.get('language') == "ru" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
+            trailing: storage.get('language') == "ru" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : const Icon(Icons.check_box_outline_blank),
             onTap: () async {
+              selectLanguage("ru", storage);
               await provider.updateUserLanguage(language: "ru");
-              selectLanguage("ru", _storage);
             },
           ),
           ListTile(
             leading: SvgPicture.asset("assets/icons/bn.svg", width: 40,),
             title: Text("Bengali".tr),
-            trailing: _storage.get('language') == "bn" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : Icon(Icons.check_box_outline_blank),
+            trailing: storage.get('language') == "bn" ? Icon(Icons.check_box, color: context.theme.primaryColor,) : const Icon(Icons.check_box_outline_blank),
             onTap: () async {
+              selectLanguage("bn", storage);
               await provider.updateUserLanguage(language: "bn");
-              selectLanguage("bn", _storage);
             },
           ),
 

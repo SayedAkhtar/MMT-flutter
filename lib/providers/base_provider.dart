@@ -1,3 +1,5 @@
+import 'package:MyMedTrip/helper/CustomException.dart';
+import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:MyMedTrip/constants/api_constants.dart';
@@ -8,7 +10,6 @@ import 'package:MyMedTrip/routes.dart';
 class BaseProvider extends GetConnect implements GetxService{
   late LocalStorageController storage;
   late String? token;
-
   BaseProvider(){
     allowAutoSignedCert = true;
   }
@@ -29,7 +30,6 @@ class BaseProvider extends GetConnect implements GetxService{
   @override void onReady() {
     // TODO: implement onReady
     super.onReady();
-
   }
 
   dynamic responseHandler(Response response) async {
@@ -59,7 +59,7 @@ class BaseProvider extends GetConnect implements GetxService{
       case 308:
         var responseJson = await response.body['DATA'];
         print(responseJson);
-        throw Exception("Server redirection");
+        throw CustomException("Server redirection");
       case 401:
         storage.delete(key: "token");
         Get.offNamedUntil(Routes.login, (route) => false);
@@ -67,15 +67,22 @@ class BaseProvider extends GetConnect implements GetxService{
         String error = response.body['ERROR'] ?? "";
         logger.i(response.body);
         if(message.isNotEmpty && error.isNotEmpty){
-          throw Exception("$message\n$error");
+          throw CustomException("$message\n$error");
         }
-        throw Exception("Login token got expired. Please login again.");
+        throw CustomException("Login token got expired. Please login again.");
       case 403:
-        throw Exception('You are not authorized to access this resource');
+        throw CustomException('You are not authorized to access this resource');
       case 404:
-        throw Exception("The resource you are trying to access in not found");
+        String message = "The resource you are trying to access in not found";
+        if(response.body['MESSAGE'] != null && response.body['MESSAGE'] != ""){
+          message = response.body['MESSAGE'];
+        }
+        else if(response.body['ERROR'] != null && response.body['ERROR'] != ""){
+          message = response.body['ERROR'];
+        }
+        throw CustomException(message);
       case 405:
-        throw Exception("Method not allowed");
+        throw CustomException("Method not allowed");
       case 400:
       case 422:
         var responseJson = response.body;
@@ -83,7 +90,7 @@ class BaseProvider extends GetConnect implements GetxService{
         if(error.error!.replaceAll(RegExp('[^A-Za-z0-9]'), '').contains('Unauthenticated')){
           storage.delete(key: "token");
           Get.offNamedUntil(Routes.login, (route) => false);
-          throw Exception("Login token got expired. Please login again.");
+          throw CustomException("Login token got expired. Please login again.");
         }
         Logger().d(error.error);
         throw Exception("${error.error}");
@@ -94,7 +101,7 @@ class BaseProvider extends GetConnect implements GetxService{
         if(Get.isDialogOpen!){
           Get.back();
         }
-        throw Exception('Server is not responding please try again later.');
+        throw CustomException('Server is not responding please try again later.');
     }
   }
 }

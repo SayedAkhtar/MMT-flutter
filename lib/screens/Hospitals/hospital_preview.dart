@@ -2,18 +2,12 @@
 
 import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/hospital_model.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Hospitals/availble_treatment.dart';
-import 'package:MyMedTrip/screens/Hospitals/doctors_details.dart';
-import 'package:MyMedTrip/screens/Hospitals/doctors_list.dart';
-import 'package:MyMedTrip/screens/Hospitals/patient_stories.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 
 class Hospital_preview_page extends GetView<HospitalController> {
@@ -113,7 +107,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
                               Get.toNamed(Routes.treatmentsAvailable);
                             },
                             image: "Images/Tr.png",
-                            title: "Available Treatment"
+                            title: "Available Treatment".tr
                         ),
                       ],
                     ),
@@ -126,7 +120,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
                           onTap: () {
                             Get.toNamed(Routes.patientTestimony);
                           },
-                          image: "Images/Md.png", title: "Patient testimonials",
+                          image: "Images/Md.png", title: "Patient testimonials".tr,
                         ),
                         CustomSpacer.s(),
                         _hospitalFeatureButton(
@@ -134,7 +128,7 @@ class Hospital_preview_page extends GetView<HospitalController> {
                           onTap: () {
                             Get.toNamed(Routes.doctors, arguments: {'type': 'doctorByHospital', "hospital_id": hospital.id});
                           },
-                          image: "Images/St.png", title: "Doctors",
+                          image: "Images/St.png", title: "Doctors".tr,
                         ),
                       ],
                     ),

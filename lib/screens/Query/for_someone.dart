@@ -2,8 +2,6 @@
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/screens/Query/generate_new_query.dart';
 
@@ -52,7 +50,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                     width: MediaQuery.of(context).size.width * 0.03,
                   ),
                   Text(
-                    "Generate a query for",
+                    "Generate a query for".tr,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
@@ -93,7 +91,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                       height: MediaQuery.of(context).size.height * 0.04,
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: Text(
-                        "yourself",
+                        "yourself".tr,
                         style: TextStyle(
                             fontFamily: "Brandon",
                             fontSize: 15,
@@ -112,7 +110,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                       height: MediaQuery.of(context).size.height * 0.04,
                       width: MediaQuery.of(context).size.width * 0.38,
                       child: Text(
-                        "Forsome one",
+                        "For someone".tr,
                         style: TextStyle(
                             fontFamily: "Brandon",
                             fontSize: 15,
@@ -132,7 +130,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Family member",
+                  "Family member".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -148,7 +146,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -172,7 +170,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Name",
+                  "Name".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -188,7 +186,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -212,7 +210,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Specializations",
+                  "Specializations".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -228,7 +226,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -252,7 +250,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Hospital",
+                  "Hospital".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -268,7 +266,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -292,7 +290,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Doctor",
+                  "Doctor".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -308,7 +306,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -332,7 +330,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Brief history of patient",
+                  "Brief history of patient".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -348,7 +346,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -372,7 +370,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                   width: MediaQuery.of(context).size.width * 0.03,
                 ),
                 Text(
-                  "Country prefered to travel",
+                  "Country preferred to travel".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -388,7 +386,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.95,
@@ -418,7 +416,7 @@ class _For_Someone_pageState extends State<For_Someone_page> {
                         context: context,
                         actions: <BottomSheetAction>[
                           BottomSheetAction(
-                            title: const Text('Upload New Photo'),
+                            title: Text('Upload New Photo'),
                             onPressed: (_) {},
                           ),
                           BottomSheetAction(

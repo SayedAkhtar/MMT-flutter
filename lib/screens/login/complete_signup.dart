@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
 
@@ -49,7 +47,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
                 Text(
-                  "Complete Sign Up",
+                  "Complete Sign Up".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     // fontFamily: "Brandon",
@@ -87,7 +85,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -103,7 +101,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -119,7 +117,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -135,7 +133,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -151,7 +149,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -167,7 +165,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -183,7 +181,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -199,7 +197,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -215,7 +213,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(
@@ -231,7 +229,7 @@ class _Complete_Sign_Up_PageState extends State<Complete_Sign_Up_Page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.of(context).size.width * 0.9,
             child: TextFormField(

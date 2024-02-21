@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
-  const DoctorDetailScreen({Key? key}) : super(key: key);
+  const DoctorDetailScreen({super.key});
 
   @override
   State<DoctorDetailScreen> createState() => _DoctorDetailScreenState();
@@ -46,7 +46,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
       return const ShimmerLoader();
     }
     if (doctor == null) {
-      return const Center(child: Text("No Data Found"));
+      return Center(child: Text("No Data Found".tr));
     }
     return Scaffold(
       appBar: CustomAppBarSecondary(
@@ -58,7 +58,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
         ),
         leadingWidth: 64,
         height: getVerticalSize(kToolbarHeight),
-        title: Text("Doctor Details", style: AppStyle.txtUrbanistRomanBold20),
+        title: Text("Doctor Details".tr, style: AppStyle.txtUrbanistRomanBold20),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -143,14 +143,14 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                   ),
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     ),
                   ),
                 ]),
                 Padding(
                   padding: getPadding(top: 17),
-                  child: Text("About The Doctor",
+                  child: Text("About The Doctor".tr,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
                       style: AppStyle.txtUrbanistRomanBold20),
@@ -177,7 +177,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       children: [
                         Padding(
                           padding: getPadding(top: 17),
-                          child: Text("Specialization",
+                          child: Text("Specialization".tr,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: AppStyle.txtUrbanistRomanBold20),
@@ -218,7 +218,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       children: [
                         Padding(
                           padding: getPadding(top: 17),
-                          child: Text("Awards",
+                          child: Text("Awards".tr,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: AppStyle.txtUrbanistRomanBold20),
@@ -258,7 +258,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       children: [
                         Padding(
                           padding: getPadding(top: 17),
-                          child: Text("Hospitals",
+                          child: Text("Hospitals".tr,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: AppStyle.txtUrbanistRomanBold20),
@@ -313,7 +313,38 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     children: [
                       Padding(
                         padding: getPadding(top: 17, bottom: 17),
-                        child: Text("Consultation timings (for this week)",
+                        child: Text("Cost of Consultation".tr,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: AppStyle.txtUrbanistRomanBold20),
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: getPadding(
+                                top: CustomSpacer.XS, left: CustomSpacer.XS),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.circle,
+                                    size: 8, color: MYcolors.cyan60001),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Flexible(
+                                    child: Text("\$" + doctor!.price.toString(),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.left,
+                                        style:
+                                        AppStyle.txtUrbanistRegular18)),
+                              ],
+                            ),
+                          )
+                        ]),
+                      Padding(
+                        padding: getPadding(top: 17, bottom: 17),
+                        child: Text("Consultation timings (for this week)".tr,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                             style: AppStyle.txtUrbanistRomanBold20),
@@ -351,7 +382,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                       child: Text(
                                         Utils.localTimeFromTimestamp(
                                             slot![index].timestamp!),
-                                        style: TextStyle(fontSize: 16.0),
+                                        style: const TextStyle(fontSize: 16.0),
                                       ),
                                     );
                                   },

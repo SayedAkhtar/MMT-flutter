@@ -1,16 +1,16 @@
-import 'dart:convert';
 import 'dart:async';
 
-import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../providers/query_provider.dart';
 
@@ -28,9 +28,9 @@ class _NoCoordinatorState extends State<NoCoordinator> {
   bool _isMuted = false;
   bool _isCallActive = false;
   Duration _callDuration = Duration.zero;
-  late QueryProvider provider;
-  late RtcEngine? _engine;
-  late String callToken;
+  QueryProvider provider = Get.put(QueryProvider());
+  RtcEngine? _engine;
+  String? callToken;
   String callState = "";
   bool _enableInEarMonitoring = false;
   double _inEarMonitoringVolume = 100;
@@ -39,21 +39,19 @@ class _NoCoordinatorState extends State<NoCoordinator> {
 
   @override
   void initState() {
-    callToken = idGenerator();
-    provider = Get.put(QueryProvider());
-    // listenSensor();
-
-    initiateCall();
-    _toggleScreenOnOff();
     super.initState();
-
+    callToken = const Uuid().v4();
+    initiateCall();
+    // _toggleScreenOnOff();
   }
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     leaveChannel();
-    _streamSubscription.cancel();
+    if(!_streamSubscription.isBlank!){
+      _streamSubscription.cancel();
+    }
   }
 
   Future<void> listenSensor() async {
@@ -77,22 +75,17 @@ class _NoCoordinatorState extends State<NoCoordinator> {
       return;
     }
     try{
-      callState = "Finding Available HCF";
-      bool res = await provider.placeCall(callToken, userId: widget.phoneNumber, type: "connect");
+      callState = "Finding Available HCF".tr;
+      bool res = await provider.placeCall(callToken!, userId: widget.phoneNumber, type: "connect");
       if(!res){
-        Loaders.errorDialog("It seems that all our HCF is busy at the moment. Please Call back again after sometime.", title: "Call Could not be placed",);
+        Loaders.errorDialog("It seems that all our HCF is busy at the moment. Please Call back again after sometime.".tr, title: "Call Could not be placed".tr,);
       }
       initializeAgora();
       return;
     }catch(e){
       print(e);
     }
-    callState = "No Available HCF";
-  }
-
-  String idGenerator() {
-    final now = DateTime.now();
-    return now.microsecondsSinceEpoch.toString();
+    callState = "No Available HCF".tr;
   }
 
   Future<void> initializeAgora() async {
@@ -102,18 +95,19 @@ class _NoCoordinatorState extends State<NoCoordinator> {
       appId: APP_ID,
     ));
     await _engine!.setLogLevel(LogLevel.logLevelNone);
+    await _toggleScreenOnOff();
     _engine!.registerEventHandler(
       RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
             debugPrint("local user ${connection.localUid} joined");
             setState(() {
-              callState = "Connecting...";
+              callState = "Connecting...".tr;
             });
           },
           onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
             debugPrint("remote user $remoteUid joined");
             setState(() {
-              callState = "Connected";
+              callState = "Connected".tr;
             });
             _startCallTimer();
           },
@@ -130,12 +124,10 @@ class _NoCoordinatorState extends State<NoCoordinator> {
           },
           onError: (ErrorCodeType codeType, message){
             debugPrint("$codeType : $message");
-            _startCallTimer();
           },
           onFacePositionChanged: (int imageWidth, int imageHeight, List<Rectangle> vecRectangle,
               List<int> vecDistance, int numFaces){
             print(vecDistance);
-            Logger().d(vecDistance[0]);
           }
 
       ),
@@ -144,27 +136,39 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     await _engine!.enableAudio();
     await _engine!.setDefaultAudioRouteToSpeakerphone(false);
     // await _engine!.
-    await joinChannel();
+    try{
+      await joinChannel();
+      if(widget.callToken != null && widget.callToken!.isNotEmpty){
+        await FlutterCallkitIncoming.setCallConnected(widget.callToken!);
+      }
+    } on AgoraRtcException catch(e){
+      Loaders.errorDialog(e.message ?? 'Socket error could not establish a connection please try again latter');
+    }
+
   }
 
   Future<void> joinChannel() async {
-    await _engine!.joinChannel(channelId: callToken, token: APP_ID, uid: 0, options: const ChannelMediaOptions() );
+    await _engine!.joinChannel(channelId: callToken!, token: APP_ID, uid: 0, options: const ChannelMediaOptions() );
     // _startCallTimer();
   }
 
   Future<void> leaveChannel({bool calledFromDispose = false}) async {
     setState(() {
-      callState = "Disconnected";
+      callState = "Disconnected".tr;
     });
     try{
-      bool res = await provider.placeCall(callToken, userId: widget.phoneNumber, type: 'disconnect');
+      bool res = await provider.placeCall(callToken!, userId: widget.phoneNumber, type: 'disconnect');
+      await disposeAgora();
+      if(widget.callToken != null && widget.callToken!.isNotEmpty){
+        await FlutterCallkitIncoming.endCall(widget.callToken!);
+      }
     }catch(e){
       Logger().e(e);
+      Loaders.errorDialog(e.toString());
     }
-    await disposeAgora();
-    if(!calledFromDispose){
-      await Get.offAllNamed('/home');
-    }
+    // if(!calledFromDispose){
+    await Get.offAllNamed('/home');
+    // }
     // _startCallTimer();
   }
 
@@ -181,7 +185,7 @@ class _NoCoordinatorState extends State<NoCoordinator> {
     const oneSecond = Duration(seconds: 1);
     Future.delayed(oneSecond, () {
       setState(() {
-        if(callState == "Connected"){
+        if(callState == "Connected".tr){
         _callDuration = _callDuration + oneSecond;
           _startCallTimer();
         }
@@ -208,8 +212,8 @@ class _NoCoordinatorState extends State<NoCoordinator> {
       _isCallActive = false;
     });
     await leaveChannel();
-    await Future.delayed(const Duration(seconds: 2));
-    Get.offAndToNamed('/home');
+    // await Future.delayed(const Duration(seconds: 2));
+    // Get.offAndToNamed('/home');
   }
 
   _onChangeInEarMonitoringVolume(double value) async {
@@ -252,17 +256,17 @@ class _NoCoordinatorState extends State<NoCoordinator> {
                 radius: 60,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'HCF Support',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(
+                'HCF Support'.tr,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Text(
-                '${callState}',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                callState,
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
-                'Call duration: ${_callDuration.inMinutes}:${_callDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                '${"Call duration:".tr} ${_callDuration.inMinutes}:${_callDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 40),

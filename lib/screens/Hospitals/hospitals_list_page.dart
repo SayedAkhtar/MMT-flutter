@@ -7,14 +7,8 @@ import 'package:MyMedTrip/helper/Debouncer.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/providers/hospital_provider.dart';
-import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 
 import '../../controller/controllers/hospital_controller.dart';
@@ -37,7 +31,7 @@ class HospitalsListPage extends GetView<HospitalController> {
         ),
         leadingWidth: 64,
         height: getVerticalSize(kToolbarHeight),
-        title: Text("All Hospitals", style: AppStyle.txtUrbanistRomanBold20),
+        title: Text("All Hospitals".tr, style: AppStyle.txtUrbanistRomanBold20),
         centerTitle: true,
       ),
       body: Padding(
@@ -45,7 +39,7 @@ class HospitalsListPage extends GetView<HospitalController> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(CustomSpacer.S),
+              padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4, top: 4),
               margin: const EdgeInsets.only(bottom: CustomSpacer.S),
               decoration: BoxDecoration(
                   color: MYcolors.whitecolor,
@@ -58,7 +52,7 @@ class HospitalsListPage extends GetView<HospitalController> {
                       offset: const Offset(0, 1),
                     )
                   ]),
-              height: CustomSpacer.M * 2,
+              // height: CustomSpacer.M * 2,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +62,9 @@ class HospitalsListPage extends GetView<HospitalController> {
                       decoration: InputDecoration(
                         hintText: 'Search for Hospitals'.tr,
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 5, bottom: 7, top: 11),
+                        contentPadding: EdgeInsets.zero,
+                        suffixIcon: Icon(Icons.search_rounded),
+                        suffixIconConstraints: BoxConstraints.tightFor(height: 20)
                       ),
                       onChanged: (String search){
 
@@ -81,8 +77,8 @@ class HospitalsListPage extends GetView<HospitalController> {
                       },
                     ),
                   ),
-                  CustomSpacer.s(),
-                  const Icon(Icons.search_rounded),
+                  // CustomSpacer.s(),
+                  // const Icon(Icons.search_rounded),
                 ],
               ),
             ),
@@ -92,7 +88,6 @@ class HospitalsListPage extends GetView<HospitalController> {
                   return FutureBuilder(
                     future: controller.hospital.value,
                     builder: (_, snapshot) {
-                      print("called");
                       if(snapshot.connectionState == ConnectionState.waiting){
                         return Center(child: CircularProgressIndicator(),);
                       }else if(snapshot.connectionState == ConnectionState.done){
@@ -104,6 +99,9 @@ class HospitalsListPage extends GetView<HospitalController> {
                             itemBuilder: (_, i) {
                               return CustomCardWithImage(
                             width: getHorizontalSize(160),
+                            fit: BoxFit.fitWidth,
+                            imageAlign: Alignment.center,
+                            imagePadding: EdgeInsets.symmetric(horizontal: 10),
                             onTap: () {
                               Get.toNamed(Routes.hospitalPreview,
                                   arguments: {'id': hospitals[i]!.id});
@@ -115,8 +113,11 @@ class HospitalsListPage extends GetView<HospitalController> {
                         }
                           );
                         }
+                        else{
+                          return Center(child: Text("No Hospitals to show".tr),);
+                        }
                       }
-                      return Center(child: Text("No Hospitals to show"),);
+                      return SizedBox();
                     }
                   );
                 }

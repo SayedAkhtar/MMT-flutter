@@ -8,11 +8,11 @@ class ConfirmedQuery {
 
   ConfirmedQuery.fromJson(Map<String, dynamic> json) {
     accommodation = json['accommodation'] != null
-        ? new Accommodation.fromJson(json['accommodation'])
+        ? Accommodation.fromJson(json['accommodation'])
         : null;
-    cab = json['cab'] != null ? new Cab.fromJson(json['cab']) : null;
+    cab = json['cab'] != null ? Cab.fromJson(json['cab']) : null;
     coordinator = json['coordinator'] != null
-        ? new Coordinator.fromJson(json['coordinator'])
+        ? Coordinator.fromJson(json['coordinator'])
         : null;
     List<Status> tempStatus = [];
     if(json['status'] != null){
@@ -25,15 +25,15 @@ class ConfirmedQuery {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.accommodation != null) {
-      data['accommodation'] = this.accommodation!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (accommodation != null) {
+      data['accommodation'] = accommodation!.toJson();
     }
-    if (this.cab != null) {
-      data['cab'] = this.cab!.toJson();
+    if (cab != null) {
+      data['cab'] = cab!.toJson();
     }
-    if (this.coordinator != null) {
-      data['coordinator'] = this.coordinator!.toJson();
+    if (coordinator != null) {
+      data['coordinator'] = coordinator!.toJson();
     }
     return data;
   }
@@ -47,16 +47,16 @@ class Accommodation {
   Accommodation({this.name, this.address, this.geoLocation});
 
   Accommodation.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    address = json['address'];
-    geoLocation = json['geo_location'];
+    name = json['name'] ?? "";
+    address = json['address'] ?? "";
+    geoLocation = json['geo_location'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['address'] = this.address;
-    data['geo_location'] = this.geoLocation;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['address'] = address;
+    data['geo_location'] = geoLocation;
     return data;
   }
 }
@@ -69,16 +69,16 @@ class Cab {
   Cab({this.name, this.number, this.type});
 
   Cab.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    number = json['car_number'];
-    type = json['car_type'];
+    name = json['name'] ?? "";
+    number = json['car_number'] ?? "";
+    type = json['car_type'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['number'] = this.number;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['number'] = number;
+    data['type'] = type;
     return data;
   }
 }
@@ -94,16 +94,16 @@ class Coordinator {
   Coordinator.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     phone = json['phone'];
-    email = json['email'];
-    image = json['image'];
+    email = json['email'] ?? "";
+    image = json['image'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['image'] = image;
     return data;
   }
 }
@@ -117,15 +117,15 @@ class Status {
 
   Status.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    file = json['file'].cast<String>();
+    file = json['file'] != null ?json['file'].cast<String>() :[];
     timestamp = json['timestamp'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['file'] = this.file;
-    data['timestamp'] = this.timestamp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['file'] = file;
+    data['timestamp'] = timestamp;
     return data;
   }
 }

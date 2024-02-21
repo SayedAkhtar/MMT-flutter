@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:MyMedTrip/constants/colors.dart';
 
 class SmallIconButton extends StatelessWidget {
-  const SmallIconButton({Key? key, required this.onTap, required this.icon}) : super(key: key);
+  const SmallIconButton({super.key, required this.onTap, required this.icon});
   final onTap;
   final IconData icon;
   @override

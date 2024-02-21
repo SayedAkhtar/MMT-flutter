@@ -1,5 +1,4 @@
 import 'package:MyMedTrip/helper/Utils.dart';
-import 'package:intl/intl.dart';
 
 import '../constants/query_type.dart';
 

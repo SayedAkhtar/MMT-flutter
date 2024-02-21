@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TranslatedText extends StatelessWidget {
-  TranslatedText({Key? key, this.text = "Default Text", this.style }) : super(key: key);
+  TranslatedText({super.key, this.text = "Default Text", this.style });
   String? text;
   final TextStyle? style;
   @override

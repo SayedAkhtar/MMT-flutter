@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'dart:convert';
 
-import 'package:MyMedTrip/components/CustomCardWithImage.dart';
-import 'package:MyMedTrip/components/CustomImageView.dart';
+import 'package:MyMedTrip/components/CustomButton.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +20,7 @@ class Add_Family_List_page extends GetView<UserController> {
     return Scaffold(
       // backgroundColor: Color(0xFFedeff5),
       appBar: CustomAppBar(
-        pageName: "Friends and Families",
+        pageName: "Friends and Families".tr,
         showDivider: true,
         backFunction: () {
           Get.toNamed(Routes.setting);
@@ -73,48 +71,76 @@ class Add_Family_List_page extends GetView<UserController> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
-                            tileColor: Colors.white,
+                            tileColor: Colors.white12,
                             style: ListTileStyle.drawer,
                             title: Text(
                               controller.familiesList[index].name!,
                               style: AppStyle.txtUrbanistRomanBold24,
                             ),
-                            subtitle: Row(children: [
-                              Visibility(
-                                visible: controller.familiesList[index]
-                                        .relationWithPatient !=
-                                    null,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                        controller.familiesList[index]
-                                                .relationWithPatient ??
-                                            '',
-                                        style: TextStyle(
-                                            overflow: TextOverflow.ellipsis)),
-                                    Text(' | '),
-                                  ],
-                                ),
-                              ),
-                              Text(controller.familiesList[index].phoneNo!),
-                              Visibility(
-                                visible:
-                                    controller.familiesList[index].speciality !=
+                            subtitle: Column(
+                              children: [
+                                Row(children: [
+                                  Visibility(
+                                    visible: controller.familiesList[index]
+                                            .relationWithPatient !=
                                         null,
-                                child: Row(
-                                  children: [
-                                    Text(' | '),
-                                    Text(
-                                      controller
-                                              .familiesList[index].speciality ??
-                                          '',
-                                      style: TextStyle(
-                                          overflow: TextOverflow.ellipsis),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                            controller.familiesList[index]
+                                                    .relationWithPatient ??
+                                                '',
+                                            style: TextStyle(
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
+                                        Text(' | '),
+                                      ],
                                     ),
+                                  ),
+                                  Text(controller.familiesList[index].phoneNo!),
+                                  Visibility(
+                                    visible: controller
+                                            .familiesList[index].speciality !=
+                                        null,
+                                    child: Row(
+                                      children: [
+                                        Text(' | '),
+                                        Text(
+                                          controller.familiesList[index]
+                                                  .speciality ??
+                                              '',
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ]),
+                                Row(
+                                  children: [
+                                    Visibility(
+                                      visible: controller.familiesList[index].familyUserId != null,
+                                        child: TextButton(
+                                      child: Text("Show Status"),
+                                      onPressed: () {
+                                        Get.toNamed(Routes.confirmedQuery,
+                                            arguments: {
+                                              'family_user_id': '169'
+                                            });
+                                      },
+                                    ))
                                   ],
                                 ),
-                              ),
-                            ]),
+                                TextButton(
+                                  child: Text(controller.familiesList[index].notificationSubscribed! ? "Un-Subscribe to Notifications": "Subscribe to Notifications"),
+                                  onPressed: () {
+                                      controller.updateFamilyNotificationStatus(controller.familiesList[index].id!);
+                                      controller.listFamily();
+                                      controller.update();
+                                  },
+                                )
+                              ],
+                            ),
                             trailing: IconButton(
                               icon: Icon(
                                 Icons.remove_circle_outline,
@@ -122,38 +148,50 @@ class Add_Family_List_page extends GetView<UserController> {
                               ),
                               onPressed: () {
                                 Get.defaultDialog(
-                                  title: "Are you sure ?",
+                                  title: "Are you sure ?".tr,
                                   content: Container(
-                                    margin: EdgeInsets.only(bottom: CustomSpacer.S),
+                                    margin:
+                                        EdgeInsets.only(bottom: CustomSpacer.S),
                                     child: RichText(
-                                      text: TextSpan(
-                                      children: [
-                                        TextSpan(text: "You are about to remove".tr),
-                                        TextSpan(text: " ${controller.familiesList[index].name!} " ),
-                                        TextSpan(text: "from your family list.".tr ),
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "You are about to remove".tr),
+                                        TextSpan(
+                                            text:
+                                                " ${controller.familiesList[index].name!} "),
+                                        TextSpan(
+                                            text: "from your family list.".tr),
                                         TextSpan(text: "\n"),
                                         TextSpan(text: "\n"),
                                         TextSpan(text: "Note: These means".tr),
-                                        TextSpan(text: " ${controller.familiesList[index].name} "),
-                                        TextSpan(text: "wont receive any further notification and you wont be able to create any queries for ".tr),
-                                        TextSpan(text: controller.familiesList[index].gender!.toLowerCase() == 'female' ? 'her'.tr : 'him'.tr),
-                                      ],
-                                        style: AppStyle.txtUrbanistRegular18
-                                      ),
+                                        TextSpan(
+                                            text:
+                                                " ${controller.familiesList[index].name} "),
+                                        TextSpan(
+                                            text:
+                                                "wont receive any further notification and you wont be able to create any queries for "
+                                                    .tr),
+                                        TextSpan(
+                                            text: controller.familiesList[index]
+                                                        .gender!
+                                                        .toLowerCase() ==
+                                                    'female'
+                                                ? 'her'.tr
+                                                : 'him'.tr),
+                                      ], style: AppStyle.txtUrbanistRegular18),
                                     ),
                                   ),
-                                  onConfirm: (){
+                                  onConfirm: () {
                                     controller.deleteFamily(
                                         controller.familiesList[index].id);
                                     controller.listFamily();
                                   },
                                   // confirm: Text("Yes, I am sure", style: AppStyle.txtSourceSansProSemiBold18,),
-                                  textConfirm: "Yes, I am sure",
-                                  onCancel: (){},
-                                  textCancel: "No, It was a mistake",
+                                  textConfirm: "Yes, I am sure".tr,
+                                  onCancel: () {},
+                                  textCancel: "No, It was a mistake".tr,
                                   buttonColor: MYcolors.bluecolor,
                                 );
-
                               },
                             ),
                           ),
@@ -178,7 +216,7 @@ class Add_Family_List_page extends GetView<UserController> {
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     width: double.infinity,
                     child: Text(
-                      "Add  Friends and family".tr,
+                      "Add Friends and family".tr,
                       style: TextStyle(
                         color: MYcolors.whitecolor,
                         fontSize: 18,

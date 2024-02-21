@@ -8,7 +8,7 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:get/get.dart';
 
 class QuerySubmissionSuccess extends StatefulWidget {
-  const QuerySubmissionSuccess({Key? key}) : super(key: key);
+  const QuerySubmissionSuccess({super.key});
 
   @override
   State<QuerySubmissionSuccess> createState() => _QuerySubmissionSuccessState();
@@ -22,7 +22,7 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
     // TODO: implement initState
     super.initState();
     _animationController =
-        AnimationController(duration: Duration(seconds: 5), vsync: this);
+        AnimationController(duration: const Duration(seconds: 5), vsync: this);
   }
 
   @override
@@ -51,20 +51,10 @@ class _QuerySubmissionSuccessState extends State<QuerySubmissionSuccess>
         CustomSpacer.l(),
         RichText(
           text: TextSpan(
-            text: "Thank you for your query. ",
+            text: "Thank you, your query has been successfully received.".tr,
             children: [
-              const TextSpan(
-                text: "Your query has been received successfully and is currently under review. "
-              ),
-              const TextSpan(
-                  text: "Please access the "
-              ),
               TextSpan(
-                  text: '"Query"',
-                style: AppStyle.txtRobotoRegular20.copyWith(fontWeight: FontWeight.w600)
-              ),
-              const TextSpan(
-                  text: " tab to view the response once the review process is complete."
+                text: "Please access the Query section to view the reply.".tr
               ),
             ],
             style: AppStyle.txtRobotoRegular20,

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/helper/Debouncer.dart';
@@ -10,9 +9,11 @@ import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
 
+import '../../controller/controllers/local_storage_controller.dart';
+
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -25,15 +26,23 @@ class _SearchScreenState extends State<SearchScreen> {
   List searchResults = [];
   bool isSearching = false;
   final Debouncer debouncer = Debouncer(milliseconds: 800);
+  final _storage = Get.find<LocalStorageController>();
 
   @override
   void initState() {
     super.initState();
     searchFieldController = TextEditingController();
     provider = Get.put(BaseProvider());
+    provider.httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
+
     searchNode = FocusNode();
     searchNode.requestFocus();
   }
+
+
 
   @override
   void dispose() {
@@ -125,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Builder(
           builder: (_) {
             if (searchFieldController.text.length < 3) {
-              return const SizedBox(child: Center(child: Text("Please enter 3 or more character to begin search")));
+              return SizedBox(child: Center(child: Text("Please enter 3 or more character to begin search".tr)));
             }
             if (searchResults.isNotEmpty) {
               return searchSection(searchResults);
@@ -137,7 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               );
             }
-            return const Center(child: Text("No data to display"));
+            return Center(child: Text("No data to display".tr));
           },
         ),
       ),

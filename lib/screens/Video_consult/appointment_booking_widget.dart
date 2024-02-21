@@ -1,4 +1,3 @@
-import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/controller/controllers/teleconsult_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:flutter/material.dart';
@@ -42,21 +41,21 @@ class _AppointmentBookingWidgetState extends State<AppointmentBookingWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: 'Choose your preferred slot',
+        pageName: 'Choose your preferred slot'.tr,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: CustomSpacer.S),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                'Select a day:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Select a day:'.tr,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            Container(
+            SizedBox(
               height: 50,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -66,7 +65,7 @@ class _AppointmentBookingWidgetState extends State<AppointmentBookingWidget> {
                   return GestureDetector(
                     onTap: () => _onDaySelected(day),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: selectedDay == day ? Colors.blue : Colors.transparent,
@@ -82,8 +81,8 @@ class _AppointmentBookingWidgetState extends State<AppointmentBookingWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                'Available timings for $selectedDay:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                '${"Available timings for".tr} $selectedDay:',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(

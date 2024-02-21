@@ -4,14 +4,10 @@ import 'dart:async';
 
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
-import 'package:MyMedTrip/screens/login/verify_confirm.dart';
 
 import '../../constants/colors.dart';
 
@@ -26,10 +22,11 @@ class _Verify_pageState extends State<Verify_page> {
   late Timer _timer;
   int _start = 60;
   late AuthController _controller;
-  List _otp = ['','','','', '', ''];
+  final List _otp = ['','','','', '', ''];
+  String errorText = "";
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
+    const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -60,13 +57,11 @@ class _Verify_pageState extends State<Verify_page> {
     // _controller.resendOtp();
     super.initState();
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-    pageName: "Let's Verify",
+    pageName: "Let's Verify".tr,
     showDivider: true,
       ),
       body: Padding(
@@ -74,7 +69,7 @@ class _Verify_pageState extends State<Verify_page> {
     child: Column(
       children: [
         Text(
-          "We've send a verification code to ${_controller.phoneController.text}",
+          "${"We've send a verification code to".tr} ${_controller.phoneController.text}",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -124,23 +119,23 @@ class _Verify_pageState extends State<Verify_page> {
             _controller.resendOtp();
           },
           child: Text(
-            _start == 0 ? "Resend Now" : "Resend in ${_start}",
+            _start == 0 ? "Resend Now".tr : "${"Resend in".tr} $_start",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
                 color: MYcolors.bluecolor),
           ),
         ),
+        errorText.isNotEmpty ? Text(errorText) : SizedBox(),
         Spacer(),
         GestureDetector(
           onTap: () {
             if(_otp.length == 6){
-              if(_controller.newPasswordController.text.isNotEmpty ){
-                _controller.otpType = "forgot_password";
-              }else{
-                _controller.otpType = "register";
-              }
               _controller.verifyOtp(otp: _otp.join());
+            }else{
+              setState(() {
+                errorText = "Please enter the OTP to proceed".tr;
+              });
             }
           },
           child: Container(
@@ -152,7 +147,7 @@ class _Verify_pageState extends State<Verify_page> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: Text(
-              "Verify",
+              "Verify".tr,
               style: AppStyle.txtUrbanistRomanBold20.copyWith(color: Colors.white),
             ),
           ),

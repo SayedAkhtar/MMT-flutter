@@ -5,9 +5,9 @@ import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/providers/doctor_provider.dart';
 import 'package:MyMedTrip/providers/teleconsult_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:logger/logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../models/query_screen_model.dart';
 
 class TeleconsultController extends GetxController {
   late TeleconsultProvider _provider;
@@ -33,10 +33,6 @@ class TeleconsultController extends GetxController {
     _provider = Get.put(TeleconsultProvider());
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -48,30 +44,29 @@ class TeleconsultController extends GetxController {
 
   void getDoctors({int? page}) async {
     isSearchingDoctor.value = true;
-    List<Doctor> _doctors = [];
+    List<Doctor> docs = [];
     var res = await _doctorProvider.getAllDoctors(
         parameter: "?specialization_id=${specializationId.value}&video_consultation=true&page=${page??0}");
     for (var element in res) {
       if (element != null) {
-        _doctors.add(element);
+        docs.add(element);
       }
     }
-    doctors.value = _doctors;
+    doctors.value = docs;
     isSearchingDoctor.value = false;
     doctors.refresh();
   }
 
   void getPopularDoctors({int? page}) async {
     isSearchingDoctor.value = true;
-    List<Doctor> _doctors = [];
+    List<Doctor> docs = [];
     var res = await _doctorProvider.getAllDoctors(
         parameter: "?popular=true&video_consultation=true&page=${page??0}");
-    for (var element in res) {
-      if (element != null) {
-        _doctors.add(element);
-      }
+    if(res != null){
+      docs = res;
     }
-    doctors.value = _doctors;
+    Logger().d(res);
+    doctors.value = docs;
     isSearchingDoctor.value = false;
     doctors.refresh();
   }
@@ -86,7 +81,9 @@ class TeleconsultController extends GetxController {
 
   void getAllConsultations() async {
     List res = await _provider.getConsultationList();
-    consultationList = res;
+    if(res != null){
+      consultationList = res;
+    }
     consultationsLoaded = true;
     update();
   }

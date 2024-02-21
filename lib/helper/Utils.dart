@@ -140,12 +140,10 @@ class Utils {
           dir = downloadsDir.path;
         }
         print(dir);
-        if (dir != null) {
-          File file = new File('$dir/$filename');
-          print(file);
-          await file.writeAsBytes(bytes);
-          return file;
-        }
+        File file = File('$dir/$filename');
+        print(file);
+        await file.writeAsBytes(bytes);
+        return file;
       } else {
         Get.snackbar("Error", "File save permissions denied");
         // Loaders.errorDialog("File save permissions denined");
@@ -184,7 +182,7 @@ class Utils {
     return (path.split('?')[0]).split('.').last;
   }
 
-  static String displayStringForOption(Result option) => option.name!;
+  static String displayStringForOption(Result option) => option.name;
 
   static String getExcerptFromDescription(String description) {
     if (description.length > 100) {

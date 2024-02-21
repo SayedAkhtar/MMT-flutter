@@ -3,7 +3,6 @@ import 'package:MyMedTrip/components/RowHeader.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Hospitals/hospital_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +16,7 @@ class SuggestedHospitals extends StatelessWidget {
     return Column(
       children: [
         RowHeader(
-            heading: "Suggested Hospitals",
+            heading: "Suggested Hospitals".tr,
             action: () {
               Get.toNamed(Routes.hospitals,
                   arguments: {'type': 'allHospitals'});
@@ -29,7 +28,10 @@ class SuggestedHospitals extends StatelessWidget {
               itemCount: data.length,
               itemBuilder: (_, index) {
                 return CustomCardWithImage(
+                  bgColor: Colors.white,
                   width: getHorizontalSize(160),
+                  fit: BoxFit.contain,
+                  imageAlign: Alignment.center,
                   onTap: () {
                     Get.toNamed(Routes.hospitalPreview,
                         arguments: {'id': data[index].id});
@@ -38,6 +40,7 @@ class SuggestedHospitals extends StatelessWidget {
                   title: data[index].name,
                   bodyText: data[index].address,
                   imagePadding: const EdgeInsets.all(10),
+                  imageHeight: 90,
                 );
               }),
         ),

@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/screens/Home_screens/home_page.dart';
-import 'package:MyMedTrip/screens/Hospitals/hospital_preview.dart';
 import 'package:MyMedTrip/screens/Query/query.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/connects/connect_homepage.dart';
@@ -37,17 +34,17 @@ class _Home_screenState extends State<Home_screen> {
             children: [
               ListTile(
                 leading: SvgPicture.asset('assets/icons/bottom-nav-whatsapp.svg'),
-                title: Text("Whatsapp Chat".tr),
+                title: Text("WhatsApp Chat".tr),
                 onTap: (){
                   openWhatsapp(
-                      text: "Hello, I have query regarding MyMedTrip.",
+                      text: "Hello, I have query regarding MyMedTrip.".tr,
                       number: WHATSAPP_NUMBER);
                 },
               ),
               ListTile(
                 leading: const Icon( Icons.support_agent_outlined),
                 title: Text("Live Chat".tr),
-                onTap: () => Get.to(() =>  SupportConnect()),
+                onTap: () => Get.to(() =>  const SupportConnect()),
               ),
             ],
           ),
@@ -71,8 +68,8 @@ class _Home_screenState extends State<Home_screen> {
           whatsappURLIos,
         ));
       } else {
-        Get.snackbar("Whatsapp not installed",
-            "Please install whatsapp on your device and try again.",
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     } else {
@@ -80,8 +77,8 @@ class _Home_screenState extends State<Home_screen> {
       if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
         await launchUrl(Uri.parse(whatsappURlAndroid));
       } else {
-        Get.snackbar("Whatsapp not installed",
-            "Please install whatsapp on your device and try again.",
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     }
@@ -156,7 +153,7 @@ class _Home_screenState extends State<Home_screen> {
       case 1:
         return const Query_page();
       case 3:
-        return const QueryConfirmed();
+        return QueryConfirmed();
       case 4:
         return const Connect_Home_page();
       default:

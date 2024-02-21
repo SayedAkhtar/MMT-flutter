@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:io';
 import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:camera/camera.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
-import 'package:MyMedTrip/components/SmallIconButton.dart';
 import 'package:MyMedTrip/components/TranslatedText.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
@@ -29,7 +23,7 @@ class Profile_Page extends GetView<UserController> {
     final PageController pageController = PageController();
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Profile",
+        pageName: "Profile".tr,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -90,9 +84,9 @@ class Profile_Page extends GetView<UserController> {
                     title: Text('Upload new photo'.tr),
                     onPressed: (_) async {
                       try {
-                        ImagePicker _picker = ImagePicker();
+                        ImagePicker picker0 = ImagePicker();
                         final XFile? cameraImage =
-                            await _picker.pickImage(source: ImageSource.camera);
+                            await picker0.pickImage(source: ImageSource.camera);
                         if (cameraImage == null) return;
                         Get.back();
                         controller.updateProfileImage(

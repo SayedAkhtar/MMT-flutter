@@ -5,10 +5,8 @@ import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Query/pay_page_form.dart';
 import 'package:MyMedTrip/screens/Query/upload_ticket_visa_form.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/query_step_name.dart';
@@ -18,7 +16,7 @@ import 'document_visa_form.dart';
 import 'document_visa_form_edit.dart';
 
 class QueryForm extends StatefulWidget {
-  const QueryForm(this.queryType,{Key? key, this.queryId = 0, this.queryStep = QueryStep.documentForVisa}) : super(key: key);
+  const QueryForm(this.queryType,{super.key, this.queryId = 0, this.queryStep = QueryStep.documentForVisa});
   final int queryType;
   final int? queryId;
   final int? queryStep;
@@ -39,10 +37,10 @@ class _QueryFormState extends State<QueryForm> {
   List<int> editableSteps = [];
 
   List<String> stepName = [
-    "Doctor\'s \nReply",
-    "Documents For Visa",
-    "Payment Confirmation",
-    "Upload Tickets and Visa"
+    "Doctor's \nReply".tr,
+    "Documents For Visa".tr,
+    "Payment Confirmation".tr,
+    "Upload Tickets and Visa".tr
   ];
 
   @override
@@ -73,7 +71,7 @@ class _QueryFormState extends State<QueryForm> {
     // print(response!.editableSteps);
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Query Form",
+        pageName: "Query Form".tr,
         showDivider: true,
         backFunction: (){
           Get.toNamed(Routes.home);
@@ -85,7 +83,7 @@ class _QueryFormState extends State<QueryForm> {
           if (currentBackPressTime == null ||
               now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
             currentBackPressTime = now;
-            Get.showSnackbar(const GetSnackBar(title: "Are you sure to you want to exit ?", message: "Press back button twice to close the app.",duration: Duration(milliseconds: 2),));
+            Get.showSnackbar( GetSnackBar(title: "Are you sure to you want to exit ?".tr, message: "Press back button twice to close the app.".tr,duration: const Duration(milliseconds: 2),));
             return Future.value(false);
           }
           return Future.value(true);
@@ -194,7 +192,7 @@ class _QueryFormState extends State<QueryForm> {
                               return const SizedBox();
                           }
 
-                          return SizedBox();
+                          return const SizedBox();
                         },
                       ),
                     ),
@@ -227,7 +225,7 @@ class CustomStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: function,
-      child: Container(
+      child: SizedBox(
         height: 110,
         width: !isLast ? 130 : 90,
         child: Stack(
@@ -295,7 +293,7 @@ class CustomStep extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),

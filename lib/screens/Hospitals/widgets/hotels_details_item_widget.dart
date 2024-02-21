@@ -1,19 +1,17 @@
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:flutter/material.dart';
 
-import '../../../components/CustomButton.dart';
 import '../../../components/CustomImageView.dart';
 import '../../../constants/size_utils.dart';
 import '../../../theme/app_decoration.dart';
-import '../../../theme/app_style.dart';
 
 // ignore: must_be_immutable
 class HotelDetailsItemWidget extends StatelessWidget {
-  HotelDetailsItemWidget();
+  const HotelDetailsItemWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.maxFinite,
       child: Container(
         padding: getPadding(

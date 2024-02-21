@@ -3,12 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:MyMedTrip/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';
@@ -28,8 +25,8 @@ class Need_Help_page extends StatelessWidget {
           whatsappURLIos,
         ));
       } else {
-        Get.snackbar("Whatsapp not installed",
-            "Please install whatsapp on your device and try again.",
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     } else {
@@ -37,8 +34,8 @@ class Need_Help_page extends StatelessWidget {
       if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
         await launchUrl(Uri.parse(whatsappURlAndroid));
       } else {
-        Get.snackbar("Whatsapp not installed",
-            "Please install whatsapp on your device and try again.",
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     }
@@ -53,8 +50,8 @@ class Need_Help_page extends StatelessWidget {
           mailURL,
         ));
       } else {
-        Get.snackbar("No mail not installed",
-            "Please install configure mail on your device and try again.",
+        Get.snackbar("No mail not installed".tr,
+            "Please install configure mail on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     } else {
@@ -62,17 +59,29 @@ class Need_Help_page extends StatelessWidget {
       if (await canLaunchUrl(Uri.parse(mailURL))) {
         await launchUrl(Uri.parse(mailURL));
       } else {
-        Get.snackbar("No mail not installed",
-            "Please install configure mail on your device and try again.",
+        Get.snackbar("No mail not installed".tr,
+            "Please install configure mail on your device and try again.".tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     }
   }
 
+  void openCall(String number) async{
+    String url = "tel: $number";
+    if(await canLaunchUrl(Uri.parse(url))){
+      await launchUrl(Uri.parse(url));
+    }else {
+      Get.snackbar("Couldn't open dialer".tr,
+          "Please try again.".tr,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(pageName: "Need help?", showDivider: true,),
+      appBar: CustomAppBar(pageName: "Need help?".tr, showDivider: true,),
       body: SafeArea(
     child: Padding(
       padding: const EdgeInsets.all(CustomSpacer.S),
@@ -96,7 +105,7 @@ class Need_Help_page extends StatelessWidget {
               runSpacing: CustomSpacer.XS,
               children: [
                 Text(
-                  "Chat Support",
+                  "Chat Support".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: MYcolors.bluecolor,
@@ -105,7 +114,7 @@ class Need_Help_page extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Get quick answer to any app-related queries from out team",
+                  "Get quick answer to any app-related queries from out team".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     // color: MYcolors.bluecolor,
@@ -125,13 +134,13 @@ class Need_Help_page extends StatelessWidget {
           ),
           child: InkWell(
             onTap: (){
-                Get.toNamed(Routes.supportCall);
+              openCall(WHATSAPP_NUMBER);
             },
             child: Wrap(
               runSpacing: CustomSpacer.XS,
               children: [
                 Text(
-                  "Call Us",
+                  "Call Us".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: MYcolors.bluecolor,
@@ -140,7 +149,7 @@ class Need_Help_page extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Get quick answer to any app-related queries from out team",
+                  "Get quick answer to any app-related queries from out team".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 15,
@@ -150,41 +159,41 @@ class Need_Help_page extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(CustomSpacer.XS),
-          decoration: BoxDecoration(
-            color: MYcolors.greycolor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: InkWell(
-            onTap: (){
-              openEmail(email: SUPPORT_EMAIL, subject: "Support mail from MyMedTrip App", body: "");
-            },
-            child: Wrap(
-              runSpacing: CustomSpacer.XS,
-              children: [
-                Text(
-                  "Drop on email",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: MYcolors.bluecolor,
-                    // fontFamily: "Brandon",
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  "Get quick answer to any app-related queries from out team",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    // color: MYcolors.bluecolor,
-                    // fontFamily: "Brandon",
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // Container(
+        //   padding: const EdgeInsets.all(CustomSpacer.XS),
+        //   decoration: BoxDecoration(
+        //     color: MYcolors.greycolor,
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   child: InkWell(
+        //     onTap: (){
+        //       openEmail(email: SUPPORT_EMAIL, subject: "Support mail from MyMedTrip App", body: "");
+        //     },
+        //     child: Wrap(
+        //       runSpacing: CustomSpacer.XS,
+        //       children: [
+        //         Text(
+        //           "Drop on email".tr,
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.bold,
+        //             color: MYcolors.bluecolor,
+        //             // fontFamily: "Brandon",
+        //             fontSize: 20,
+        //           ),
+        //         ),
+        //         Text(
+        //           "Get quick answer to any app-related queries from out team".tr,
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.normal,
+        //             // color: MYcolors.bluecolor,
+        //             // fontFamily: "Brandon",
+        //             fontSize: 15,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ]),
     ),
       ),

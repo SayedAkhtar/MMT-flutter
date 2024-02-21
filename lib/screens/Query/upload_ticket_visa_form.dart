@@ -6,9 +6,6 @@ import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
@@ -17,7 +14,6 @@ import 'package:MyMedTrip/helper/Utils.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/query_step_name.dart';
-import '../../controller/controllers/query_controller.dart';
 import '../../models/query_response_model.dart';
 import '../../providers/query_provider.dart';
 
@@ -50,7 +46,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
   Widget build(BuildContext context) {
     if(formSubmitted || widget.response.response!.isNotEmpty){
       return Scaffold(
-        body: Center(child: Text("Please wait while Our HCF validates your documents.\nYou will be notified once its completed.",
+        body: Center(child: Text("Please wait while we validate your documents. \nYou will be notified once ot is complete.".tr,
           style: AppStyle.txtUrbanistRomanBold24, textAlign: TextAlign.center,),),
       );
     }
@@ -62,7 +58,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
             visible: files.isNotEmpty,
             child: Column(
               children: [
-                Text("Uploaded Files:"),
+                Text("Uploaded Files:".tr),
                 SizedBox(
                   height: 110,
                   child: ListView.builder(
@@ -163,7 +159,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                             try {
                               FilePickerResult? result =
                                   await FilePicker.platform.pickFiles(
-                                dialogTitle: "Upload medical visa",
+                                dialogTitle: "Upload medical visa".tr,
                                 type: FileType.custom,
                                 allowMultiple: true,
                                 allowedExtensions: ['pdf', 'docx'],
@@ -253,7 +249,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                             try {
                               FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
-                                dialogTitle: "Upload medical visa",
+                                dialogTitle: "Upload medical visa".tr,
                                 type: FileType.custom,
                                 allowMultiple: true,
                                 allowedExtensions: ['pdf'],
@@ -310,7 +306,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
           ElevatedButton(
             onPressed: () async{
 
-              QueryResponse data = widget.response!;
+              QueryResponse data = widget.response;
               Map<dynamic, dynamic> response = widget.response.response!;
               data.currentStep = QueryStep.ticketsAndVisa;
               if(visa.isNotEmpty){
@@ -318,7 +314,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
               }
               if(tickets.isNotEmpty){
                 response['tickets'] = tickets;
-              };
+              }
               data.response = response;
               bool res = await Get.put(QueryProvider())
                   .postQueryGenerationData(data.toJson());

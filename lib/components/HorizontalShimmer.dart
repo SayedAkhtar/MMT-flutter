@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HorizontalShimmer extends StatelessWidget {
-  const HorizontalShimmer({Key? key}) : super(key: key);
+  const HorizontalShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

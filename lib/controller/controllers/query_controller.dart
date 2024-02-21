@@ -1,16 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:MyMedTrip/constants/query_type.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:MyMedTrip/constants/query_step_name.dart';
-import 'package:MyMedTrip/constants/razorpay_constants.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/models/confirmed_query.dart';
-import 'package:MyMedTrip/models/generate_query_model.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
 import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
@@ -60,10 +53,6 @@ class QueryController extends GetxController {
     _provider = Get.put(QueryProvider());
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -98,7 +87,7 @@ class QueryController extends GetxController {
       medicalVisaPath = [];
       patientFaminlyId.value = 0;
       Get.offNamed(Routes.startQuery);
-      Get.to(QuerySubmissionSuccess());
+      Get.to(const QuerySubmissionSuccess());
     }
   }
 
@@ -184,7 +173,7 @@ class QueryController extends GetxController {
           await _provider.getQueryStepData(selectedQuery, step);
       if (data != null) {
         stepData = data.response!;
-        showPaymentPage = data!.paymentRequired!;
+        showPaymentPage = data.paymentRequired!;
       }
     }
     isLoaded.value = true;

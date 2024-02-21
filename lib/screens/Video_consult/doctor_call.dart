@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/screens/Video_consult/doctor_call_chat.dart';
-import 'package:MyMedTrip/screens/connects/chat_page.dart';
 
 import '../../constants/colors.dart';
 
@@ -55,7 +52,7 @@ class _Doctor_call_pageState extends State<Doctor_call_page> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.08,
           ),
-          Container(
+          SizedBox(
             // color: MYcolors.bluecolor,
             height: MediaQuery.of(context).size.height * 0.15,
             width: MediaQuery.of(context).size.width * 0.4,

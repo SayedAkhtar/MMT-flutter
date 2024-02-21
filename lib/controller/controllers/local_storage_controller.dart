@@ -17,10 +17,6 @@ class LocalStorageController extends GetxController {
     _storage.initStorage;
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   String? get(key){
     if(_storage.hasData(key)){

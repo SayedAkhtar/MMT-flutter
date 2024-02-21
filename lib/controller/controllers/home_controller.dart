@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
@@ -6,7 +5,6 @@ import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/models/blog.dart';
 import 'package:MyMedTrip/models/faq_model.dart';
 import 'package:MyMedTrip/providers/home_provider.dart';
-import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
@@ -25,15 +23,7 @@ class HomeController extends GetxController {
     _provider = Get.put(HomeProvider());
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   void getHomeData() async{
     doctors= [];
@@ -60,11 +50,10 @@ class HomeController extends GetxController {
   void refreshFirebaseCreds() async{
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
-      if(Platform.isAndroid){
+      // if(Platform.isAndroid){
         final fcmToken = await FirebaseMessaging.instance.getToken();
-        print(fcmToken);
         await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
-      }
+      // }
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "operation-not-allowed":

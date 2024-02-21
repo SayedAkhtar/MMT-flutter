@@ -14,5 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <application android:requestLegacyExternalStorage="true" ></application>
+    <application android:requestLegacyExternalStorage="true" >
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
+    </application>
+
 </manifest>

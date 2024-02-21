@@ -5,9 +5,9 @@ class SearchQueryResult {
   SearchQueryResult.fromJson(List<dynamic> json) {
     if(json.isNotEmpty){
       list = <Result>[];
-      json.forEach((element) {
+      for (var element in json) {
         list?.add(Result.fromJson(element));
-      });
+      }
     }
   }
 

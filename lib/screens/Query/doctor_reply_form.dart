@@ -1,23 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
 import 'package:MyMedTrip/components/FileViewerScreen.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/screens/Query/terms_and_conditions.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
-import 'package:path_provider_android/path_provider_android.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/controller/controllers/query_controller.dart';
-import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../constants/colors.dart';
-import '../../helper/FirebaseFunctions.dart';
 import '../../models/query_response_model.dart';
-import 'package:http/http.dart' as http;
 
 class DoctorReplyForm extends StatefulWidget {
   const DoctorReplyForm(this.response, {super.key});
@@ -35,8 +26,8 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
     // TODO: implement initState
     documentRequired = false;
     responses = widget.response.response! as List;
-    documentRequired = responses!.last['document_required'] &&
-        responses!.last['patient'] == null;
+    documentRequired = responses.last['document_required'] &&
+        responses.last['patient'] == null;
     super.initState();
   }
 
@@ -60,7 +51,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
                       .entries
                       .map((e) => Tab(
                             child: Text(
-                              "Response ${e.key + 1}",
+                              "${"Response".tr} ${e.key + 1}",
                               style: AppStyle.txtSourceSansProSemiBold18,
                             ),
                           ))
@@ -86,7 +77,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
 
                           // Response res = await GetConnect().get(e.value['proforma_invoice']);
                           // print(res.body.toString());
-                        }, child: Text('Proforma Invoice'),): const SizedBox()
+                        }, child: Text('Proforma Invoice'.tr),): const SizedBox()
                       ],
                     );
                   },
@@ -102,7 +93,7 @@ class _DoctorReplyFormState extends State<DoctorReplyForm> {
         ElevatedButton(
           onPressed: () async {
             if (documentRequired) {
-              QueryResponse data = widget.response!;
+              QueryResponse data = widget.response;
               Map<String, dynamic> response = widget.response.response!;
               response['patient'] = docPath;
               data.response = response;

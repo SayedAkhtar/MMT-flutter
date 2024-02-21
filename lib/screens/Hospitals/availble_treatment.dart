@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/colors.dart';
@@ -19,13 +17,13 @@ class Available_Treatment extends GetView<HospitalController> {
         && controller.selectedHospital!.treatment != null
         && controller.selectedHospital!.treatment!.isNotEmpty){
       return Scaffold(
-        appBar: CustomAppBar(pageName: "Available Treatment", showDivider: true,),
+        appBar: CustomAppBar(pageName: "Available Treatment".tr, showDivider: true,),
         body: Padding(
           padding: const EdgeInsets.all(CustomSpacer.S),
           child: ListView.builder(
             itemCount: controller.selectedHospital!.treatment!.length,
               itemBuilder: (ctx, i){
-                return Container(
+                return SizedBox(
                   height: MediaQuery.of(context).size.height * 0.1,
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: Column(
@@ -41,7 +39,7 @@ class Available_Treatment extends GetView<HospitalController> {
                           )),
                       Row(
                         children: [
-                          Container(
+                          SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05,
                             width: MediaQuery.of(context).size.width * 0.05,
                             child: Image.asset(
@@ -71,8 +69,8 @@ class Available_Treatment extends GetView<HospitalController> {
       );
     }
     return Scaffold(
-        appBar: CustomAppBar(pageName: "Available Treatment", showDivider: true,),
-        body: Center(child: Text("No treatment added for this hospital yet."),)
+        appBar: CustomAppBar(pageName: "Available Treatment".tr, showDivider: true,),
+        body: Center(child: Text("No treatment added for this hospital yet.".tr),)
     );
   }
 }

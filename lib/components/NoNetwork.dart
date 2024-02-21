@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import '../controller/controllers/local_storage_controller.dart';
 
 class NoNetwork extends StatefulWidget {
-  const NoNetwork({Key? key}) : super(key: key);
+  const NoNetwork({super.key});
 
   @override
   State<NoNetwork> createState() => _NoNetworkState();
@@ -25,7 +25,7 @@ class _NoNetworkState extends State<NoNetwork> with TickerProviderStateMixin  {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _animationController = AnimationController(duration: Duration(seconds: 5), vsync: this);
+    _animationController = AnimationController(duration: const Duration(seconds: 5), vsync: this);
     subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       print(result.toString());
       if(result != ConnectivityResult.none){
@@ -35,7 +35,7 @@ class _NoNetworkState extends State<NoNetwork> with TickerProviderStateMixin  {
         }
           Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Loading_page()),
+          MaterialPageRoute(builder: (context) => const Loading_page()),
         );
       }
     });

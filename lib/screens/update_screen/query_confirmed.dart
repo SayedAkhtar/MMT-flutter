@@ -1,29 +1,31 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:math';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:MyMedTrip/locale/AppTranslation.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/colors.dart';
-import 'package:MyMedTrip/constants/query_step_name.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/confirmed_query.dart';
 import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/screens/update_screen/connect_coordinotor.dart';
+import 'package:logger/logger.dart';
 
-import '../connects/voice_call.dart';
 
 class QueryConfirmed extends GetView<QueryController> {
-  const QueryConfirmed({super.key});
+  QueryConfirmed({super.key});
+  final Map<String, String>? arguments = Get.arguments;
+  String? familyUserId = "";
   @override
   Widget build(BuildContext context) {
-    QueryProvider _provider = Get.put(QueryProvider());
+    QueryProvider provider = Get.put(QueryProvider());
+    if(arguments != null && arguments!['family_user_id'] != null ){
+      familyUserId = arguments!['family_user_id'];
+    }
+
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Confirmed details".tr,
@@ -34,27 +36,33 @@ class QueryConfirmed extends GetView<QueryController> {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
         child: Column(
           children: [
+
             DefaultTabController(
               length: 2,
               child: Expanded(
                 child: Column(
                   children: [
                     TabBar(
+                      isScrollable: true,
                       tabs: [
-                        Text(
-                          "Status".tr,
-                          style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                        Tab(
+                          child: Text(
+                            "Status".tr,
+                            style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                          ),
                         ),
-                        Text(
-                          "Quick Information".tr,
-                          style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                        Tab(
+                          child: Text(
+                            "Quick Information".tr,
+                            style: AppStyle.txtUrbanistRomanBold20Cyan60001,
+                          ),
                         )
                       ],
                     ),
                     Expanded(
                       child: FutureBuilder<ConfirmedQuery?>(
-                          future: _provider.getConfirmedQueryDetail(
-                              controller.selectedQuery),
+                          future: provider.getConfirmedQueryDetail(
+                              controller.selectedQuery, familyId: familyUserId),
                           builder:
                               (context, AsyncSnapshot<ConfirmedQuery?> data) {
                             if (data.hasData) {
@@ -64,7 +72,7 @@ class QueryConfirmed extends GetView<QueryController> {
                                     if (data.data!.statuses == null ||
                                         data.data!.statuses!.isEmpty) {
                                       return Center(
-                                          child: Text("No Status Updated yet"));
+                                          child: Text("No Status Updated yet".tr));
                                     }
                                     return ListView.builder(
                                       itemCount: data.data!.statuses!.length,
@@ -84,114 +92,13 @@ class QueryConfirmed extends GetView<QueryController> {
                                     );
                                   },
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Hotel Details".tr,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${data.data?.accommodation?.name} \n${data.data?.accommodation?.address}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    CustomSpacer.m(),
-                                    Text(
-                                      "Cab Details".tr,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      data.data?.cab?.name == null
-                                          ? "Not Assigned"
-                                          : "${data.data?.cab?.name}\n${data.data?.cab?.type} \n${data.data?.cab?.number}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    CustomSpacer.m(),
-                                    Text(
-                                      "Coordinator details",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.15,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: Image.network(
-                                          data.data!.coordinator!.image!),
-                                    ),
-                                    Text(
-                                      "Name : ${data.data?.coordinator?.name}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${'Phone Number'.tr} : ${data.data?.coordinator?.phone}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Get.to(NoCoordinator(
-                                          phoneNumber:
-                                              data.data?.coordinator?.phone,
-                                        ));
-                                      },
-                                      style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color?>(
-                                                  MYcolors.bluecolor)),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 16.0),
-                                        width: double.infinity,
-                                        child: Text(
-                                          "Connect to Coordinator".tr,
-                                          style: TextStyle(
-                                            color: MYcolors.whitecolor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                    CustomSpacer.xs(),
-                                  ],
-                                )
+                                CoOrdinatorDetails(data.data),
                               ]);
                             } else if (data.connectionState ==
                                     ConnectionState.done &&
                                 !data.hasData) {
                               return Center(
-                                child: Text("No Coordinator Data"),
+                                child: Text("No Status Updated yet".tr)
                               );
                             } else {
                               return Center(child: CircularProgressIndicator());
@@ -237,6 +144,135 @@ class QueryConfirmed extends GetView<QueryController> {
   }
 }
 
+class FamilyMemberStatus extends StatelessWidget {
+  const FamilyMemberStatus({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(child: Text("Family member status"),);
+  }
+}
+
+class CoOrdinatorDetails extends StatelessWidget {
+  final ConfirmedQuery? data;
+  const CoOrdinatorDetails(this.data, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex:1,
+            child: ListView(
+          children: [
+            Text(
+              "Hotel Details".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              "${data?.accommodation?.name} \n${data?.accommodation?.address}",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 15,
+              ),
+            ),
+            CustomSpacer.m(),
+            Text(
+              "Cab Details".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              data?.cab?.name == null
+                  ? "Not Assigned".tr
+                  : "${data?.cab?.name}\n${data?.cab?.type} \n${data?.cab?.number}",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 15,
+              ),
+            ),
+            CustomSpacer.m(),
+            Text(
+              "Coordinator details".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height:
+              MediaQuery.of(context).size.height *
+                  0.15,
+              width: MediaQuery.of(context).size.width *
+                  0.4,
+              child: Image.network(
+                  data!.coordinator!.image!),
+            ),
+            Text(
+              "${"Name".tr} : ${data?.coordinator?.name}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              "${'Phone Number'.tr} : ${data?.coordinator?.phone}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        )),
+        ElevatedButton(
+          onPressed: () {
+            Get.to(NoCoordinator(
+              phoneNumber:
+                  data?.coordinator?.phone,
+            ));
+          },
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<
+                  RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(100),
+                ),
+              ),
+              backgroundColor:
+                  MaterialStateProperty.all<Color?>(
+                      MYcolors.bluecolor)),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: 16.0),
+            width: double.infinity,
+            child: Text(
+              "Connect to Coordinator".tr,
+              style: TextStyle(
+                color: MYcolors.whitecolor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        CustomSpacer.xs(),
+      ],
+    );
+  }
+}
+
 class TimelineItem extends StatelessWidget {
   final String event;
   final bool isFirst;
@@ -245,7 +281,7 @@ class TimelineItem extends StatelessWidget {
   final List<String>? file;
 
   const TimelineItem(
-      {required this.event,
+      {super.key, required this.event,
       required this.isFirst,
       required this.isLast,
       required this.timestamp,
@@ -286,10 +322,10 @@ class TimelineItem extends StatelessWidget {
               if(file != null && file!.isNotEmpty)
                 ElevatedButton(onPressed: (){
                   Get.defaultDialog(
-                    title: "Uploaded Images",
+                    title: "Uploaded Images".tr,
                     content: showImages(file)
                   );
-                }, child: Text("Show Images"))
+                }, child: Text("Show Images".tr))
             ],
           ),
         ),
@@ -300,20 +336,20 @@ class TimelineItem extends StatelessWidget {
 
 Widget showImages(List<String>? file){
   return Builder(builder: (context) {
-    if (file != null && (file!.isNotEmpty)) {
+    if (file != null && (file.isNotEmpty)) {
       return ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          itemCount: file!.length, itemBuilder: (ctx, idx) {
+          itemCount: file.length, itemBuilder: (ctx, idx) {
         return Image.network(
-          file![idx],
+          file[idx],
           height: 300,
           width: 200,
           fit: BoxFit.contain,
           filterQuality: FilterQuality.low,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
-            return Container(
+            return SizedBox(
               height: 200,
               width: 200,
               child: Center(
@@ -337,3 +373,4 @@ Widget showImages(List<String>? file){
     }
   });
 }
+

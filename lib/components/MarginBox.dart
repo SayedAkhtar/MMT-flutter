@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 
 class MarginBox extends StatelessWidget {
-  const MarginBox({Key? key, required this.child}) : super(key: key);
+  const MarginBox({super.key, required this.child});
   final Widget child;
   @override
   Widget build(BuildContext context) {

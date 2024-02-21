@@ -1,12 +1,13 @@
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/ShimmerLoader.dart';
-import 'package:MyMedTrip/controller/controllers/hospital_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/models/hospital_model.dart';
 import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/routes.dart';
+import 'package:MyMedTrip/screens/stories/patient_stories.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/CustomImageView.dart';
@@ -135,7 +136,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Doctors",
+                              Text("Doctors".tr,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: AppStyle.txtUrbanistRomanBold20),
@@ -144,7 +145,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                 child: Padding(
                                   padding: getPadding(bottom: 4),
                                   child: Text(
-                                    "See All",
+                                    "See All".tr,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.left,
                                     style: AppStyle.txtUrbanistRomanBold16Blue
@@ -224,7 +225,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                       ),
                       Padding(
                           padding: getPadding(top: 29),
-                          child: Text("Details",
+                          child: Text("Details".tr,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: AppStyle.txtUrbanistRomanBold20)),
@@ -348,7 +349,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                           children: [
                             Padding(
                                 padding: getPadding(top: CustomSpacer.S),
-                                child: Text("Location",
+                                child: Text("Location".tr,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.left,
                                     style: AppStyle.txtUrbanistRomanBold20)),
@@ -375,7 +376,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                             children: [
                               Padding(
                                   padding: getPadding(top: 31),
-                                  child: Text("Description",
+                                  child: Text("Description".tr,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: AppStyle.txtUrbanistRomanBold20)),
@@ -397,24 +398,27 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                           Padding(
                             padding: getPadding(top: 30, right: 24),
                             child: Row(children: [
-                              Text("Patient Testimonials",
+                              Text("Patient Testimonials".tr,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: AppStyle.txtUrbanistRomanBold20),
                               const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(Routes.patientTestimony);
-                                },
-                                child: Padding(
-                                  padding: getPadding(top: 1, bottom: 2),
-                                  child: Text(
-                                    "See All",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: AppStyle.txtUrbanistRomanBold16Blue
-                                        .copyWith(
-                                      letterSpacing: getHorizontalSize(0.2),
+                              Visibility(
+                                visible: hospital.testimony!.length > 4,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(Routes.patientTestimony, arguments: hospital.testimony!);
+                                  },
+                                  child: Padding(
+                                    padding: getPadding(top: 1, bottom: 2),
+                                    child: Text(
+                                      "See All".tr,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: AppStyle.txtUrbanistRomanBold16Blue
+                                          .copyWith(
+                                        letterSpacing: getHorizontalSize(0.2),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -433,24 +437,22 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                 crossAxisSpacing: CustomSpacer.S,
                                 mainAxisSpacing: CustomSpacer.S,
                               ),
-                              itemCount: hospital.testimony!.length,
+                              itemCount: hospital.testimony!.length < 4 ? hospital.testimony!.length: 4,
                               itemBuilder: (context, index) {
-                                if(hospital.testimony![index].type == "image"){
-                                  return CustomImageView(
-                                    imagePath: "Images/P1.jpg",
-                                    height: getSize(
-                                      MediaQuery.of(context).size.width * 0.35,
-                                    ),
-                                    width: getSize(
-                                      MediaQuery.of(context).size.width * 0.35,
-                                    ),
-                                    radius: BorderRadius.circular(
-                                      getHorizontalSize(
-                                        16,
-                                      ),
-                                    ),
-                                  );
-                                }
+
+                                  return
+                                    CustomImageView(
+                                      url: hospital.testimony![index].thumbnail,
+                                      fit: BoxFit.fill,
+                                      onTap: (){
+                                        Get.to(() => PatientStories(
+                                          hospital.testimony![index].description!,
+                                          hospital.testimony![index].thumbnail!,
+                                          images: hospital.testimony![index].images!,
+                                          videos: hospital.testimony![index].videos!,
+                                        ));
+                                      },
+                                    );
 
                               },
                             ),

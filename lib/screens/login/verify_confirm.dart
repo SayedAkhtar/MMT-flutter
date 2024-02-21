@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/screens/login/complete_signup.dart';
 import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
@@ -52,7 +50,7 @@ class _Verify_Confirm_pageState extends State<Verify_Confirm_page> {
                 width: MediaQuery.of(context).size.width * 0.02,
               ),
               Text(
-                "Let's Verify",
+                "Let's Verify".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
               SizedBox(
@@ -85,7 +83,7 @@ class _Verify_Confirm_pageState extends State<Verify_Confirm_page> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.0,
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.08,
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Text(

@@ -1,18 +1,18 @@
 import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomCardWithImage extends StatelessWidget {
   const CustomCardWithImage(
-      {Key? key,
+      {super.key,
       this.onTap,
       required this.imageUri,
       this.body,
       required this.title,
       this.bodyText,
       this.align,
+      this.imageAlign,
       this.width,
       this.icon,
       this.imagePadding,
@@ -20,8 +20,8 @@ class CustomCardWithImage extends StatelessWidget {
       this.bodyStyle,
       this.bgColor,
       this.imageHeight,
-      this.textLines})
-      : super(key: key);
+      this.fit,
+      this.textLines});
   final onTap;
   final String? imageUri;
   final double? imageHeight;
@@ -31,16 +31,20 @@ class CustomCardWithImage extends StatelessWidget {
   final IconData? icon;
   final Widget? body;
   final TextAlign? align;
+  final Alignment? imageAlign;
   final EdgeInsetsGeometry? imagePadding;
   final TextStyle? titleStyle;
   final TextStyle? bodyStyle;
   final Color? bgColor;
   final int? textLines;
+  final BoxFit? fit;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Card(
+        surfaceTintColor: Colors.white,
+        color: Colors.white,
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -51,15 +55,18 @@ class CustomCardWithImage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: CustomImageView(
                   url: imageUri,
-                  fit: BoxFit.fitWidth,
+                  fit: fit??BoxFit.cover,
+                  imageAlign: imageAlign ?? Alignment.center,
                   height: getVerticalSize(imageHeight ?? 100),
-                  margin: imagePadding ?? const EdgeInsets.all(0),
+                  width: double.maxFinite,
+                  margin: imagePadding ?? const EdgeInsets.all(0)
                 ),
               ),
               Flexible(
+                flex: 1,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
                   child: Text(
@@ -71,11 +78,14 @@ class CustomCardWithImage extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
-                child:
-                    bodyText != null ? buildCardBody(icon) : const SizedBox(),
-              ),
+          bodyText != null ?Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
+                  child:
+                       buildCardBody(icon) ,
+                ),
+              ): const SizedBox(),
               body ?? const SizedBox()
             ],
           ),

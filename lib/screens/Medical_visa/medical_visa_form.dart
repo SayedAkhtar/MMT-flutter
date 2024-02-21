@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
-import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:logger/logger.dart';
@@ -19,7 +18,6 @@ import 'package:select_dialog/select_dialog.dart';
 
 import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
-import '../../constants/size_utils.dart';
 
 class MedicalVisaForm extends StatefulWidget {
   const MedicalVisaForm({super.key});
@@ -41,7 +39,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
   @override
   void initState() {
     // TODO: implement initState
-    selectedCountry = "Select Country";
+    selectedCountry = "Select Country".tr;
     super.initState();
   }
 
@@ -80,13 +78,13 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
               //   style: AppStyle.txtUrbanistRomanBold24,
               // ),
               _documentUploadListTile(
-                  title: "Upload Patient's Passport here",
+                  title: "Upload Patient's Passport here".tr,
                   name: 'patient_passport'),
               _documentUploadListTile(
-                  title: "Upload Attendant's Passport here",
+                  title: "Upload Attendant's Passport here".tr,
                   name: 'attendant_passport'),
               _documentUploadListTile(
-                  title: "Upload Second Attendant's Passport here, (If any)",
+                  title: "Upload Second Attendant's Passport here, (If any)".tr,
                   name: 'second_attendant_passport'),
               CustomSpacer.m(),
               FormLabel(
@@ -99,8 +97,9 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
               TextFormField(
                 validator: (text){
                   if(text == null || text.isEmpty){
-                    return 'Required';
+                    return 'Required'.tr;
                   }
+                  return null;
                 },
                 onFieldSubmitted: (String? name){
                 },
@@ -124,8 +123,9 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
               TextFormField(
                 validator: (text){
                   if(text == null || text.isEmpty){
-                    return 'Required';
+                    return 'Required'.tr;
                   }
+                  return null;
                 },
                 onFieldSubmitted: (String? name){
 
@@ -145,7 +145,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
               ),
               CustomSpacer.m(),
               FormLabel(
-                "To which country will you be applying \nfor the visa?".tr,
+                "Please select your destination country \nfor travel".tr,
               ),
               CustomSpacer.m(),
               FormLabel(
@@ -164,7 +164,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                     thickness: 0,
                     color: Colors.transparent,
                   ),
-                  items: <String>['Select Country','India']
+                  items: <String>['Select Country'.tr,'India']
                       .map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -173,7 +173,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                   }).toList(),
                   value: selectedCountry.isNotEmpty ? selectedCountry: "",
                   onChanged: (value) {
-                    if(value == 'Select Country'){
+                    if(value == 'Select Country'.tr){
                       return;
                     }
                     setState(() {
@@ -248,11 +248,11 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
                   bool res = await Get.put(QueryProvider()).postMedicalVisaQueryData(data);
                   if(res){
                     Get.defaultDialog(
-                      title: "Success",
-                      content: Text("A medical Query request has been successfully processed.\nPlease check the Query screen for updates on the query."),
+                      title: "Success".tr,
+                      content: Text("A medical Query request has been successfully processed.\nPlease check the Query screen for updates on the query.".tr),
                       confirm: ElevatedButton(onPressed: (){
                         Get.offNamed(Routes.home);
-                      }, child: Text("Go to Home"))
+                      }, child: Text("Go to Home".tr))
                     );
                   }
                 },
@@ -296,7 +296,7 @@ class _MedicalVisaFormState extends State<MedicalVisaForm> {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             File file = File(result.files.single.path!);
-            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents");
+            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents".tr);
             if (uploadedPath == null) {
               return;
             }

@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 
@@ -74,8 +72,29 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   color: MYcolors.whitecolor,
                   borderRadius: BorderRadius.circular(10),
                   border:
+                      Border.all(color: MYcolors.blacklightcolors, width: 0.5)),
+              height: MediaQuery.of(context).size.height * 0.06,
+              width: MediaQuery.of(context).size.width * 0.95,
+              child: Text(
+                "Lorem Ips is simply dummy text >",
+                style: TextStyle(
+                  fontFamily: "Brandon",
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  //
+                  color: MYcolors.whitecolor,
+                  borderRadius: BorderRadius.circular(10),
+                  border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),
@@ -106,7 +125,7 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   borderRadius: BorderRadius.circular(10),
                   border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),
@@ -137,7 +156,7 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   borderRadius: BorderRadius.circular(10),
                   border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),
@@ -168,7 +187,7 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   borderRadius: BorderRadius.circular(10),
                   border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),
@@ -199,7 +218,7 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   borderRadius: BorderRadius.circular(10),
                   border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),
@@ -230,38 +249,7 @@ class _FAQS_PageState extends State<FAQS_Page> {
                   borderRadius: BorderRadius.circular(10),
                   border:
                       Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
-                    // BoxShadow(
-                    //   // /color: Color.fromARGB(255, 189, 181, 181),
-                    //   color: Colors.grey.withOpacity(0.5),
-                    //   blurRadius: 2,
-                    //   spreadRadius: 0,
-                    //   offset: Offset(0, 1),
-                    // )
-                  ]),
-              // margin: EdgeInsets.only(left: 2),
-              height: MediaQuery.of(context).size.height * 0.06,
-              width: MediaQuery.of(context).size.width * 0.95,
-              child: Text(
-                "Lorem Ips is simply dummy text >",
-                style: TextStyle(
-                  fontFamily: "Brandon",
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  //
-                  color: MYcolors.whitecolor,
-                  borderRadius: BorderRadius.circular(10),
-                  border:
-                      Border.all(color: MYcolors.blacklightcolors, width: 0.5),
-                  boxShadow: [
+                  boxShadow: const [
                     // BoxShadow(
                     //   // /color: Color.fromARGB(255, 189, 181, 181),
                     //   color: Colors.grey.withOpacity(0.5),

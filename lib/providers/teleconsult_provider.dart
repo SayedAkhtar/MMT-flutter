@@ -1,27 +1,26 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
-import 'package:MyMedTrip/models/confirmed_query.dart';
-import 'package:MyMedTrip/models/doctor.dart';
-import 'package:MyMedTrip/models/query_screen_model.dart';
-import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
-import 'package:MyMedTrip/providers/doctor_provider.dart';
-import 'package:MyMedTrip/routes.dart';
 
 import '../controller/controllers/local_storage_controller.dart';
-import '../models/error_model.dart';
+
 
 class TeleconsultProvider extends BaseProvider {
-
+  final LocalStorageController _storage = Get.find<LocalStorageController>();
+  @override
+  void onInit(){
+    super.onInit();
+    httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
+  }
 
   Future<bool> uploadVisaDocuments({required String path, required String fieldName}) async{
     final form = FormData({});
     form.files.add(MapEntry("files", MultipartFile(File(path), filename: "${DateTime.now().microsecondsSinceEpoch}.${path.split('.').last}")));
-    form.fields.add(MapEntry("model_id", "6"));
+    form.fields.add(const MapEntry("model_id", "6"));
     form.fields.add(MapEntry("name", fieldName));
     try{
       Response? response = await post('/query-upload-visa',form);

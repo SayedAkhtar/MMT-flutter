@@ -1,13 +1,10 @@
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/components/CustomElevetedButton.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
-import 'package:MyMedTrip/components/StyledTextFormField.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -56,12 +53,12 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: Wrap(
               runSpacing: CustomSpacer.XS,
               children: [
-                const FormLabel("Old Password :"),
+                FormLabel("Old Password :".tr),
                 TextFormField(
                   controller: oldPasswordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your old password';
+                      return 'Please enter your old password'.tr;
                     }
                     return null;
                   },
@@ -73,15 +70,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
-                const FormLabel("New Password :"),
+                FormLabel("New Password :".tr),
                 TextFormField(
                   controller: newPasswordController,
                   validator: (value) {
                     if(value == null || value.isEmpty){
-                      return "Please enter new password";
+                      return "Please enter new password".tr;
                     }
                     if(value.length < 8){
-                      return "Minimum 8 characters required";
+                      return "Minimum 8 characters required".tr;
                     }
                     return null;
                   },
@@ -93,18 +90,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
-                const FormLabel("Re-Enter Password :"),
+                FormLabel("Re-Enter Password :".tr),
                 TextFormField(
                   controller: confirmPasswordController,
                   validator: (value) {
                     if(value == null || value.isEmpty){
-                      return "Please enter new password";
+                      return "Please enter new password".tr;
                     }
                     if(value != newPasswordController.text){
-                      return "Confirm password does not match";
+                      return "Confirm password does not match".tr;
                     }
                     if(value.length < 8){
-                      return "Minimum 8 characters required";
+                      return "Minimum 8 characters required".tr;
                     }
                     return null;
                   },

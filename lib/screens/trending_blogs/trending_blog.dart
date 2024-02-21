@@ -3,8 +3,6 @@
 import 'package:MyMedTrip/providers/home_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
@@ -239,7 +237,7 @@ class _TrendingBlogsState extends State<TrendingBlogs> {
             );
           }): Center(
         child: SizedBox(
-          child: noBlogs ? Center(child: Text("No Blogs Data Available"),):Center(child: CircularProgressIndicator(),),
+          child: noBlogs ? Center(child: Text("No Blogs Data Available".tr),):Center(child: CircularProgressIndicator(),),
         ),
       ),
     );

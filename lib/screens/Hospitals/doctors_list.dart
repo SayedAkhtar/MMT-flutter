@@ -90,7 +90,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
         ),
         leadingWidth: 64,
         height: getVerticalSize(kToolbarHeight),
-        title: Text("Doctors List", style: AppStyle.txtUrbanistRomanBold20),
+        title: Text("Doctors List".tr, style: AppStyle.txtUrbanistRomanBold20),
         centerTitle: true,
       ),
       body: Padding(
@@ -98,7 +98,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(CustomSpacer.S),
+              padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4, top: 4),
               margin: const EdgeInsets.only(bottom: CustomSpacer.S),
               decoration: BoxDecoration(
                   color: MYcolors.whitecolor,
@@ -111,7 +111,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                       offset: const Offset(0, 1),
                     )
                   ]),
-              height: CustomSpacer.M * 2,
+              // height: CustomSpacer.M * 2,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,9 +119,12 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(
+                        isDense: true,
                         hintText: 'Search for Doctors'.tr,
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 5, bottom: 7, top: 11),
+                        // contentPadding: EdgeInsets.only(left: 5, bottom: 7, top: 11),
+                          suffixIcon: Icon(Icons.search_rounded, size: 24,),
+                          suffixIconConstraints: BoxConstraints.tightFor(height: 20)
                       ),
                       onChanged: (String search){
                         _debouncer.run(() {
@@ -131,8 +134,6 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                       },
                     ),
                   ),
-                  CustomSpacer.s(),
-                  const Icon(Icons.search_rounded),
                 ],
               ),
             ),
@@ -170,12 +171,12 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
             //     }
             //   ),
             // ),
-            Builder(builder: (builder){
-              if(loading){
-                return Expanded(child: Center(child: CircularProgressIndicator(),));
-              }
-              return Expanded(
-                child: GridView.builder(
+            Expanded(
+              child: Builder(builder: (builder){
+                if(loading){
+                  return Expanded(flex:4, child: Center(child: CircularProgressIndicator(),));
+                }
+                return GridView.builder(
                     controller: lazyScrollController,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
@@ -183,6 +184,7 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                     itemBuilder: (_, i) {
                       return CustomCardWithImage(
                         width: getHorizontalSize(160),
+                        imageAlign: Alignment.topCenter,
                         onTap: () {
                           Get.toNamed(Routes.doctorPreviewNew,
                               arguments: {'id': _doctors?[i]!.id});
@@ -191,9 +193,9 @@ class _Doctors_list_pageState extends State<Doctors_list_page> {
                         title: _doctors![i]!.name!,
                         // bodyText: hospitals[i]!.address,
                       );
-                    }),
-              );
-            }),
+                    });
+              }),
+            ),
             loadingMore ?
             SizedBox(
               child: Center(child: CircularProgressIndicator(),),

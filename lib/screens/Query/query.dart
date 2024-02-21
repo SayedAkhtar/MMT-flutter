@@ -55,7 +55,7 @@ class _Query_pageState extends State<Query_page> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: CustomAppBar(showBack: false, pageName: "Active query"),
+      appBar: CustomAppBar(showBack: false, pageName: "Active query".tr),
       body: Padding(
         padding: const EdgeInsets.all(CustomSpacer.S),
         child: Column(
@@ -95,7 +95,7 @@ class _Query_pageState extends State<Query_page> {
                 return Expanded(
                   child: Center(
                     child: Text(
-                      "No queries opened yet. \nStart with clicking on Generate Query button to begin creating a new query.",
+                      "No queries opened yet. \nStart with clicking on Generate Query button to begin creating a new query.".tr,
                       style: AppStyle.txtSourceSansProSemiBold18,
                       textAlign: TextAlign.center,
                     ),
@@ -130,9 +130,9 @@ class _Query_pageState extends State<Query_page> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: double.infinity,
-                child: const Text(
-                  "Generate new query",
-                  style: TextStyle(
+                child: Text(
+                  "Generate new query".tr,
+                  style: const TextStyle(
                     color: MYcolors.whitecolor,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

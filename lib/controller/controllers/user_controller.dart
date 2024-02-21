@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
-import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
@@ -10,7 +9,6 @@ import 'package:MyMedTrip/models/user_model.dart';
 import 'package:MyMedTrip/providers/user_provider.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 
 import '../../models/user_family_model.dart';
 
@@ -29,10 +27,6 @@ class UserController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
@@ -99,13 +93,13 @@ class UserController extends GetxController {
     Loaders.loadingDialog(shouldCloseAll: false);
     bool res = await _provider.deleteFamilyMember(id);
     if(res){
-      List<UserFamily> _newList = [];
-      familiesList.forEach((element) {
+      List<UserFamily> newList = [];
+      for (var element in familiesList) {
         if(element.id != id){
-          _newList.add(element);
+          newList.add(element);
         }
-      });
-      familiesList = _newList;
+      }
+      familiesList = newList;
     }
     Get.back(closeOverlays: true);
     update();
@@ -148,6 +142,21 @@ class UserController extends GetxController {
     if(res != null){
       user = res;
     }
+    update();
+  }
+
+  void getAuthenticatedUser() async{
+    LocalUser? res = await _provider.getCurrentUser();
+    if(res != null) {
+      user = res;
+      update();
+    }
+  }
+
+  void updateFamilyNotificationStatus(int patientId) async{
+    Loaders.loadingDialog();
+    bool res = await _provider.changeFamilyNotificationStatus(patientId);
+    Loaders.closeLoaders();
     update();
   }
 

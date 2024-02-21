@@ -23,11 +23,11 @@ class User_Profile extends GetView<UserController> {
   @override
   Widget build(BuildContext context) {
     final LocalAuthentication auth = LocalAuthentication();
-    final AuthController _authController = Get.find<AuthController>();
-    final LocalStorageController _storage = Get.find<LocalStorageController>();
+    final AuthController authController = Get.find<AuthController>();
+    final LocalStorageController storage = Get.find<LocalStorageController>();
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Settings",
+        pageName: "Settings".tr,
         backFunction: (){
           Get.toNamed(Routes.home);
         },
@@ -76,10 +76,10 @@ class User_Profile extends GetView<UserController> {
                     CustomSpacer.s(),
                     _menuLinks(context, onTap: () {
                       Get.toNamed(Routes.profile);
-                    }, label: "Profile"),
+                    }, label: "Profile".tr),
                     _menuLinks(context, onTap: () {
                       Get.toNamed(Routes.listFamily);
-                    }, label: "Family Members"),
+                    }, label: "Family Members".tr),
                     _menuLinks(
                       context,
                       onTap: () async {
@@ -93,18 +93,18 @@ class User_Profile extends GetView<UserController> {
                         }
                         try {
                           var data = await auth.authenticate(
-                              localizedReason: "Use face id to authenticate",
+                              localizedReason: "Use face id to authenticate".tr,
                               options: AuthenticationOptions(
                                 stickyAuth: true,
                               ));
                           if(data){
-                            String? key = _storage.get('biometric');
+                            String? key = storage.get('biometric');
                             if(key == null){
                               controller.updateBiometric(controller.user!.id, controller.user!.gender, controller.user!.id);
-                              _storage.set(key : 'biometric', value: controller.user!.id.toString());
+                              storage.set(key : 'biometric', value: controller.user!.id.toString());
                             }else{
                               controller.updateBiometric(controller.user!.id, controller.user!.gender, null);
-                              _storage.delete(key: 'biometric');
+                              storage.delete(key: 'biometric');
                             }
                           }
                         } on PlatformException catch ( e) {
@@ -114,7 +114,7 @@ class User_Profile extends GetView<UserController> {
                           print(e.toString());
                         }
                       },
-                      label: "Biometric",
+                      label: "Biometric".tr,
                       linkAction: GetBuilder<UserController>(
                         builder: (ctrl) {
                           return Switch(
@@ -128,7 +128,7 @@ class User_Profile extends GetView<UserController> {
                     ),
                     _menuLinks(context, onTap: () {
                       Get.to(const ChangePassword());
-                    }, label: "Change Password"),
+                    }, label: "Change Password".tr),
                     // _menuLinks(context,
                     //     onTap: () {},
                     //     label: "Notifications",
@@ -137,13 +137,13 @@ class User_Profile extends GetView<UserController> {
                     //         "Manage if you want to receive updates about promotion features or news"),
                     _menuLinks(context, onTap: () {
                       Get.to(ChangeLanguagePage());
-                    }, label: "App Language"),
+                    }, label: "App Language".tr),
                     _menuLinks(context, onTap: () {
                       Get.toNamed(Routes.support);
-                    }, label: "Support"),
+                    }, label: "Support".tr),
                     _menuLinks(context, onTap: () {
                       Get.to(() => AboutApp());
-                    }, label: "About"),
+                    }, label: "About".tr),
                     TextButton(
                       style: TextButton.styleFrom(
                           foregroundColor: MYcolors.blackcolor,
@@ -152,7 +152,7 @@ class User_Profile extends GetView<UserController> {
                               vertical: CustomSpacer.XS,
                               horizontal: CustomSpacer.S)),
                       onPressed: () {
-                        _authController.logout();
+                        authController.logout();
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

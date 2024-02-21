@@ -14,8 +14,6 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:logger/logger.dart';
-import 'package:select_dialog/select_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
@@ -164,7 +162,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                       children: [
                         CustomSpacer.m(),
                         FormLabel(
-                          "From which country will you be applying for the visa?".tr,
+                          "Please select your destination country \nfor travel".tr,
                         ),
                         CustomSpacer.m(),
                         FormLabel(

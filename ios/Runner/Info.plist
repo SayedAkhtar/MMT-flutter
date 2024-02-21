@@ -24,6 +24,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -38,7 +40,7 @@
 	<key>NSContactsUsageDescription</key>
 	<string>$(PRODUCT_NAME) contact use</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Why is my app authenticating using face id?</string>
+	<string>Authenticate yourself using FaceID</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) location use</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -49,14 +51,21 @@
 	<string>This app requires to access your photo library to show image on profile and send via chat</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>$(PRODUCT_NAME) reminder use</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads to you.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
-	    <string>voip</string>
+		<string>audio</string>
 		<string>fetch</string>
-		<string>remote-notification</string>
 		<string>processing</string>
+		<string>remote-notification</string>
+		<string>voip</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
@@ -75,9 +84,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<true/>
-	<key>NSUserTrackingUsageDescription</key>
-    <string>This identifier will be used to deliver personalized ads to you.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

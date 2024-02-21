@@ -1,12 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/routes.dart';
-import 'package:MyMedTrip/screens/Video_consult/doctor_call.dart';
 
 import '../../constants/colors.dart';
 
@@ -41,7 +38,7 @@ class _Thank_you_pageState extends State<Thank_you_page> {
               ),
               Center(
                 child: Text(
-                  "We have received Your request for the video consultation.\nWe will consult with doctor and will inform you about his/her availability.\nIf not available in the said time slot we will arrange a new time which is convenient for both and let you know of the new time to get a confirmation.",
+                  "We have received Your request for the video consultation.\nWe will consult with doctor and will inform you about his/her availability.\nIf not available in the said time slot we will arrange a new time which is convenient for both and let you know of the new time to get a confirmation.".tr,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -61,7 +58,7 @@ class _Thank_you_pageState extends State<Thank_you_page> {
                   alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   child: Text(
-                    "Home",
+                    "Home".tr,
                     style: TextStyle(
                       color: MYcolors.whitecolor,
                       fontSize: 20,

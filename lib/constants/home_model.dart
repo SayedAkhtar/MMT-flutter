@@ -128,13 +128,36 @@ class DoctorsHome {
 }
 
 class Stories{
-  String? type;
+  String? thumbnail;
+  List<String>? images;
+  List<String>? videos;
+  String? description;
   String? value;
 
-  Stories({this.type, this.value});
+  Stories();
 
   Stories.fromJson(Map<String, dynamic> json){
-    type = json['type'];
-    value = json['value'];
+    List<String> tempImages = [];
+    List<String> tempVideos = [];
+    thumbnail = json['thumbnail'];
+    description = json['description'];
+    if(json['images'] != null){
+      json['images'].forEach((v) {
+        if(v != null && v!=""){
+          tempImages.add(v);
+        }
+      });
+    }
+
+    if(json['video'] != null){
+      json['video'].forEach((v) {
+        if(v != null && v!=""){
+          tempVideos.add(v);
+        }
+      });
+    }
+
+    images = tempImages;
+    videos = tempVideos;
   }
 }

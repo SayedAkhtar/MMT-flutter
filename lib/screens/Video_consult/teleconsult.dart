@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:MyMedTrip/screens/Video_consult/appointment_booking_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
@@ -24,7 +22,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
   List<Result> specializations = [];
   late TeleconsultController controller;
   Result? selectedOption;
-  bool _doctorsFound = false;
+  final bool _doctorsFound = false;
   bool isPopularDoctors = true;
   @override
   void initState() {
@@ -64,7 +62,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        pageName: "Video Consultation",
+        pageName: "Video Consultation".tr,
         showDivider: true,
       ),
       body: Padding(
@@ -73,7 +71,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FormLabel(
-              "Specializations",
+              "Specializations".tr,
             ),
             CustomSpacer.s(),
             DropdownButtonFormField<Result>(
@@ -104,7 +102,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                     .map<DropdownMenuItem<Result>>((Result value) {
                   return DropdownMenuItem<Result>(
                     value: value,
-                    child: Text(value.name!),
+                    child: Text(value.name),
                   );
                 }).toList()),
             CustomSpacer.s(),
@@ -112,14 +110,14 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
               children: [
                 isPopularDoctors
                     ? Text(
-                        "Popular Doctors",
+                        "Popular Doctors".tr,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
                       )
                     : Text(
-                        "Doctors",
+                        "Doctors".tr,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -127,9 +125,9 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                       ),
                 CustomSpacer.s(),
                 Obx(
-                  () => controller.doctors.value.length > 0
+                  () => controller.doctors.value.isNotEmpty
                       ? Text(
-                          "( Found ${controller.doctors.value.length} doctor )",
+                          "( ${"Found".tr} ${controller.doctors.value.length} ${"doctor".tr} )",
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 16,
@@ -147,8 +145,8 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                     if (controller.doctors.value.isEmpty) {
                       return Center(
                         child: Text(
-                          "Please select the \nspecialty from the list",
-                          style: AppStyle.txtUrbanistRomanBold24RedA200,
+                          "No doctor found for this specialty.\nPlease speak with us to help you better.".tr,
+                          style: AppStyle.txtUrbanistRomanBold24,
                           textAlign: TextAlign.center,
                         ),
                       );
@@ -172,8 +170,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                         backgroundImage:
                                             const AssetImage("Images/PR.png"),
                                         foregroundImage: controller.doctors
-                                                    .value[index].image! !=
-                                                null
+                                                    .value[index].image!.isNotEmpty
                                             ? NetworkImage(controller
                                                 .doctors.value[index].image!)
                                             : const AssetImage("Images/PR.png")
@@ -189,12 +186,12 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                         spacing: 4.0,
                                         children: [
                                           Text(
-                                            "${controller.doctors.value[index].name!}",
+                                            controller.doctors.value[index].name!,
                                             style:
                                                 AppStyle.txtUrbanistRomanBold24,
                                           ),
                                           Text(
-                                            "${controller.doctors.value[index].experience!} Years Of Experience",
+                                            "${controller.doctors.value[index].experience!} ${"Years Of Experience".tr}",
                                             style:
                                                 AppStyle.txtUrbanistRegular16,
                                           ),
@@ -252,7 +249,7 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                                                           .doctors[index],
                                                     ));
                                           },
-                                          child: Text("Book Now"))
+                                          child: Text("Book Now".tr))
                                     ],
                                   ),
                                 ],
@@ -266,12 +263,11 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                 }),
               ),
             ),
-            Container(
+            SizedBox(
               // alignment: Alignment.center,
-              height: MediaQuery.of(context).size.height * 0.05,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Text(
-                "Please remember that there is may be charge applied to video consulting",
+                "Please remember that there is may be charge applied to video consulting".tr,
                 style: TextStyle(
                     // color: MYcolors.whitecolor,
                     fontSize: 15,

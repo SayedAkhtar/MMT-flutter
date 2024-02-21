@@ -1,5 +1,5 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
@@ -14,6 +14,10 @@ class HomeProvider extends BaseProvider {
   @override
   void onInit() {
     super.onInit();
+    httpClient.addRequestModifier((dynamic request) {
+      request.headers['language'] = _storage.get("language") ?? "";
+      return request;
+    });
   }
 
   Future<Home?> getHomeData() async{
@@ -23,7 +27,7 @@ class HomeProvider extends BaseProvider {
       Home data = Home.fromJson(body);
       return data;
     } catch (error) {
-      Loaders.errorDialog("${error}", title: "Error");
+      Loaders.errorDialog("$error", title: "Error");
       printError(info: error.toString());
     }
     return null;
@@ -32,7 +36,7 @@ class HomeProvider extends BaseProvider {
   Future<dynamic> fetchBlogData({int page = 1}) async{
     List<Blog> blogs= [];
     try{
-      Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts?page=${page}');
+      Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts?page=$page');
       if(res.status.code == 200){
         print(res.headers);
         List<dynamic> json = res.body;
@@ -40,7 +44,7 @@ class HomeProvider extends BaseProvider {
           blogs.add(Blog.fromJson(element));
         }
       }
-    }catch(e, stacktrace){
+    }catch(e){
       print(e.toString());
       Logger().e(e.toString());
     }
@@ -56,6 +60,18 @@ class HomeProvider extends BaseProvider {
     } catch (error) {
       Loaders.errorDialog(error.toString());
     } finally {}
+    return false;
+  }
+
+  Future<bool> disconnectCall(String uid, String? userId) async {
+    try{
+      Response? response = await post("/decline-call", {'uid': uid, 'user_id': userId},
+        contentType: "application/json",);
+      var jsonString = await responseHandler(response);
+      return true;
+    }catch(error){
+      FirebaseCrashlytics.instance.log(error.toString());
+    }
     return false;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/models/doctor.dart';
 import 'package:MyMedTrip/models/testimony_model.dart';
 import 'package:MyMedTrip/models/treatment.dart';
@@ -12,7 +13,7 @@ class Hospital {
   bool? isActive;
   List<String>? banners;
   List<Treatment>? treatment;
-  List<Testimony>? testimony;
+  List<Stories>? testimony;
   List<Doctor>? doctors;
   List<Map<String, dynamic>>? blogs;
   Hospital(
@@ -43,9 +44,9 @@ class Hospital {
       });
     }
     if (json['testimonies'] != null) {
-      testimony = <Testimony>[];
+      testimony = <Stories>[];
       json['testimonies'].forEach((v) {
-        testimony!.add(Testimony.fromJson(v));
+        testimony!.add(Stories.fromJson(v));
       });
     }
     doctors = <Doctor>[];

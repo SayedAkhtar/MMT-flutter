@@ -1,5 +1,4 @@
 import 'package:MyMedTrip/helper/Utils.dart';
-import 'package:get/get.dart';
 
 class UserFamily {
   int? id;
@@ -10,6 +9,8 @@ class UserFamily {
   String? treatmentCountry;
   String? relationWithPatient;
   String? speciality;
+  int? familyUserId;
+  bool? notificationSubscribed;
 
   static const int TYPE_PATIENT = 1;
   static const int TYPE_DOCTOR = 4;
@@ -33,6 +34,8 @@ class UserFamily {
     treatmentCountry = json["treatment_country"];
     relationWithPatient = json['relationship'];
     speciality = json['speciality'];
+    familyUserId = json['family_user_id'];
+    notificationSubscribed = json['notification_subscribed'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

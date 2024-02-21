@@ -7,7 +7,6 @@ import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:logger/logger.dart';
-import 'package:path/path.dart';
 import 'package:pattern_formatter/date_formatter.dart';
 import 'package:select_dialog/select_dialog.dart';
 
@@ -107,19 +106,19 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
             ),
             DropdownButtonFormField(
               value: controller.user?.gender,
-              items: const [
+              items: [
                 DropdownMenuItem(
                   value: 'male',
                   enabled: true,
-                  child: Text('Male'),
+                  child: Text('Male'.tr),
                 ),
                 DropdownMenuItem(
                   value: 'female',
-                  child: Text('Female'),
+                  child: Text('Female'.tr),
                 ),
                 DropdownMenuItem(
                   value: 'other',
-                  child: Text('Other'),
+                  child: Text('Other'.tr),
                 ),
               ],
               onChanged: (String? value) {
@@ -156,7 +155,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
               onTap: (){
                 SelectDialog.showModal<String>(
                     context,
-                    label: "Select Country",
+                    label: "Select Country".tr,
                     selectedValue: controller.user!.treatmentCountry,
                     items: List.generate(countryName.length, (index) => countryName[index]),
                     onChange: (String selected) {
@@ -172,7 +171,7 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
-                child: Text(controller.user!.treatmentCountry!=null? controller.user!.treatmentCountry! : "Select Country", style: const TextStyle(fontSize: 16.0),),
+                child: Text(controller.user!.treatmentCountry!=null? controller.user!.treatmentCountry! : "Select Country".tr, style: const TextStyle(fontSize: 16.0),),
               ),
             ),
             SizedBox(

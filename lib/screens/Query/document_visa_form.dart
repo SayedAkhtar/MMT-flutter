@@ -9,10 +9,7 @@ import 'package:MyMedTrip/providers/query_provider.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/components/FormLabel.dart';
 import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
@@ -46,7 +43,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   @override
   void initState() {
     // TODO: implement initState
-    selectedCountry = "India";
+    selectedCountry = "India".tr;
     super.initState();
   }
 
@@ -74,7 +71,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   Widget build(BuildContext context) {
     if(formSubmitted){
       return Scaffold(
-        body: Center(child: Text("Please wait while Our HCF validates your documents.\nYou will be notified once its completed.",
+        body: Center(child: Text("Please wait while Our HCF validates your documents.\nYou will be notified once its completed.".tr,
           style: AppStyle.txtUrbanistRomanBold24, textAlign: TextAlign.center,),),
       );
     }
@@ -87,13 +84,13 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _documentUploadListTile(
-                    title: "Upload Patient's Passport here",
+                    title: "Upload Patient's Passport here".tr,
                     name: 'patient_passport'),
                 _documentUploadListTile(
-                    title: "Upload Attendant's Passport here",
+                    title: "Upload Attendant's Passport here".tr,
                     name: 'attendant_passport'),
                 _documentUploadListTile(
-                    title: "Upload Second Attendant's Passport here, (If any)",
+                    title: "Upload Second Attendant's Passport here, (If any)".tr,
                     name: 'second_attendant_passport'),
                 CustomSpacer.m(),
                 FormLabel(
@@ -108,6 +105,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     if(text == null || text.isEmpty){
                       return 'Required';
                     }
+                    return null;
                   },
                   onFieldSubmitted: (String? name){
                   },
@@ -131,8 +129,9 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 TextFormField(
                   validator: (text){
                     if(text == null || text.isEmpty){
-                      return 'Required';
+                      return 'Required'.tr;
                     }
+                    return null;
                   },
                   onFieldSubmitted: (String? name){
 
@@ -156,7 +155,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 ),
                 CustomSpacer.m(),
                 FormLabel(
-                  "To which country will you be applying \nfor the visa?".tr,
+                  "Please select your destination country \nfor travel".tr,
                 ),
                 FormLabel(
                   "Country".tr,
@@ -205,7 +204,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     }
                     SelectDialog.showModal<String>(
                       context,
-                      label: "Select City",
+                      label: "Select City".tr,
                       selectedValue: selectedCountry,
                       items:
                       List.generate(cityNames.length, (index) => cityNames[index]),
@@ -244,7 +243,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                       ));
                       return;
                     }
-                    QueryResponse data = widget.response!;
+                    QueryResponse data = widget.response;
                     Map<dynamic, dynamic> response = widget.response.response!;
                     data.currentStep = QueryStep.documentForVisa;
                     response['passport'] = patientPassport;
@@ -315,7 +314,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             File file = File(result.files.single.path!);
-            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents");
+            String? uploadedPath = await FirebaseFunctions.uploadImage(file, title: "Uploading Documents".tr);
             if (uploadedPath == null) {
               return;
             }

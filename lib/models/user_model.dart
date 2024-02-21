@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 
 class LocalUser {
   String? username;
@@ -54,7 +53,7 @@ class LocalUser {
       country = json['country'];
       dob = json['dob'] != null ? DateTime.parse(json['dob']): null;
       if(json["patient_details"] != null){
-        treatmentCountry = json["patient_details"]['treatment_country'] != null ? json["patient_details"]['treatment_country'] : '';
+        treatmentCountry = json["patient_details"]['treatment_country'] ?? '';
       }
       else if(json["treatment_country"] != null && (json["treatment_country"] != "")){
         treatmentCountry = json["treatment_country"];

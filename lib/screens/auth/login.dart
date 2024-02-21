@@ -15,12 +15,12 @@ import 'package:MyMedTrip/routes.dart';
 import '../../controller/controllers/local_storage_controller.dart';
 
 class LoginPage extends GetView<AuthController> {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final LocalAuthentication auth = LocalAuthentication();
-    final LocalStorageController _storage = Get.find<LocalStorageController>();
+    final LocalStorageController storage = Get.find<LocalStorageController>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -42,9 +42,7 @@ class LoginPage extends GetView<AuthController> {
                               Get.toNamed(Routes.languageSelector);
                             },
                             icon: Icons.arrow_back_ios_new_outlined),
-                        const Spacer(),
-                        SmallIconButton(
-                            onTap: () {}, icon: Icons.question_mark_rounded)
+                        const Spacer()
                       ],
                     ),
                   ),
@@ -66,7 +64,7 @@ class LoginPage extends GetView<AuthController> {
                               prefixIcon: const Icon(Icons.call),
                               contentPadding: const EdgeInsets.only(
                                   left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: "Phone",
+                              hintText: "Phone".tr,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -92,7 +90,7 @@ class LoginPage extends GetView<AuthController> {
                               obscuringCharacter: '*',
                               style: AppStyle.txtUrbanistRegular16WhiteA700,
                               decoration: InputDecoration(
-                                hintText: "Password",
+                                hintText: "Password".tr,
                                 contentPadding: const EdgeInsets.only(
                                     left: 15, bottom: 11, top: 11, right: 15),
                                 suffixIcon: IconButton(
@@ -116,77 +114,9 @@ class LoginPage extends GetView<AuthController> {
                   ),
                   CustomButton(
                     onTap: () {
-                      Get.defaultDialog(
-                        title: "Reset Password",
-                        contentPadding: const EdgeInsets.all(CustomSpacer.S),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              child: IntlPhoneField(
-                                style: AppStyle.txtUrbanistRegular16WhiteA700,
-                                controller: controller.phoneController,
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(Icons.call),
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 15, bottom: 11, top: 11, right: 15),
-                                  hintText: "Phone",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  counterText: "",
-                                ),
-                                onChanged: (phone) {
-                                  // controller.phoneController.text = phone.completeNumber;
-                                },
-                                onCountryChanged: (country){
-                                  // controller.phoneController.text = country.dialCode + controller.phoneController.text;
-                                },
-                                initialCountryCode: "IN",
-                                showCountryFlag: false,
-                                showDropdownIcon: false,
-                              ),
-                            ),
-                            CustomSpacer.s(),
-                            Obx(
-                              () => TextFormField(
-                                controller: controller.newPasswordController,
-                                keyboardType: TextInputType.visiblePassword,
-                                obscureText: !controller.showNewLoginPassword.value,
-                                obscuringCharacter: '*',
-                                style: AppStyle.txtUrbanistRegular16WhiteA700,
-                                decoration: InputDecoration(
-                                  hintText: "New Password",
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 15, bottom: 11, top: 11, right: 15),
-                                  suffixIcon: IconButton(
-                                    icon: controller.showNewLoginPassword.value
-                                        ? const Icon(Icons.visibility)
-                                        : const Icon(Icons.visibility_off),
-                                    onPressed: () {
-                                      controller.showNewLoginPassword.value =
-                                      !controller.showNewLoginPassword.value;
-                                    },
-                                  ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                              ),
-                            ),
-                            CustomSpacer.s(),
-                            CustomButton(
-                              onTap: () {
-                                controller.resetPassword();
-                              },
-                              text: "Send Reset Request",
-                              padding: ButtonPadding.PaddingAll8,
-                            ),
-                          ],
-                        )
-                      );
+                      Get.toNamed(Routes.forgotPassword);
                     },
-                    text: "Forgot password?",
+                    text: "${"Forgot password".tr} ?",
                     alignment: Alignment.bottomRight,
                     variant: ButtonVariant.OnlyText,
                     padding: ButtonPadding.PaddingAll8,
@@ -198,9 +128,9 @@ class LoginPage extends GetView<AuthController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't have an account? ",
-                        style: TextStyle(
+                      Text(
+                        "Don't have an account?".tr,
+                        style: const TextStyle(
                             fontFamily: "Brandon",
                             fontSize: 15,
                             color: MYcolors.blacklightcolors),
@@ -210,7 +140,7 @@ class LoginPage extends GetView<AuthController> {
                           controller.passwordController.text = "";
                           Get.toNamed(Routes.registerFirstStep);
                         },
-                        text: "sign up here?",
+                        text: "Sign up here?".tr,
                         alignment: Alignment.bottomLeft,
                         variant: ButtonVariant.OnlyText,
                         padding: ButtonPadding.PaddingAll8,
@@ -222,35 +152,35 @@ class LoginPage extends GetView<AuthController> {
                     onTap: () {
                       controller.login();
                     },
-                    text: "Sign in",
+                    text: "Sign in".tr,
                     padding: ButtonPadding.PaddingAll8,
                   ),
                   CustomButton(
                     onTap: () async {
                       try {
                         var data = await auth.authenticate(
-                            localizedReason: "Use face id to authenticate",
+                            localizedReason: "Use face id to authenticate".tr,
                             options: const AuthenticationOptions(
                               stickyAuth: true,
                             ));
                         if (data) {
-                          String? bioId = _storage.get('biometric');
+                          String? bioId = storage.get('biometric');
                           if (bioId == null || bioId.isEmpty) {
-                            Get.snackbar("Verification Failed",
-                                "Please re enable biometric from profile settings to use it",
+                            Get.snackbar("Verification Failed".tr,
+                                "Please re enable biometric from profile settings to use it".tr,
                                 snackPosition: SnackPosition.BOTTOM);
                           } else {
                             controller.loginWithBiometric(bioId);
                           }
                         }
                       } on PlatformException catch (e) {
-                        Get.snackbar("Not Supported", e.message.toString(),
+                        Get.snackbar("Not Supported".tr, e.message.toString(),
                             snackPosition: SnackPosition.BOTTOM);
                       } catch (e) {
                         print(e);
                       }
                     },
-                    text: "Biometric login",
+                    text: "Biometric login".tr,
                     alignment: Alignment.center,
                     variant: ButtonVariant.OnlyText,
                     padding: ButtonPadding.PaddingAll8,
@@ -279,7 +209,7 @@ class LoginPage extends GetView<AuthController> {
                   prefixIcon: const Icon(Icons.call),
                   contentPadding: const EdgeInsets.only(
                       left: 15, bottom: 11, top: 11, right: 15),
-                  hintText: "Phone",
+                  hintText: "Phone".tr,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -306,7 +236,7 @@ class LoginPage extends GetView<AuthController> {
                   obscuringCharacter: '*',
                   style: AppStyle.txtUrbanistRegular16WhiteA700,
                   decoration: InputDecoration(
-                    hintText: "Password",
+                    hintText: "Password".tr,
                     contentPadding: const EdgeInsets.only(
                         left: 15, bottom: 11, top: 11, right: 15),
                     suffixIcon: IconButton(

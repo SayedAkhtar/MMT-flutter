@@ -5,7 +5,7 @@ import '../constants/size_utils.dart';
 
 class CustomButton extends StatelessWidget {
   CustomButton(
-      {this.shape,
+      {super.key, this.shape,
         this.padding,
         this.variant,
         this.fontStyle,
@@ -336,6 +336,7 @@ enum ButtonVariant {
   OutlineCyan60001,
   FillRedA2001e,
   OnlyText,
+  Default
 }
 
 enum ButtonFontStyle {

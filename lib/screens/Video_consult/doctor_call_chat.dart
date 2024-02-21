@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 import '../../constants/colors.dart';
@@ -42,7 +39,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         color: MYcolors.greycolor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios,
                         size: 20,
                       )),
@@ -50,8 +47,8 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                     width: MediaQuery.of(context).size.width * 0.04,
                   ),
                   Text(
-                    "Doctor",
-                    style: TextStyle(
+                    "Doctor".tr,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                     ),
@@ -61,10 +58,10 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(CoordinatorCallPage());
+                      Get.to(const CoordinatorCallPage());
                     },
                     child: Container(
-                        padding: EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(3),
                         height: MediaQuery.of(context).size.height * 0.05,
                         width: MediaQuery.of(context).size.width * 0.1,
                         decoration: BoxDecoration(
@@ -88,7 +85,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         color: MYcolors.greycolor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.call,
                         size: 20,
                       )),
@@ -101,7 +98,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Divider(
+            const Divider(
               thickness: 1,
             ),
             Row(
@@ -110,7 +107,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: MYcolors.greycolor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(0),
@@ -126,7 +123,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height * 0.10,
                         width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
+                        child: const Text(
                           "Enjoy 4GB data valid till your current pack validity.Also get EXTRA 2GB on your next ",
                           style: TextStyle(
                             fontSize: 15,
@@ -143,14 +140,14 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
-                Text("05:08 PM"),
+                const Text("05:08 PM"),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: MYcolors.greenlightcolor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -166,7 +163,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height * 0.10,
                         width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
+                        child: const Text(
                           "Enjoy 4GB data valid till your current pack validity.Also get EXTRA 2GB on your next ",
                           style: TextStyle(
                             fontSize: 15,
@@ -184,7 +181,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("05:08 PM"),
+                const Text("05:08 PM"),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
@@ -196,7 +193,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: MYcolors.greycolor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -212,7 +209,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height * 0.29,
                         width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
+                        child: const Text(
                           "Image ",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -231,7 +228,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.05,
                 ),
-                Text("05:08 PM"),
+                const Text("05:08 PM"),
               ],
             ),
             Row(
@@ -240,7 +237,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: MYcolors.greycolor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(0),
@@ -256,7 +253,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                         alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height * 0.10,
                         width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
+                        child: const Text(
                           "Enjoy 4GB data valid till your current pack validity.Also get EXTRA 2GB on your next ",
                           style: TextStyle(
                             fontSize: 15,
@@ -273,7 +270,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
-                Text("05:08 PM"),
+                const Text("05:08 PM"),
               ],
             ),
             SizedBox(
@@ -284,14 +281,14 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
-                Container(
+                SizedBox(
                   // alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: TextFormField(
                     textAlign: TextAlign.start,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
+                      contentPadding: const EdgeInsets.only(
                           left: 15, bottom: 11, top: 11, right: 15),
                       hintText: "Type your messages..........",
                       border: OutlineInputBorder(
@@ -302,7 +299,7 @@ class _Doctor_call_chat_pageState extends State<Doctor_call_chat_page> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
-                Icon(Icons.image_outlined),
+                const Icon(Icons.image_outlined),
               ],
             )
           ],

@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/Settings_page/help_page.dart';
@@ -72,7 +70,7 @@ class _Login_fingerprint_pageState extends State<Login_fingerprint_page> {
             height: MediaQuery.of(context).size.height * 0.09,
           ),
           Text(
-            "Biometric Log in",
+            "Biometric Log in".tr,
             style: TextStyle(fontFamily: "Brandon", fontSize: 23),
           ),
           SizedBox(
@@ -86,7 +84,7 @@ class _Login_fingerprint_pageState extends State<Login_fingerprint_page> {
             height: MediaQuery.of(context).size.height * 0.01,
           ),
           Text(
-            "Touch the fingerprint sensor",
+            "Touch the fingerprint sensor".tr,
             style: TextStyle(
                 fontFamily: "BrandonMed",
                 fontSize: 15,
@@ -99,7 +97,7 @@ class _Login_fingerprint_pageState extends State<Login_fingerprint_page> {
             onTap: () {
             },
             child: Text(
-              "Or sign in with password",
+              "Or sign in with password".tr,
               style: TextStyle(
                   fontFamily: "Brandon",
                   fontSize: 19,

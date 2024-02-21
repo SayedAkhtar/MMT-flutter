@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
-import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/models/search_query_result_model.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
@@ -18,11 +17,9 @@ import 'package:MyMedTrip/controller/controllers/query_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/FirebaseFunctions.dart';
 import 'package:logger/logger.dart';
-import 'package:select_dialog/select_dialog.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
 
 class Generate_New_Query extends StatefulWidget {
@@ -65,7 +62,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
         leadingWidth: 64,
         height: getVerticalSize(kToolbarHeight),
         title:
-            Text("Generate New Query", style: AppStyle.txtUrbanistRomanBold20),
+            Text("Generate New Query".tr, style: AppStyle.txtUrbanistRomanBold20),
         centerTitle: true,
       ),
       body: Padding(
@@ -94,8 +91,8 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const FormLabel(
-                                  "Name",
+                                FormLabel(
+                                  "Name".tr,
                                 ),
                                 CustomSpacer.s(),
                                 TextFormField(
@@ -105,13 +102,14 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                     if(text == null || text.isEmpty){
                                       return 'Required';
                                     }
+                                    return null;
                                   },
                                   onFieldSubmitted: (String? name){
                                     controller.patientName = name!;
                                   },
                                   keyboardType: TextInputType.text,
                                   decoration: InputDecoration(
-                                    hintText: "Friend or Family Name",
+                                    hintText: "Friend or Family Name".tr,
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8)),
                                     contentPadding: const EdgeInsets.symmetric(vertical: CustomSpacer.XS, horizontal: CustomSpacer.XS),
@@ -120,7 +118,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                               ],
                             )),
                         CustomSpacer.s(),
-                        const FormLabel("Brief history of patient"),
+                        FormLabel("Brief history of patient".tr),
                         CustomSpacer.s(),
                         TextFormField(
                           textAlign: TextAlign.start,
@@ -135,11 +133,11 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                           },
                         ),
                         CustomSpacer.s(),
-                        const Row(
+                        Row(
                           children: [
                             Text(
-                              "Country preferred to travel",
-                              style: TextStyle(
+                              "Country preferred to travel".tr,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
@@ -182,7 +180,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                   context: context,
                                   actions: <BottomSheetAction>[
                                     BottomSheetAction(
-                                      title: const Text('Open Camera'),
+                                      title: Text('Open Camera'.tr),
                                       onPressed: (_) async {
                                         try {
                                           final XFile? cameraImage =
@@ -192,7 +190,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           String? imagePath =
                                               await FirebaseFunctions
                                                   .uploadImage(
-                                                      File(cameraImage.path), title: "Uploading Documents");
+                                                      File(cameraImage.path), title: "Uploading Documents".tr);
                                           if (imagePath != null) {
                                             controller.medicalVisaPath = [
                                               imagePath
@@ -207,23 +205,23 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                       },
                                     ),
                                     BottomSheetAction(
-                                      title: const Text(
-                                          'Choose file from Library'),
+                                      title: Text(
+                                          'Choose file from Library'.tr),
                                       onPressed: (_) async {
                                         try {
                                           FilePickerResult? result =
                                               await FilePicker.platform
                                                   .pickFiles(
-                                            dialogTitle: "Upload medical visa",
+                                            dialogTitle: "Upload medical visa".tr,
                                             type: FileType.custom,
                                             allowMultiple: true,
                                             allowedExtensions: ['pdf', 'docx'],
                                           );
                                           if (result != null) {
                                             List<File> files = [];
-                                            result.files.forEach((element) {
+                                            for (var element in result.files) {
                                               files.add(File(element.path!));
-                                            });
+                                            }
                                             List<String>? filesPaths =
                                                 await FirebaseFunctions
                                                     .uploadMultipleFiles(files);
@@ -241,8 +239,8 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                       },
                                     ),
                                     BottomSheetAction(
-                                      title: const Text('Remove Photo',
-                                          style: TextStyle(
+                                      title: Text('Remove Photo'.tr,
+                                          style: const TextStyle(
                                               color: MYcolors.redcolor)),
                                       onPressed: (_) {
                                         controller.medicalVisaPath = [];
@@ -252,9 +250,9 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                     ),
                                   ],
                                   cancelAction: CancelAction(
-                                      title: const Text(
-                                    'Cancel',
-                                    style: TextStyle(color: MYcolors.redcolor),
+                                      title: Text(
+                                    'Cancel'.tr,
+                                    style: const TextStyle(color: MYcolors.redcolor),
                                   )),
                                 );
                               },
@@ -281,7 +279,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                             CustomSpacer.xs(),
                             Expanded(
                               child: TranslatedText(
-                                text: "Upload medical documents",
+                                text: "Upload medical documents".tr,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -299,7 +297,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                   context: context,
                                   actions: <BottomSheetAction>[
                                     BottomSheetAction(
-                                      title: const Text('Open Camera'),
+                                      title: Text('Open Camera'.tr),
                                       onPressed: (_) async {
                                         try {
                                           final XFile? cameraImage =
@@ -309,7 +307,7 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                           String? imagePath =
                                               await FirebaseFunctions
                                                   .uploadImage(
-                                                      File(cameraImage.path), title: "Uploading Documents");
+                                                      File(cameraImage.path), title: "Uploading Documents".tr);
                                           if (imagePath != null) {
                                             controller.passportPath = [
                                               imagePath
@@ -324,13 +322,13 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                       },
                                     ),
                                     BottomSheetAction(
-                                      title: const Text('Choose from Library'),
+                                      title: Text('Choose from Library'.tr),
                                       onPressed: (_) async {
                                         FilePickerResult? result =
                                             await FilePicker.platform.pickFiles(
                                           allowMultiple: true,
                                           dialogTitle:
-                                              "Upload medical documents",
+                                              "Upload medical documents".tr,
                                           type: FileType.custom,
                                           allowedExtensions: [
                                             'jpeg',
@@ -343,12 +341,12 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
 
                                         if (result != null) {
                                           List<File> files = [];
-                                          result.files.forEach((element) {
+                                          for (var element in result.files) {
                                             files.add(File(element.path!));
-                                          });
+                                          }
                                           List<String>? filesPaths =
                                               await FirebaseFunctions
-                                                  .uploadMultipleFiles(files, title: "Uploading Documents");
+                                                  .uploadMultipleFiles(files, title: "Uploading Documents".tr);
                                           controller.passportPath = filesPaths!;
                                           controller.update();
                                         } else {
@@ -358,8 +356,8 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                       },
                                     ),
                                     BottomSheetAction(
-                                      title: const Text('Remove Photo',
-                                          style: TextStyle(
+                                      title: Text('Remove Photo'.tr,
+                                          style: const TextStyle(
                                               color: MYcolors.redcolor)),
                                       onPressed: (_) {
                                         controller.passportPath = [];
@@ -368,9 +366,9 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                                     ),
                                   ],
                                   cancelAction: CancelAction(
-                                      title: const Text(
-                                    'Cancel',
-                                    style: TextStyle(color: MYcolors.redcolor),
+                                      title: Text(
+                                    'Cancel'.tr,
+                                    style: const TextStyle(color: MYcolors.redcolor),
                                   )),
                                 );
                               },
@@ -399,10 +397,10 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02,
                             ),
-                            const Flexible(
+                            Flexible(
                               child: Text(
-                                "Upload passport if available",
-                                style: TextStyle(
+                                "Upload passport if available".tr,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -462,9 +460,9 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
               ),
               height: MediaQuery.of(context).size.height * 0.04,
               width: MediaQuery.of(context).size.width * 0.45,
-              child: const Text(
-                "For Yourself",
-                style: TextStyle(
+              child: Text(
+                "For Yourself".tr,
+                style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: MYcolors.blacklightcolors),
@@ -487,9 +485,9 @@ class _Generate_New_QueryState extends State<Generate_New_Query> {
               ),
               height: MediaQuery.of(context).size.height * 0.04,
               width: MediaQuery.of(context).size.width * 0.38,
-              child: const Text(
-                "For someone else",
-                style: TextStyle(
+              child: Text(
+                "For someone else".tr,
+                style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: MYcolors.blacklightcolors),
@@ -512,7 +510,7 @@ Widget fileAddedCounter(int length){
             style: AppStyle.txtUrbanistRomanBold32,
             children: [
               TextSpan(
-                  text: length > 1 ? "files added": "file added",
+                  text: length > 1 ? "files added".tr: "file added".tr,
                   style: AppStyle
                       .txtUrbanistRomanBold16)
             ]),
