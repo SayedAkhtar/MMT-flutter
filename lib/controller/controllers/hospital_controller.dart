@@ -8,8 +8,12 @@ class HospitalController extends GetxController {
   int openHospitalID = 0;
   Hospital? selectedHospital;
   RxString searchText = "".obs;
-  // RxList<Hospital>? hospitals = <Hospital>[].obs;
-  final hospital = Future.value(<Hospital?>[]).obs;
+  RxInt currentPage = 1.obs;
+ RxList<Hospital>? hospitals = <Hospital>[].obs;
+ RxBool loading = true.obs;
+ RxInt listCount = 0.obs;
+ RxBool listEnd = false.obs;
+  // final hospital = Future.value(<Hospital?>[]).obs;
   @override
   void onInit() {
     super.onInit();
@@ -39,9 +43,18 @@ class HospitalController extends GetxController {
     var hospital = _provider.getAllHospitals();
   }
 
-  Future<List<Hospital?>?> getHospitals() async{
-    List<Hospital?>? temp = await _provider.getAllHospitals(params: searchText.value);
-    hospital.value = _provider.getAllHospitals(params: searchText.value);
-    return temp;
+  void getHospitals() async{
+    String params = "page=${currentPage.value}";
+    if(searchText.value.isNotEmpty){
+      params = "query=${searchText.value}&page=${currentPage.value}";
+    }
+    print(params);
+    List<Hospital>? temp = await _provider.getAllHospitals(params: params);
+    listEnd.value = temp.isEmpty;
+    for (var element in temp) {
+      hospitals!.add(element);
+    }
+    loading.value = false;
+    currentPage = currentPage+1;
   }
 }

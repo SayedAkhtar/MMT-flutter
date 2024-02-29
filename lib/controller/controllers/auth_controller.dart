@@ -98,11 +98,11 @@ class AuthController extends GetxController {
       LocalUser? user = await _provider.register(body);
       if (user != null) {
         phoneController.text = phone;
-        _storageController.set(key: "token", value: user.token!);
+        // _storageController.set(key: "token", value: user.token!);
         otpType = "register";
         _user.user = user;
         update();
-        Get.offAllNamed(Routes.otpVerify);
+        Get.toNamed(Routes.otpVerify);
       }
 
     } catch (e) {
@@ -130,6 +130,7 @@ class AuthController extends GetxController {
       isLoggedIn.value = true;
       update();
       await Get.offAllNamed(Routes.home);
+      await updateFirebaseCreds();
     } else {
       await Get.offAllNamed(Routes.login);
     }
@@ -150,7 +151,7 @@ class AuthController extends GetxController {
       passwordController.text = "";
 
       try {
-       await _updateFirebaseCreds();
+       await updateFirebaseCreds();
       } catch (e) {
         Logger().d("Unknown error.");
       } finally {
@@ -225,7 +226,7 @@ class AuthController extends GetxController {
         _storageController.set(key: "token", value: res.token!);
         _user.user = res;
         update();
-        await _updateFirebaseCreds();
+        await updateFirebaseCreds();
         Get.offAllNamed(Routes.home);
       }
       if (otpType == "forgot_password") {
@@ -252,7 +253,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future _updateFirebaseCreds() async {
+  Future updateFirebaseCreds() async {
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
       String? apnToken;

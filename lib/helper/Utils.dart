@@ -1,14 +1,20 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:MyMedTrip/constants/api_constants.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/search_query_result_model.dart';
+import 'FirebaseFunctions.dart';
 
 class Utils {
   static void checkResponseVariableType(Map<String, dynamic> json) {
@@ -114,16 +120,22 @@ class Utils {
     return DateFormat('MM/dd/yyyy').parse(date);
   }
 
-  static localDateFromTimestamp(int timestamp){
-    return Utils.formatDate(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal());
+  static localDateFromTimestamp(int timestamp) {
+    return Utils.formatDate(
+        DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true)
+            .toLocal());
   }
 
-  static localDateTimeFromTimestamp(int timestamp){
-    return Utils.formatDateWithTime(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal());
+  static localDateTimeFromTimestamp(int timestamp) {
+    return Utils.formatDateWithTime(
+        DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true)
+            .toLocal());
   }
 
-  static localTimeFromTimestamp(int timestamp){
-    return DateFormat('jm').format((DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true).toLocal()));
+  static localTimeFromTimestamp(int timestamp) {
+    return DateFormat('jm').format(
+        (DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true)
+            .toLocal()));
   }
 
   static Future<File?> saveFileToDevice(String filename, String url) async {
@@ -193,5 +205,74 @@ class Utils {
 
   static String stripHtmlIfNeeded(String text) {
     return (Bidi.stripHtmlIfNeeded(text)).trim();
+  }
+
+  static Future<String?> uploadFromLibrary(
+    String title, {
+    List<String>? allowedExtensions,
+    bool multiple = false,
+    String? path
+  }) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: title,
+        type: FileType.custom,
+        allowMultiple: multiple,
+        allowedExtensions: allowedExtensions ?? ['pdf'],
+      );
+      if (result != null) {
+        var path = result.files.single.path!;
+        File imageFile = File(result.files.single.path!);
+        String? imagePath = await FirebaseFunctions.uploadImage(imageFile, ref: path);
+        return imagePath;
+      }
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      return null;
+    }
+    return null;
+  }
+  static Future<String?> uploadFromCamera() async {
+    try {
+      final XFile? cameraImage = await ImagePicker()
+          .pickImage(source: ImageSource.camera);
+      if (cameraImage == null) return null;
+      File imageFile = File(cameraImage.path);
+      String? imagePath =
+          await FirebaseFunctions.uploadImage(
+          imageFile);
+      if (imagePath != null) return imagePath;
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      return null;
+    }
+    return null;
+  }
+
+  static void openWhatsapp({required String text, required String number}) async {
+    var whatsapp = number; //+92xx enter like this
+    var whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
+    var whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
+    if (Platform.isIOS) {
+      // for iOS phone only
+      if (await canLaunchUrl(Uri.parse(whatsappURLIos))) {
+        await launchUrl(Uri.parse(
+          whatsappURLIos,
+        ));
+      } else {
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } else {
+      // android , web
+      if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+        await launchUrl(Uri.parse(whatsappURlAndroid));
+      } else {
+        Get.snackbar("Whatsapp not installed".tr,
+            "Please install whatsapp on your device and try again.".tr,
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    }
   }
 }

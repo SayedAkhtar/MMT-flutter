@@ -75,6 +75,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
 
   @override
   Widget build(BuildContext context) {
+    print(vil);
     return Scaffold(
       body: SingleChildScrollView(
         child: Builder(builder: (ctrl) {
@@ -162,7 +163,7 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
                       children: [
                         CustomSpacer.m(),
                         FormLabel(
-                          "Please select your destination country \nfor travel".tr,
+                          "Please select your destination country for travel".tr,
                         ),
                         CustomSpacer.m(),
                         FormLabel(
@@ -206,115 +207,6 @@ class _EditDocumentForVisaFormState extends State<EditDocumentForVisaForm> {
             ),
           );
         }),
-      ),
-    );
-  }
-
-  Widget _documentUploadListTile(
-      {required String title, required String name}) {
-    return ListTile(
-      dense: false,
-      contentPadding:
-          EdgeInsets.only(left: 0.0, right: 0.0, bottom: CustomSpacer.M),
-      leading: InkWell(
-        onTap: () async {
-          FilePickerResult? result = await FilePicker.platform.pickFiles();
-          if (result != null) {
-            File file = File(result.files.single.path!);
-            String? uploadedPath = await FirebaseFunctions.uploadImage(file);
-            if (uploadedPath == null) {
-              return;
-            }
-            if (name == 'patient_passport') {
-              setState(() {
-                patientPassport = uploadedPath;
-              });
-            }
-            if (name == 'attendant_passport') {
-              setState(() {
-                attendantPassport.add(uploadedPath);
-              });
-            }
-            if (name == 'second_attendant_passport') {
-              setState(() {
-                attendantPassport.add(uploadedPath);
-              });
-            }
-            // _controller.uploadVisaDocuments(path: result.files.first.path!, name: name);
-            // File file = File();
-          } else {
-            // User canceled the picker
-          }
-        },
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7),
-              border: Border.all(color: MYcolors.blackcolor, width: 0.2),
-            ),
-            height: 100,
-            width: 60,
-            child: Builder(builder: (context) {
-              if (name == 'patient_passport') {
-                if (patientPassport != "") {
-                  // if(patient_passport.split('.').last == 'pdf'){
-                  return Image.asset('assets/icons/pdf_file.png');
-                  // }
-                  // return Image.file(File(patient_passport));
-                }
-              }
-              if (name == 'attendant_passport') {
-                if (attendantPassport.isNotEmpty) {
-                  // if(attendant_passport.split('.').last == 'pdf'){
-                  return Image.asset('assets/icons/pdf_file.png');
-                  // }
-                  // return Image.file(File(attendant_passport));
-                }
-              }
-              if (name == 'second_attendant_passport') {
-                if (attendantPassport.asMap().containsKey(1)) {
-                  // if(second_attendant_passport.split('.').last == 'pdf'){
-                  return Image.asset('assets/icons/pdf_file.png');
-                  // }
-                  // return Image.file(File(second_attendant_passport));
-                }
-              }
-              return Icon(Icons.add);
-            })),
-      ),
-      title: Text(
-        title.tr,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      trailing: TextButton(
-        onPressed: () {
-          if (name == 'patient_passport') {
-            setState(() {
-              patientPassport = "";
-            });
-          }
-          if (name == 'attendant_passport') {
-            setState(() {
-              attendantPassport = [];
-            });
-          }
-          if (name == 'second_attendant_passport') {
-            setState(() {
-              secondAttendantPassport = "";
-            });
-          }
-        },
-        style: IconButton.styleFrom(
-          padding: EdgeInsets.all(CustomSpacer.S),
-          shape: CircleBorder(side: BorderSide(color: MYcolors.greycolor)),
-        ),
-        child: const Icon(
-          Icons.delete_outline,
-          color: MYcolors.greycolor,
-        ),
       ),
     );
   }

@@ -12,6 +12,9 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/theme/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../constants/api_constants.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
   const DoctorDetailScreen({super.key});
@@ -169,6 +172,24 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                                 fontWeight: FontWeight.w400))
                       ]),
                       textAlign: TextAlign.left),
+                ),
+
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: CustomSpacer.S),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Utils.openWhatsapp(text: "Hello, I have query regarding MyMedTrip.".tr,
+                          number: WHATSAPP_NUMBER);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                        MYcolors.bluecolor),
+                    child: Text(
+                      "Talk to us now".tr,
+                      style: AppStyle.txtRobotoRegular20
+                          .copyWith(color: Colors.white),
+                    ),),
                 ),
                 Visibility(
                     visible: doctor!.specialization!.isNotEmpty,

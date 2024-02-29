@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/constants/colors.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../controller/controllers/hospital_controller.dart';
 import '../../models/hospital_model.dart';
@@ -19,6 +20,14 @@ class HospitalsListPage extends GetView<HospitalController> {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController lazyScrollController = ScrollController();
+    lazyScrollController.addListener(() {
+      if(lazyScrollController.position.pixels == lazyScrollController.positions.last.maxScrollExtent){
+        if(!controller.listEnd.value){
+          controller.getHospitals();
+        }
+      }
+    });
     Debouncer? debouncer = Debouncer(milliseconds: 800);
     controller.getHospitals();
     return Scaffold(
@@ -69,8 +78,10 @@ class HospitalsListPage extends GetView<HospitalController> {
                       onChanged: (String search){
 
                         debouncer.run(() {
-                          String query = "query=$search&page=1";
-                          controller.searchText.value = query;
+                          controller.hospitals!.value = [];
+                          controller.loading.value=true;
+                          controller.currentPage.value = 1;
+                          controller.searchText.value = search;
                           controller.getHospitals();
                         });
                         // print(search);
@@ -85,41 +96,65 @@ class HospitalsListPage extends GetView<HospitalController> {
             Expanded(
               child: Obx(
                  (){
-                  return FutureBuilder(
-                    future: controller.hospital.value,
-                    builder: (_, snapshot) {
-                      if(snapshot.connectionState == ConnectionState.waiting){
-                        return Center(child: CircularProgressIndicator(),);
-                      }else if(snapshot.connectionState == ConnectionState.done){
-                        if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
-                          List<Hospital?>? hospitals = snapshot.data;
-                          return GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (_, i) {
-                              return CustomCardWithImage(
-                            width: getHorizontalSize(160),
-                            fit: BoxFit.fitWidth,
-                            imageAlign: Alignment.center,
-                            imagePadding: EdgeInsets.symmetric(horizontal: 10),
-                            onTap: () {
-                              Get.toNamed(Routes.hospitalPreview,
-                                  arguments: {'id': hospitals[i]!.id});
-                            },
-                            imageUri: hospitals![i]!.logo,
-                            title: hospitals[i]!.name!,
-                            // bodyText: hospitals[i]!.address,
-                          );
-                        }
-                          );
-                        }
-                        else{
-                          return Center(child: Text("No Hospitals to show".tr),);
-                        }
-                      }
-                      return SizedBox();
-                    }
-                  );
+                   if(controller.loading.value == true){
+                     return Center(child: CircularProgressIndicator(),);
+                   }
+                   return GridView.builder(
+                       controller: lazyScrollController,
+                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                       itemCount: controller.hospitals!.length,
+                       itemBuilder: (_, i) {
+                         return CustomCardWithImage(
+                           width: getHorizontalSize(160),
+                           fit: BoxFit.fitWidth,
+                           imageAlign: Alignment.center,
+                           imagePadding: EdgeInsets.symmetric(horizontal: 10),
+                           onTap: () {
+                             Get.toNamed(Routes.hospitalPreview,
+                                 arguments: {'id': controller.hospitals![i].id});
+                           },
+                           imageUri: controller.hospitals![i].logo,
+                           title: controller.hospitals![i].name!,
+                           // bodyText: hospitals[i]!.address,
+                         );
+                       }
+                   );
+                  // return FutureBuilder(
+                  //   future: controller.hospital.value,
+                  //   builder: (_, snapshot) {
+                  //     if(snapshot.connectionState == ConnectionState.waiting){
+                  //       return Center(child: CircularProgressIndicator(),);
+                  //     }else if(snapshot.connectionState == ConnectionState.done){
+                  //       if(snapshot.hasData && snapshot.data != null &&snapshot.data!.isNotEmpty){
+                  //         List<Hospital?>? hospitals = snapshot.data;
+                  //         return GridView.builder(
+                  //           controller: lazyScrollController,
+                  //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  //           itemCount: snapshot.data!.length,
+                  //           itemBuilder: (_, i) {
+                  //             return CustomCardWithImage(
+                  //           width: getHorizontalSize(160),
+                  //           fit: BoxFit.fitWidth,
+                  //           imageAlign: Alignment.center,
+                  //           imagePadding: EdgeInsets.symmetric(horizontal: 10),
+                  //           onTap: () {
+                  //             Get.toNamed(Routes.hospitalPreview,
+                  //                 arguments: {'id': hospitals[i]!.id});
+                  //           },
+                  //           imageUri: hospitals![i]!.logo,
+                  //           title: hospitals[i]!.name!,
+                  //           // bodyText: hospitals[i]!.address,
+                  //         );
+                  //       }
+                  //         );
+                  //       }
+                  //       else{
+                  //         return Center(child: CircularProgressIndicator(),);
+                  //       }
+                  //     }
+                  //     return SizedBox();
+                  //   }
+                  // );
                 }
               ),
             ),

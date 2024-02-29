@@ -1,6 +1,7 @@
 import 'package:MyMedTrip/components/CustomImageView.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/constants/size_utils.dart';
+import 'package:MyMedTrip/controller/controllers/auth_controller.dart';
 import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/models/faq_model.dart';
 import 'package:MyMedTrip/providers/home_provider.dart';
@@ -23,6 +24,7 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/screens/Home_screens/SearchScreen.dart';
 import 'package:MyMedTrip/screens/trending_blogs/read_blog.dart';
+import 'package:logger/logger.dart';
 
 import '../../components/RowHeader.dart';
 import '../update_screen/connect_coordinotor.dart';
@@ -80,7 +82,7 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        Logger().e(e);
       }
     }
   }
@@ -96,7 +98,6 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
       }
     }
   }

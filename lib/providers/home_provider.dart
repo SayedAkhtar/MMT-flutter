@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/home_model.dart';
 import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
@@ -38,23 +43,28 @@ class HomeProvider extends BaseProvider {
     try{
       Response res = await GetConnect(allowAutoSignedCert: true).get('https://mymedtrip.com/wp-json/wp/v2/posts?page=$page');
       if(res.status.code == 200){
-        print(res.headers);
         List<dynamic> json = res.body;
         for (var element in json) {
           blogs.add(Blog.fromJson(element));
         }
       }
     }catch(e){
-      print(e.toString());
       Logger().e(e.toString());
     }
     return blogs;
   }
 
-  Future<bool> updateFirebase(String uid, String fcm) async{
+  Future<bool> updateFirebase() async{
     try {
-      Loaders.loadingDialog();
-      Response? response = await post("/update-firebase", {'uid': uid, 'token': fcm},
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      final fcm = await FirebaseMessaging.instance.getToken();
+      String? apnToken;
+      String? apnsToken;
+      if (Platform.isIOS) {
+        apnToken = await FlutterCallkitIncoming.getDevicePushTokenVoIP();
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      }
+      Response? response = await post("/update-firebase", {'uid': userCredential.user!.uid, 'token': fcm},
         contentType: "application/json",);
       var jsonString = await responseHandler(response);
     } catch (error) {

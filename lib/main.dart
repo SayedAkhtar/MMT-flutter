@@ -12,6 +12,7 @@ import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -19,16 +20,17 @@ import 'package:MyMedTrip/firebase_options.dart';
 import 'package:MyMedTrip/locale/AppTranslation.dart';
 import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/login/loading_page.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider_android/path_provider_android.dart';
 import 'package:path_provider_ios/path_provider_ios.dart';
 import 'bindings/InitialBinding.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await firebaseFunctions.handleOnMessage(message);
-  // await showCallkitIncoming(message.data['uuid'], message.data['patient_name'], message.data['avatar'], message.data['patient_phone']);
+  await firebaseFunctions.handleOnMessage(message, isBackground: true);
 }
 Future<void> showCallkitIncoming(String uuid, String? name, String? avatar, String? phone) async {
   final params = CallKitParams(
@@ -75,7 +77,7 @@ Future<void> showCallkitIncoming(String uuid, String? name, String? avatar, Stri
   await FlutterCallkitIncoming.showCallkitIncoming(params);
 }
 
-FirebaseFunctions firebaseFunctions = FirebaseFunctions();
+final FirebaseFunctions firebaseFunctions = FirebaseFunctions();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,14 +90,17 @@ void main() async {
   if (Platform.isIOS) {
     PathProviderIOS.registerWith();
     await Firebase.initializeApp();
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
   }
 
   firebaseFunctions.initCrashAnalytics();
-
+  // firebaseFunctions.initFirebaseBackground();
   //=========== Firebase Messaging Code ==============//
   // await FirebaseMessaging.instance.getToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: true,
@@ -113,9 +118,7 @@ void main() async {
 
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
-    if(Platform.isIOS) {
-    }
-    await firebaseFunctions.handleOnMessage(message);
+    await firebaseFunctions.handleOnMessage(message, isBackground: false);
   });
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async{
     await firebaseFunctions.handleOnMessageOpened(message);
@@ -139,25 +142,39 @@ void main() async {
     }
     FlutterError.presentError(details);
   };
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+  if(initialMessage != null){
+   await firebaseFunctions.handleOnMessageOpened(initialMessage);
+  }
+
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  runApp(GetMaterialApp(
-    home: const Loading_page(),
-    debugShowCheckedModeBanner: false,
-    initialBinding: InitialBinding(),
-    translationsKeys: AppTranslation.translationsKeys,
-    locale: Get.deviceLocale,
-    fallbackLocale: const Locale('en', 'US'),
-    defaultTransition: Transition.fade,
-    title: "My Medical Trip",
-    getPages: getPages,
-    theme: ThemeData(
-      fontFamily: AppStyle.txtUrbanistRegular16.fontFamily,
-      fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!],
-    ),
-    smartManagement: SmartManagement.keepFactory,
+  await SentryFlutter.init(
+        (options) {
+      options.dsn = 'https://f22971999f078fb42d0bd57986fd17d2@o4506792716075008.ingest.sentry.io/4506792717516800';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(GetMaterialApp(
+      home: const Loading_page(),
+      debugShowCheckedModeBanner: false,
+      initialBinding: InitialBinding(),
+      translationsKeys: AppTranslation.translationsKeys,
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en', 'US'),
+      defaultTransition: Transition.fade,
+      title: "My Medical Trip",
+      getPages: getPages,
+      theme: ThemeData(
+        fontFamily: AppStyle.txtUrbanistRegular16.fontFamily,
+        fontFamilyFallback: [AppStyle.txtSourceSansProSemiBold14.fontFamily!],
+      ),
+      smartManagement: SmartManagement.keepFactory,
 
-  ));
+    )),
+  );
 }

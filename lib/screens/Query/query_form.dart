@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:MyMedTrip/components/CustomAppBar.dart';
 import 'package:MyMedTrip/constants/query_type.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
@@ -6,6 +8,7 @@ import 'package:MyMedTrip/routes.dart';
 import 'package:MyMedTrip/screens/Query/pay_page_form.dart';
 import 'package:MyMedTrip/screens/Query/upload_ticket_visa_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../constants/colors.dart';
@@ -35,6 +38,7 @@ class _QueryFormState extends State<QueryForm> {
   bool isEditable = false;
   DateTime? currentBackPressTime;
   List<int> editableSteps = [];
+  QueryProvider provider= Get.put(QueryProvider());
 
   List<String> stepName = [
     "Doctor's \nReply".tr,
@@ -56,15 +60,21 @@ class _QueryFormState extends State<QueryForm> {
     if(widget.queryId == 0) {
       return;
     }
-    QueryResponse res = await Get.put(QueryProvider()).getQueryStepData(queryId, stepNo);
-    setState(() {
-      response = res;
-      paymentRequired = res.paymentRequired!;
-      nextQueryStep = res.nextStep!;
-      loading = false;
-      editableSteps = res.editableSteps!;
-    });
+    if(!mounted){
+      return;
+    }
+    QueryResponse? res = await provider.getQueryStepData(queryId, stepNo);
+    if(res != null){
+      setState(() {
+        response = res;
+        paymentRequired = res.paymentRequired!;
+        nextQueryStep = res.nextStep!;
+        loading = false;
+        editableSteps = res.editableSteps!;
+      });
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +87,22 @@ class _QueryFormState extends State<QueryForm> {
           Get.toNamed(Routes.home);
         },
       ),
-      body: WillPopScope(
-        onWillPop: ()async {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (_){
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
               now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
             currentBackPressTime = now;
             Get.showSnackbar( GetSnackBar(title: "Are you sure to you want to exit ?".tr, message: "Press back button twice to close the app.".tr,duration: const Duration(milliseconds: 2),));
-            return Future.value(false);
+          }else{
+            if(Platform.isIOS) {
+              exit(0);
+            }else{
+              SystemNavigator.pop();
+            }
           }
-          return Future.value(true);
+
         },
         child: SafeArea(
           child: Container(
@@ -120,6 +136,9 @@ class _QueryFormState extends State<QueryForm> {
                             isActive: (currentQueryStep >= QueryStep.documentForVisa) || editableSteps.contains(QueryStep.doctorResponse),
                             isLast: false,
                             function: () {
+                              if(!editableSteps.contains(QueryStep.documentForVisa) && response!.currentStep != QueryStep.documentForVisa){
+                                return;
+                              }
                               setState(() {
                                 currentQueryStep = QueryStep.documentForVisa;
                                 // isEditable = true;
@@ -132,10 +151,16 @@ class _QueryFormState extends State<QueryForm> {
                         paymentRequired
                             ? CustomStep(
                                 stepName: stepName[2],
-                                isActive: currentQueryStep >=
+                                isActive: response!.currentStep! >=
                                     QueryStep.payment,
                                 isLast: false,
                                 function: () {
+                                  setState(() {
+                                    currentQueryStep = QueryStep.payment;
+                                    // isEditable = true;
+                                    loading = true;
+                                  });
+                                  fetchStepData(widget.queryId!, QueryStep.payment);
                                 })
                             : const SizedBox(),
                         CustomStep(
@@ -144,9 +169,14 @@ class _QueryFormState extends State<QueryForm> {
                             (currentQueryStep >= QueryStep.ticketsAndVisa) || editableSteps.contains(QueryStep.ticketsAndVisa),
                             isLast: true,
                             function: () {
+                              print(editableSteps);
+                              print(response!.currentStep);
+                              if(!editableSteps.contains(QueryStep.ticketsAndVisa) && response!.currentStep != QueryStep.ticketsAndVisa){
+                                return;
+                              }
                               setState(() {
                                 currentQueryStep = QueryStep.ticketsAndVisa;
-                                isEditable = true;
+                                isEditable = editableSteps.contains(QueryStep.ticketsAndVisa);
                                 loading = true;
                               });
                               fetchStepData(widget.queryId!, QueryStep.ticketsAndVisa);
@@ -173,17 +203,20 @@ class _QueryFormState extends State<QueryForm> {
                           ]),
                       child: Builder(
                         builder: (context){
+                          bool isCompleted = editableSteps.contains(currentQueryStep);
                           if(loading){
                             return const Center(child: SizedBox(child: CircularProgressIndicator()));
                           }
                           switch (currentQueryStep) {
                             case QueryStep.doctorResponse:
-                              return DoctorReplyForm(response!);
+                              return DoctorReplyForm(response!, isCompleted: isCompleted);
                             case QueryStep.documentForVisa:
-                              if(response!.response!.isEmpty){
-                                return DocumentForVisaForm(response!);
+
+                              if(response!.response!['vil'] != null && response!.response!['vil'] != ""){
+                                return EditDocumentForVisaForm(response!);
                               }
-                              return EditDocumentForVisaForm(response!);
+                              return DocumentForVisaForm(response!, formSubmitted: !(response!.response!.isEmpty));
+
                             case QueryStep.payment:
                               return PayPageForm(response!);
                             case QueryStep.ticketsAndVisa:

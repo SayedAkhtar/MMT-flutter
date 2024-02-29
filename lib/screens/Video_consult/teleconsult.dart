@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:MyMedTrip/constants/size_utils.dart';
 import 'package:MyMedTrip/screens/Video_consult/appointment_booking_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -125,9 +126,9 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                       ),
                 CustomSpacer.s(),
                 Obx(
-                  () => controller.doctors.value.isNotEmpty
+                  () => controller.doctors.isNotEmpty
                       ? Text(
-                          "( ${"Found".tr} ${controller.doctors.value.length} ${"doctor".tr} )",
+                          "( ${"Found".tr} ${controller.doctors.length} ${"doctor".tr} )",
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 16,
@@ -142,136 +143,143 @@ class _TeLe_Consult_pageState extends State<TeLe_Consult_page> {
                 margin: EdgeInsets.only(top: 10),
                 child: Obx(() {
                   if (!controller.isSearchingDoctor.value) {
-                    if (controller.doctors.value.isEmpty) {
+                    if (controller.doctors.isEmpty) {
                       return Center(
                         child: Text(
-                          "No doctor found for this specialty.\nPlease speak with us to help you better.".tr,
+                          "No doctor found for this specialty.\nPlease speak with us to help you better."
+                              .tr,
                           style: AppStyle.txtUrbanistRomanBold24,
                           textAlign: TextAlign.center,
                         ),
                       );
                     }
                     return ListView.builder(
-                        itemCount: controller.doctors.value.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 15,
-                            shadowColor: MYcolors.bluecolor.withAlpha(80),
-                            shape: RoundedRectangleBorder(
+                      itemCount: controller.doctors.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 15,
+                          shadowColor: MYcolors.bluecolor.withAlpha(80),
+                          clipBehavior: Clip.hardEdge,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(CustomSpacer.S),
-                              child: Wrap(
-                                runSpacing: 10,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage:
-                                            const AssetImage("Images/PR.png"),
-                                        foregroundImage: controller.doctors
-                                                    .value[index].image!.isNotEmpty
-                                            ? NetworkImage(controller
-                                                .doctors.value[index].image!)
-                                            : const AssetImage("Images/PR.png")
-                                                as ImageProvider,
-                                        minRadius: 30,
+                            padding: const EdgeInsets.all(CustomSpacer.S),
+                            child: Wrap(
+                              runSpacing: 10,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage:
+                                          const AssetImage("Images/PR.png"),
+                                      foregroundImage: controller
+                                              .doctors[index].image!.isNotEmpty
+                                          ? NetworkImage(
+                                              controller.doctors[index].image!)
+                                          : const AssetImage("Images/PR.png")
+                                              as ImageProvider,
+                                      minRadius: 30,
+                                    ),
+                                    CustomSpacer.s(),
+                                    Wrap(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      direction: Axis.vertical,
+                                      clipBehavior: Clip.hardEdge,
+                                      runSpacing: 8.0,
+                                      spacing: 4.0,
+                                      children: [
+                                        Text(
+                                          controller.doctors[index].name!,
+                                          style:
+                                              AppStyle.txtUrbanistRomanBold24,
+                                        ),
+                                        Text(
+                                          "${controller.doctors[index].experience!} ${"Years Of Experience".tr}",
+                                          style: AppStyle.txtUrbanistRegular16,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    CustomSpacer.xs(),
+                                    Icon(Icons.favorite_border_outlined),
+                                    CustomSpacer.xs(),
+                                    Flexible(
+                                      child: Text(
+                                        "${controller.doctors[0].specialization!.join(', ')} ",
+                                        style: AppStyle.txtUrbanistRegular18
+                                            .copyWith(
+                                                fontWeight: FontWeight.w500),
+                                        softWrap: true,
+                                        overflow: TextOverflow.fade,
                                       ),
-                                      CustomSpacer.s(),
-                                      Wrap(
-                                        // crossAxisAlignment: CrossAxisAlignment.start,
-                                        direction: Axis.vertical,
-                                        clipBehavior: Clip.hardEdge,
-                                        runSpacing: 8.0,
-                                        spacing: 4.0,
-                                        children: [
-                                          Text(
-                                            controller.doctors.value[index].name!,
-                                            style:
-                                                AppStyle.txtUrbanistRomanBold24,
-                                          ),
-                                          Text(
-                                            "${controller.doctors.value[index].experience!} ${"Years Of Experience".tr}",
-                                            style:
-                                                AppStyle.txtUrbanistRegular16,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Row(
+                                    )
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: controller
+                                      .doctors[0].hospitals!.isNotEmpty,
+                                  child: Row(
                                     children: [
                                       CustomSpacer.xs(),
-                                      Icon(Icons.favorite_border_outlined),
+                                      Icon(Icons.location_on),
                                       CustomSpacer.xs(),
                                       Flexible(
                                         child: Text(
-                                          "${controller.doctors.value[0].specialization!.join(', ')} ",
+                                          controller.doctors[0].hospitals!
+                                              .take(3)
+                                              .map((v) => v.name)
+                                              .join(', '),
                                           style: AppStyle.txtUrbanistRegular18
                                               .copyWith(
                                                   fontWeight: FontWeight.w500),
-                                          softWrap: true,
-                                          overflow: TextOverflow.fade,
                                         ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Get.to(() => AppointmentBookingWidget(
+                                                doctor:
+                                                    controller.doctors[index],
+                                              ));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                MYcolors.bluecolor),
+                                        child: Text(
+                                          "Book Now".tr,
+                                          style: AppStyle.txtRobotoRegular20
+                                              .copyWith(color: Colors.white),
+                                        ),),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Consultation Fees".tr,
+                                        style: AppStyle.txtRobotoRegular16,
+                                        children: [TextSpan(text: " \$${controller.doctors[index].price}".tr, style: AppStyle.txtRobotoRegular20.copyWith(fontSize: getFontSize(24)),), ]
                                       )
-                                    ],
-                                  ),
-                                  Visibility(
-                                    visible: controller
-                                        .doctors.value[0].hospitals!.isNotEmpty,
-                                    child: Row(
-                                      children: [
-                                        CustomSpacer.xs(),
-                                        Icon(Icons.location_on),
-                                        CustomSpacer.xs(),
-                                        Flexible(
-                                          child: Text(
-                                            controller.doctors.value[0]
-                                                .hospitals!.take(3)
-                                                .map((v) => v.name)
-                                                .join(', '),
-                                            style: AppStyle.txtUrbanistRegular18
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                          ),
-                                        ),
-                                      ],
+                                      // style: AppStyle.txtRobotoRegular20.copyWith(fontSize: 24),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Get.to(
-                                                () => AppointmentBookingWidget(
-                                                      doctor: controller
-                                                          .doctors[index],
-                                                    ));
-                                          },
-                                          child: Text("Book Now".tr))
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        });
+                          ),
+                        );
+                      },
+                    );
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
-              ),
-            ),
-            SizedBox(
-              // alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(
-                "Please remember that there is may be charge applied to video consulting".tr,
-                style: TextStyle(
-                    // color: MYcolors.whitecolor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,7 @@ class _Home_screenState extends State<Home_screen> {
                 leading: SvgPicture.asset('assets/icons/bottom-nav-whatsapp.svg'),
                 title: Text("WhatsApp Chat".tr),
                 onTap: (){
-                  openWhatsapp(
+                  Utils.openWhatsapp(
                       text: "Hello, I have query regarding MyMedTrip.".tr,
                       number: WHATSAPP_NUMBER);
                 },
@@ -57,32 +58,6 @@ class _Home_screenState extends State<Home_screen> {
     }
   }
 
-  void openWhatsapp({required String text, required String number}) async {
-    var whatsapp = number; //+92xx enter like this
-    var whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
-    var whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
-    if (Platform.isIOS) {
-      // for iOS phone only
-      if (await canLaunchUrl(Uri.parse(whatsappURLIos))) {
-        await launchUrl(Uri.parse(
-          whatsappURLIos,
-        ));
-      } else {
-        Get.snackbar("Whatsapp not installed".tr,
-            "Please install whatsapp on your device and try again.".tr,
-            snackPosition: SnackPosition.BOTTOM);
-      }
-    } else {
-      // android , web
-      if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
-        await launchUrl(Uri.parse(whatsappURlAndroid));
-      } else {
-        Get.snackbar("Whatsapp not installed".tr,
-            "Please install whatsapp on your device and try again.".tr,
-            snackPosition: SnackPosition.BOTTOM);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +128,7 @@ class _Home_screenState extends State<Home_screen> {
       case 1:
         return const Query_page();
       case 3:
-        return QueryConfirmed();
+        return QueryConfirmed(showBack: false);
       case 4:
         return const Connect_Home_page();
       default:

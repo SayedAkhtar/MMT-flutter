@@ -2,6 +2,7 @@ import 'package:MyMedTrip/helper/Utils.dart';
 
 class UserFamily {
   int? id;
+  String? countryCode;
   String? phoneNo;
   String? name;
   String? gender;
@@ -27,6 +28,7 @@ class UserFamily {
 
   UserFamily.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    countryCode = json['country_code'].toString();
     phoneNo = json['phone'].toString();
     name = json['name'];
     gender = json['gender'];
@@ -43,6 +45,7 @@ class UserFamily {
     data['name'] = name;
     data['gender'] = gender;
     data['treatment_country'] = treatmentCountry;
+    data['country_code'] = countryCode;
     data['phone'] = phoneNo;
     data['relationship'] = relationWithPatient;
     data['speciality'] = speciality;

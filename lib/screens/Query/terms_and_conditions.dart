@@ -11,7 +11,7 @@ import 'package:MyMedTrip/screens/Query/query_form.dart';
 
 import '../../constants/colors.dart';
 
-class Terms_and_Conditions extends GetView<QueryController> {
+class Terms_and_Conditions extends StatelessWidget {
   const Terms_and_Conditions(this.response, {super.key});
   final QueryResponse response;
   @override
@@ -32,12 +32,6 @@ class Terms_and_Conditions extends GetView<QueryController> {
         Spacer(),
         GestureDetector(
           onTap: () {
-            // if(controller.currentStep.value == QueryStep.documentForVisa && !controller.showPaymentPage){
-            //   controller.currentStep.value = controller.currentStep.value + 2;
-            // }else{
-            //   controller.currentStep.value = controller.currentStep.value + 1;
-            // }
-            print(response.queryId!);
             Get.offAll(() => QueryForm(response.queryType!, queryId: response.queryId,));
           },
           child: Container(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -43,11 +44,14 @@ class QueryProvider extends BaseProvider {
     return null;
   }
 
-  Future<bool> postQueryGenerationData(Map data) async {
+  Future<bool> postQueryGenerationData(Map<String, dynamic> data) async {
 
     try{
       Loaders.loadingDialog(title: "Uploading Data");
-      Response response = await post('/queries', data, headers: _headers);
+      String json = jsonEncode(data);
+      print(json);
+      Response response = await post('/queries', data, headers: _headers, contentType: 'application/json');
+      print(response.body);
       Logger().d(response.body);
       var jsonBody = await responseHandler(response);
       if(response.isOk){
@@ -119,7 +123,7 @@ class QueryProvider extends BaseProvider {
 
   Future<bool> updatePatientResponse(FormData data) async{
     try{
-      Response response = await post('/upload-patient-response', data, headers: _headers);
+      Response response = await post('/upload-patient-response', data, headers: _headers, contentType: 'application/json');
       if(response.status.hasError){
         print(response.body);
         return false;
@@ -134,14 +138,15 @@ class QueryProvider extends BaseProvider {
   }
 
   Future getQueryStepData(int queryId, int step) async{
-    try {
+    // try {
       Response response = await get('/queries/$queryId/$step',
           contentType: 'application/json', headers: _headers);
       var jsonString = await responseHandler(response);
       return QueryResponse.fromJson(jsonString);
-    } catch (error) {
-      Loaders.errorDialog(error.toString(), title: "Error");
-    }
+    // } catch (error) {
+    //   print(error);
+    //   // Loaders.errorDialog(error.toString(), title: "Error");
+    // }
   }
 
   Future<bool> postMedicalVisaQueryData(Map data) async {

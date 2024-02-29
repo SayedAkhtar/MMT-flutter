@@ -81,7 +81,7 @@ class UserController extends GetxController {
     }
   }
 
-  void listFamily() async {
+  Future listFamily() async {
     List<UserFamily> res = await _provider.listFamilies();
     familiesList = res;
     loading.value = false;
@@ -101,7 +101,7 @@ class UserController extends GetxController {
       }
       familiesList = newList;
     }
-    Get.back(closeOverlays: true);
+    Get.back();
     update();
   }
 
@@ -156,8 +156,8 @@ class UserController extends GetxController {
   void updateFamilyNotificationStatus(int patientId) async{
     Loaders.loadingDialog();
     bool res = await _provider.changeFamilyNotificationStatus(patientId);
+    await listFamily();
     Loaders.closeLoaders();
-    update();
   }
 
 }

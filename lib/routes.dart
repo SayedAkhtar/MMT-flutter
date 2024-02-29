@@ -168,7 +168,8 @@ final getPages = [
   ),
   GetPage(
       name: Routes.teleconsultationSchedule,
-      page: () => const TeLe_Consult_page()),
+      page: () => const TeLe_Consult_page()
+  ),
   GetPage(name: Routes.teleconsultationPay, page: () => const Schedule_page()),
   GetPage(
       name: Routes.teleconsultationConfirm, page: () => const Thank_you_page()),

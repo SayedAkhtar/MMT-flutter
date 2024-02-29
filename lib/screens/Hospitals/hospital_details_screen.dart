@@ -1,6 +1,8 @@
 import 'package:MyMedTrip/components/CustomAppAbrSecondary.dart';
 import 'package:MyMedTrip/components/ShimmerLoader.dart';
+import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
+import 'package:MyMedTrip/helper/Utils.dart';
 import 'package:MyMedTrip/models/hospital_model.dart';
 import 'package:MyMedTrip/providers/hospital_provider.dart';
 import 'package:MyMedTrip/routes.dart';
@@ -11,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/CustomImageView.dart';
+import '../../constants/api_constants.dart';
 import '../../constants/size_utils.dart';
 import '../../theme/app_style.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +98,7 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: getPadding(left: 24, top: 25, bottom: 78),
+                padding: getPadding(left: 16, top: 25, bottom: 78, right: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -222,6 +225,23 @@ class _HospitalDetailsScreenState extends State<HospitalDetailsScreen> {
                                   )
                               ]),
                         ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.symmetric(vertical: CustomSpacer.S),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Utils.openWhatsapp(text: "Hello, I have query regarding MyMedTrip.".tr,
+                                number: WHATSAPP_NUMBER);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                              MYcolors.bluecolor),
+                          child: Text(
+                            "Talk to us now".tr,
+                            style: AppStyle.txtRobotoRegular20
+                                .copyWith(color: Colors.white),
+                          ),),
                       ),
                       Padding(
                           padding: getPadding(top: 29),

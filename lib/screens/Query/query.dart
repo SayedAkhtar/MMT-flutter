@@ -21,15 +21,12 @@ class Query_page extends StatefulWidget {
 }
 
 class _Query_pageState extends State<Query_page> {
-  late QueryController _controller;
-  late List<ActiveQuery> queries;
+  List<ActiveQuery> queries = [];
   bool loading = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = Get.put(QueryController());
-    // _controller.getQueryPageData();
     fetchQueries();
   }
 
@@ -44,11 +41,16 @@ class _Query_pageState extends State<Query_page> {
     List<ActiveQuery> tempQueries = [];
     if(data  != null && data.activeQuery != null && data.activeQuery!.isNotEmpty){
       tempQueries = data.activeQuery!;
+      setState(() {
+        queries = tempQueries;
+        loading = false;
+      });
+    }else{
+      setState(() {
+        loading = false;
+      });
     }
-    setState(() {
-      queries = tempQueries;
-      loading = false;
-    });
+
   }
 
   @override
@@ -63,34 +65,6 @@ class _Query_pageState extends State<Query_page> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Builder(builder: (_) {
-              if (!loading) {
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async{
-                      setState(() {
-                        loading = true;
-                      });
-                      fetchQueries();
-                    },
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: queries.length,
-                        itemBuilder: (_, index) {
-                          return _activeQueryCard(context,
-                              id: queries[index].id!,
-                              queryHash: queries[index].queryHash,
-                              date:
-                                  "Date: ${queries[index].createdAt}",
-                              response: queries[index].doctorResponse!,
-                              selectedIndex: index,
-                              stepName: queries[index].stepName!,
-                              stepNote: queries[index].stepNote!,
-                              query: queries[index]
-                              );
-                        }),
-                  ),
-                );
-              }
               if (!loading && queries.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -102,15 +76,44 @@ class _Query_pageState extends State<Query_page> {
                   ),
                 );
               }
-              return const Expanded(
-                child: SizedBox(
-                  height: 350,
-                  width: 350,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+              if (loading) {
+                return const Expanded(
+                  child: SizedBox(
+                    height: 350,
+                    width: 350,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
+                );
+              }
+              return Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async{
+                    setState(() {
+                      loading = true;
+                    });
+                    fetchQueries();
+                  },
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: queries.length,
+                      itemBuilder: (_, index) {
+                        return _activeQueryCard(context,
+                            id: queries[index].id!,
+                            queryHash: queries[index].queryHash,
+                            date:
+                            "Date: ${queries[index].createdAt}",
+                            response: queries[index].doctorResponse!,
+                            selectedIndex: index,
+                            stepName: queries[index].stepName!,
+                            stepNote: queries[index].stepNote!,
+                            query: queries[index]
+                        );
+                      }),
                 ),
               );
+
             }),
             CustomSpacer.s(),
             ElevatedButton(
@@ -165,7 +168,7 @@ class _Query_pageState extends State<Query_page> {
     return GestureDetector(
       onTap: () {
         if (currQuery.isConfirmed!) {
-          Get.toNamed(Routes.confirmedQuery);
+          Get.toNamed(Routes.confirmedQuery, arguments: {"query_id": currQuery.id});
           return;
         }
         if(currQuery.type == QueryType.query && currQuery.currentStep == 1){

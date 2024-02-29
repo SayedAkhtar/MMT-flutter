@@ -35,8 +35,6 @@ class BaseProvider extends GetConnect implements GetxService{
   dynamic responseHandler(Response response) async {
     var logger = Logger();
     logger.d(token);
-    logger.d(response.statusCode);
-    logger.d("URL : ${response.request!.url}");
     switch (response.statusCode) {
       case 200:
       case 201:

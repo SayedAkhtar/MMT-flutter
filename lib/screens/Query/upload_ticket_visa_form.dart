@@ -129,60 +129,33 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
                   onTap: () {
                     showAdaptiveActionSheet(
                       context: context,
+                      isDismissible: true,
                       actions: <BottomSheetAction>[
                         BottomSheetAction(
                           title: Text('Upload New Photo'.tr),
                           onPressed: (_) async {
-                            try {
-                              final XFile? cameraImage = await _picker
-                                  .pickImage(source: ImageSource.camera);
-                              if (cameraImage == null) return;
-                              File imageFile = File(cameraImage.path);
-                              String? imagePath =
-                                  await FirebaseFunctions.uploadImage(
-                                      imageFile);
-                              if (imagePath == null) return;
+                            String? imagePath = await Utils.uploadFromCamera();
+                            if(imagePath != null && imagePath.isNotEmpty){
                               setState(() {
                                 tickets.add(imagePath);
                                 files.add(imagePath);
                               });
-                            } catch (e) {
-                              print(e.toString());
-                            } finally {
-                              Get.back();
                             }
+                            Get.back();
                           },
                         ),
                         BottomSheetAction(
                           title: Text('Choose from Library'.tr),
                           onPressed: (_) async {
-                            try {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                dialogTitle: "Upload medical visa".tr,
-                                type: FileType.custom,
-                                allowMultiple: true,
-                                allowedExtensions: ['pdf', 'docx'],
-                              );
-                              if (result != null) {
-                                var path = result.files.single.path!;
-                                File imageFile = File(result.files.single.path!);
-                                String? imagePath =
-                                await FirebaseFunctions.uploadImage(
-                                    imageFile);
-                                if (imagePath == null) return;
-                                setState(() {
-                                  tickets.add(imagePath);
-                                  files.add(imagePath);
-                                });
-                              } else {
-                                // User canceled the picker
-                              }
-                            } catch (e) {
-                              print(e);
-                            } finally {
-                              Get.back();
-                            }
+                            String? imagePath = await Utils.uploadFromLibrary("Upload medical visa".tr,
+                            allowedExtensions: ['jpeg','jpg','png','pdf']
+                            );
+                            if (imagePath == null) return;
+                            setState(() {
+                              tickets.add(imagePath);
+                              files.add(imagePath);
+                            });
+                            Get.back();
                           },
                         ),
                       ],
@@ -337,6 +310,7 @@ class _UploadTicketAndVisaFormState extends State<UploadTicketAndVisaForm> {
               // Get.to(Visa_submit_page());
             },
             style: ElevatedButton.styleFrom(
+                backgroundColor: MYcolors.bluecolor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100)),
                 minimumSize: Size(double.infinity, 40)),

@@ -34,14 +34,6 @@ class TeleconsultController extends GetxController {
   }
 
 
-  @override
-  void onClose() {
-    super.onClose();
-    if (!_provider.isDisposed) {
-      _provider.dispose();
-    }
-  }
-
   void getDoctors({int? page}) async {
     isSearchingDoctor.value = true;
     List<Doctor> docs = [];

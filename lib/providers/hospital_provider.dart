@@ -35,8 +35,8 @@ class HospitalProvider extends BaseProvider {
     return null;
   }
 
-  Future<List<Hospital?>> getAllHospitals({String? params}) async {
-    List<Hospital?> hospitals = [];
+  Future<List<Hospital>> getAllHospitals({String? params}) async {
+    List<Hospital> hospitals = [];
     try {
       Response response = await get('/hospitals?$params',
           contentType: 'application/json', headers: _headers);

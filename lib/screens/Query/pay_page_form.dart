@@ -2,6 +2,7 @@
 
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/models/query_response_model.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/constants/razorpay_constants.dart';
@@ -23,12 +24,16 @@ class PayPageForm extends StatefulWidget {
 class _PayPageFormState extends State<PayPageForm> {
   final Razorpay _razorpay = Razorpay();
   final QueryController _controller = Get.find<QueryController>();
+  int queryCost = 15;
   @override
   void initState() {
     // TODO: implement initState
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    if(widget.response!.response['query_cost'] != null && widget.response!.response['query_cost']!= ""){
+      queryCost = widget.response!.response['query_cost'];
+    }
     super.initState();
   }
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -37,9 +42,8 @@ class _PayPageFormState extends State<PayPageForm> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("====== Error ======");
-    print(response.error);
-    print(response.code);
     if(response.message != null){
+      FirebaseCrashlytics.instance.log(response.message!);
       Loaders.errorDialog(response.message!);
     }
   }
@@ -58,7 +62,7 @@ class _PayPageFormState extends State<PayPageForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '\$' "15",
+                  "\$${queryCost}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 60,

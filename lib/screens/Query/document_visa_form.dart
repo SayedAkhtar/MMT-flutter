@@ -21,16 +21,15 @@ import '../../constants/api_constants.dart';
 import '../../constants/colors.dart';
 
 class DocumentForVisaForm extends StatefulWidget {
-  const DocumentForVisaForm(this.response, {super.key});
+  const DocumentForVisaForm(this.response, {super.key, required this.formSubmitted});
   final QueryResponse response;
+  final bool formSubmitted;
 
   @override
   State<DocumentForVisaForm> createState() => _DocumentForVisaFormState();
 }
 
 class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
-  late QueryController _controller;
-
   String patientPassport = "";
   List<dynamic> attendantPassport = [];
   String secondAttendantPassport = "";
@@ -43,7 +42,8 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
   @override
   void initState() {
     // TODO: implement initState
-    selectedCountry = "India".tr;
+    selectedCountry = "Select Country".tr;
+    formSubmitted = widget.formSubmitted;
     super.initState();
   }
 
@@ -94,7 +94,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                     name: 'second_attendant_passport'),
                 CustomSpacer.m(),
                 FormLabel(
-                  "From which country will you be applying \nfor the visa?".tr,
+                  "From which country will you be applying for the visa?".tr,
                 ),
                 CustomSpacer.m(),
                 FormLabel(
@@ -151,12 +151,9 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                 ),
                 CustomSpacer.s(),
                 FormLabel(
-                  "From which country will you be applying \nfor the visa?".tr,
+                  "Please select your destination country for travel".tr,
                 ),
-                CustomSpacer.m(),
-                FormLabel(
-                  "Please select your destination country \nfor travel".tr,
-                ),
+                CustomSpacer.s(),
                 FormLabel(
                   "Country".tr,
                 ),
@@ -173,7 +170,7 @@ class _DocumentForVisaFormState extends State<DocumentForVisaForm> {
                       thickness: 0,
                       color: Colors.transparent,
                     ),
-                    items: <String>['India']
+                    items: <String>['Select Country','India']
                         .map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -57,9 +57,6 @@ class QueryController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    if (!_provider.isDisposed) {
-      _provider.dispose();
-    }
   }
 
   void generateQuery() async {

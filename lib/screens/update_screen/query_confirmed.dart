@@ -15,22 +15,33 @@ import 'package:MyMedTrip/screens/update_screen/connect_coordinotor.dart';
 import 'package:logger/logger.dart';
 
 
-class QueryConfirmed extends GetView<QueryController> {
-  QueryConfirmed({super.key});
-  final Map<String, String>? arguments = Get.arguments;
+class QueryConfirmed extends StatelessWidget {
+  QueryConfirmed({super.key, this.showBack=true });
+  final bool showBack;
+  final Map<String, dynamic>? arguments = Get.arguments;
   String? familyUserId = "";
+  int queryId = 0;
   @override
   Widget build(BuildContext context) {
     QueryProvider provider = Get.put(QueryProvider());
-    if(arguments != null && arguments!['family_user_id'] != null ){
-      familyUserId = arguments!['family_user_id'];
+    if(arguments != null ){
+      if(arguments!['family_user_id'] != null){
+        familyUserId = arguments!['family_user_id'];
+      }
+     if(arguments!['query_id'] != null){
+       if(arguments!['query_id'].runtimeType == String){
+         queryId = int.parse(arguments!['query_id']);
+       }else{
+         queryId = arguments!['query_id'];
+       }
+     }
     }
 
     return Scaffold(
       appBar: CustomAppBar(
         pageName: "Confirmed details".tr,
         showDivider: false,
-        showBack: false,
+        showBack: showBack,
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
@@ -62,7 +73,7 @@ class QueryConfirmed extends GetView<QueryController> {
                     Expanded(
                       child: FutureBuilder<ConfirmedQuery?>(
                           future: provider.getConfirmedQueryDetail(
-                              controller.selectedQuery, familyId: familyUserId),
+                              queryId, familyId: familyUserId),
                           builder:
                               (context, AsyncSnapshot<ConfirmedQuery?> data) {
                             if (data.hasData) {

@@ -149,7 +149,8 @@ class _Add_family_pageState extends State<Add_family_page> {
                       counterText: "",
                     ),
                     onChanged: (phone) {
-                      familyMember?.phoneNo = phone.completeNumber;
+                      familyMember?.countryCode = phone.countryCode;
+                      familyMember?.phoneNo = phone.number;
                     },
                     initialCountryCode: "IN",
                   ),

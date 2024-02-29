@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 class ChatMessage {
   final String type;
   final String message;
@@ -14,18 +16,20 @@ class ChatMessage {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'type': type,
-      'message': message,
-      'from': from
-    };
+    return {'type': type, 'message': message, 'from': from};
   }
 
   factory ChatMessage.fromMap(Map<dynamic, dynamic> map) {
+    int from;
+    if (map['from'].runtimeType == String) {
+      from = int.parse(map['from']);
+    } else {
+      from = map['from'];
+    }
     return ChatMessage(
       type: map['type'] as String,
       message: map['message'] as String,
-      from: map['from'] as int,
+      from: from,
     );
   }
 }

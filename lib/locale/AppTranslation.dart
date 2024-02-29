@@ -361,7 +361,10 @@ final Map<String, String> bn = {
   "Please enter the OTP to proceed": "এগিয়ে যেতে দয়া করে OTP লিখুন",
   "password reset successfully": "পাসওয়ার্ড সফলভাবে রিসেট করা হয়েছে",
   "Resend OTP": "পুনরায় OTP পাঠান",
-  "Cost of Consultation": "পরামর্শের মূল্য"
+  "Cost of Consultation": "পরামর্শের মূল্য",
+  "Show Proforma Invoice":"প্রোফর্মা চালান দেখান",
+  "File Uploaded": "ফাইল আপলোড করা হয়েছে",
+  "Talk to us now":"এখন আমাদের সাথে কথা বলুন",
 };
 final Map<String, String> ar = {
   "Cost of Consultation":"تكلفة الاستشارة",
@@ -635,7 +638,10 @@ final Map<String, String> ar = {
 "Please enter your mobile number": "الرجاء إدخال رقم هاتفك المحمول",
 "Please enter the OTP to proceed": "الرجاء إدخال كلمة مرور لمرة واحدة للمتابعة",
   "password reset successfully": "تم إعادة تعيين كلمة المرور بنجاح",
-  "Resend OTP": "إعادة إرسال رمز التحقق"
+  "Resend OTP": "إعادة إرسال رمز التحقق",
+  "Show Proforma Invoice": "عرض فاتورة بروفورما",
+  "File Uploaded": "تم تحميل الملف",
+  "Talk to us now":"تحدث إلينا الآن",
 };
 final Map<String, String> ru = {
   "Phone": "Телефон",
@@ -909,5 +915,8 @@ final Map<String, String> ru = {
   "Please enter the OTP to proceed": "Пожалуйста, введите OTP, чтобы продолжить",
   "password reset successfully": "Пароль успешно сброшен",
   "Resend OTP": "Повторно отправить OTP",
-  "Cost of Consultation": "Стоимость консультации"
+  "Cost of Consultation": "Стоимость консультации",
+  "Show Proforma Invoice": "Показать проформа-счёт",
+  "File Uploaded":"Файл загружен",
+  "Talk to us now":"Поговорите с нами сейчас"
 };

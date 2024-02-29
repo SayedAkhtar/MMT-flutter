@@ -52,7 +52,7 @@ class HomeController extends GetxController {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
       // if(Platform.isAndroid){
         final fcmToken = await FirebaseMessaging.instance.getToken();
-        await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
+        // await _provider.updateFirebase(userCredential.user!.uid, fcmToken!);
       // }
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
