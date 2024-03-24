@@ -13,7 +13,7 @@ class LocalUser {
   String? treatmentCountry;
   String? relationWithPatient;
   bool? isActive;
-  late int id;
+  int? id;
   String? token;
   dynamic biometric;
 
@@ -60,7 +60,7 @@ class LocalUser {
       }
       isActive = json['is_active'];
       token = json['token'];
-      id = json['id']??0;
+      id = json['id'];
       speciality = json['speciality'];
       biometric = json['local_auth' ];
     }catch(error, StackTrace){

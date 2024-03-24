@@ -119,6 +119,8 @@ class UserController extends GetxController {
         user: user
     );
     if(res){
+      Loaders.successDialog("Your password changed successfully. Please login again.".tr, barrierDismissible: false);
+      await Future.delayed(const Duration(seconds: 2));
       AuthController authController = Get.find<AuthController>();
       authController.logout();
     }

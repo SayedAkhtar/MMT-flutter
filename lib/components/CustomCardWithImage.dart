@@ -55,7 +55,7 @@ class CustomCardWithImage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: CustomImageView(
                   url: imageUri,
                   fit: fit??BoxFit.cover,
@@ -68,10 +68,10 @@ class CustomCardWithImage extends StatelessWidget {
               Flexible(
                 flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
+                  padding: const EdgeInsets.fromLTRB(8.0, 6, 0, 2),
                   child: Text(
                     title,
-                    style: titleStyle ?? AppStyle.txtUrbanistRomanBold18,
+                    style: titleStyle ?? AppStyle.txtUrbanistRomanBold16,
                     textAlign: align ?? TextAlign.start,
                     maxLines: textLines ?? 2,
                     overflow: TextOverflow.ellipsis,
@@ -79,9 +79,9 @@ class CustomCardWithImage extends StatelessWidget {
                 ),
               ),
           bodyText != null ?Flexible(
-                flex: 1,
+
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 6, 8, 2),
+                  padding: const EdgeInsets.fromLTRB(8.0, 6, 0, 2),
                   child:
                        buildCardBody(icon) ,
                 ),

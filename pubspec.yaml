@@ -1,6 +1,6 @@
 name: MyMedTrip
-version: 1.0.2+21
-publish_to: noney
+version: 1.0.2+23
+publish_to: none
 description: Amazon of medical tourism
 environment: 
   sdk: '>=2.18.6 <3.0.0'

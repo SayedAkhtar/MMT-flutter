@@ -22,7 +22,7 @@ class SuggestedHospitals extends StatelessWidget {
                   arguments: {'type': 'allHospitals'});
             }),
         SizedBox(
-          height: getVerticalSize(240),
+          height: getVerticalSize(260),
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: data.length,

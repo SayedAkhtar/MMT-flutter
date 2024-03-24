@@ -21,7 +21,7 @@ final Map<String, String> enUS = {
   'Our Latest blog': "Our Latest blog",
   'explore': "explore",
   'Not Convinced ?': "Not Convinced ?",
-  'Check out some of our Patient\'s stories': "Check out some of our Patient's stories",
+  'Check out some of our Patient\'s Testimonials': "Check out some of our Patient's Testimonials",
   'FAQs': "FAQs",
   'Active query': "Active query",
   'Home': "Home",
@@ -120,7 +120,7 @@ final Map<String, String> bn = {
   "Need help from where to start? Talk to us now.": "কোথা থেকে শুরু করতে সাহায্য প্রয়োজন? এখন আমাদের সাথে কথা বলুন।",
   "Our latest blog": "আমাদের সর্বশেষ ব্লগ",
   "Explore": "অন্বেষণ",
-  "Not convinced ?\\nCheck out some of our Patient's stories.": "বিশ্বাস হচ্ছে না?\\nআমাদের কিছু রোগীর গল্প দেখুন।",
+  "Patient's Testimonials.": " রোগীদের প্রশংসা।",
   "Frequently Asked Questions": "সচরাচর জিজ্ঞাস্য",
   "Please enter 3 or more character to begin search": "অনুসন্ধান শুরু করতে অনুগ্রহ করে 3 বা তার বেশি অক্ষর লিখুন৷",
   "No data to display": "কোন তথ্য প্রদর্শন",
@@ -365,6 +365,10 @@ final Map<String, String> bn = {
   "Show Proforma Invoice":"প্রোফর্মা চালান দেখান",
   "File Uploaded": "ফাইল আপলোড করা হয়েছে",
   "Talk to us now":"এখন আমাদের সাথে কথা বলুন",
+  "Subscribe to Notifications": "বিজ্ঞপ্তি সাবস্ক্রাইব করুন",
+  "Un-Subscribe to Notifications":"বিজ্ঞপ্তি সাবস্ক্রাইব করুন",
+  "Show Status": "অবস্থা দেখান",
+  "Your password changed successfully. Please login again.":"আপনার পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে। অনুগ্রহ করে আবার লগইন করুন।"
 };
 final Map<String, String> ar = {
   "Cost of Consultation":"تكلفة الاستشارة",
@@ -432,7 +436,7 @@ final Map<String, String> ar = {
   "Need help from where to start? Talk to us now.": "هل تحتاج إلى مساعدة من أين تبدأ؟ تحدث معنا الآن.",
   "Our latest blog": "أحدث بلوق لدينا",
   "Explore": "يستكشف",
-  "Not convinced ?\\nCheck out some of our Patient's stories.": "لست مقتنعا؟\\nاطلع على بعض قصص مرضانا.",
+  "Patient's Testimonials": "شهادات المرضى",
   "Frequently Asked Questions": "أسئلة مكررة",
   "Please enter 3 or more character to begin search": "الرجاء إدخال 3 أحرف أو أكثر لبدء البحث",
   "No data to display": "لا توجد بيانات لعرض",
@@ -642,6 +646,10 @@ final Map<String, String> ar = {
   "Show Proforma Invoice": "عرض فاتورة بروفورما",
   "File Uploaded": "تم تحميل الملف",
   "Talk to us now":"تحدث إلينا الآن",
+  "Subscribe to Notifications":"الاشتراك في الإشعارات",
+  "Un-Subscribe to Notifications": "الغاء الاشتراك في الإشعارات",
+  "Show Status":"عرض الحالة",
+  "Your password changed successfully. Please login again.":"تم تغيير كلمة المرور بنجاح. يرجى تسجيل الدخول مرة أخرى."
 };
 final Map<String, String> ru = {
   "Phone": "Телефон",
@@ -708,7 +716,7 @@ final Map<String, String> ru = {
   "Need help from where to start? Talk to us now.": "Нужна помощь, с чего начать? Поговорите с нами сейчас.",
   "Our latest blog": "Наш последний блог",
   "Explore": "Исследовать",
-  "Not convinced ?\\nCheck out some of our Patient's stories.": "Не уверены?\\nОзнакомьтесь с историями наших пациентов.",
+  "Patient's Testimonials": "Отзывы пациентов",
   "Frequently Asked Questions": "Часто задаваемые вопросы",
   "Please enter 3 or more character to begin search": "Пожалуйста, введите 3 или более символов, чтобы начать поиск",
   "No data to display": "Нет данных для отображения",
@@ -918,5 +926,9 @@ final Map<String, String> ru = {
   "Cost of Consultation": "Стоимость консультации",
   "Show Proforma Invoice": "Показать проформа-счёт",
   "File Uploaded":"Файл загружен",
-  "Talk to us now":"Поговорите с нами сейчас"
+  "Talk to us now":"Поговорите с нами сейчас",
+  "Subscribe to Notifications": "Подписаться на уведомления",
+  "Un-Subscribe to Notifications": "Отписаться от уведомлений",
+  "Show Status": "Показать статус",
+  "Your password changed successfully. Please login again.": "Ваш пароль успешно изменен. Пожалуйста, войдите снова."
 };

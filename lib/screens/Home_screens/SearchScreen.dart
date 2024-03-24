@@ -165,7 +165,8 @@ class _SearchScreenState extends State<SearchScreen> {
         itemCount: data.length,
         itemBuilder: (_, i) {
           return CustomCardWithImage(
-            width: getHorizontalSize(280),
+            imageAlign: Alignment.topCenter,
+            fit: BoxFit.fitWidth,
             onTap: () {
               if (data[i]['type'] == 'doctor') {
                 Get.toNamed(Routes.doctorPreviewNew,

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:MyMedTrip/constants/api_constants.dart';
+import 'package:MyMedTrip/controller/controllers/local_storage_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyMedTrip/components/CustomAppBar.dart';
@@ -6,6 +9,7 @@ import 'package:MyMedTrip/constants/colors.dart';
 import 'package:MyMedTrip/controller/controllers/user_controller.dart';
 import 'package:MyMedTrip/helper/CustomSpacer.dart';
 import 'package:MyMedTrip/helper/Utils.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:pattern_formatter/date_formatter.dart';
 import 'package:select_dialog/select_dialog.dart';
@@ -33,16 +37,30 @@ class _Profile_edit_pageState extends State<Profile_edit_page> {
   }
 
   buildCountryOption() async {
-    var t = await GetConnect().get('$api_uri/countries');
     List<String> temp = [];
     List<int> tempOne = [];
-    Logger().d(t.statusText);
-    if (t.statusCode == 200) {
-      t.body['DATA'].forEach((element) {
-        temp.add(element['name']);
-        tempOne.add(element['id']);
+    String? availableCountries = Get.put(LocalStorageController()).get('availableCountries');
+    if(availableCountries!=null && availableCountries.isNotEmpty){
+      Map<String, dynamic> countries = jsonDecode(availableCountries);
+      countries['countryName'].forEach((element){
+        temp.add(element);
       });
+      countries['countryId'].forEach((element){
+        tempOne.add(element);
+      });
+    }else{
+      var t = await GetConnect().get('$api_uri/countries');
+
+      Logger().d(t.statusText);
+      if (t.statusCode == 200) {
+        t.body['DATA'].forEach((element) {
+          temp.add(element['name']);
+          tempOne.add(element['id']);
+        });
+        Get.put(LocalStorageController()).set(key: 'availableCountries', value: jsonEncode({'countryName': temp, 'countryId': tempOne}));
+      }
     }
+
     setState(() {
       countryName = temp;
       countryId = tempOne;

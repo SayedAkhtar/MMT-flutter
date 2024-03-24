@@ -4,17 +4,18 @@ import 'package:MyMedTrip/helper/Loaders.dart';
 import 'package:MyMedTrip/providers/base_provider.dart';
 
 import '../controller/controllers/local_storage_controller.dart';
+import '../models/consultation.dart';
 
 
 class TeleconsultProvider extends BaseProvider {
   final LocalStorageController _storage = Get.find<LocalStorageController>();
   @override
   void onInit(){
-    super.onInit();
     httpClient.addRequestModifier((dynamic request) {
       request.headers['language'] = _storage.get("language") ?? "";
       return request;
     });
+    super.onInit();
   }
 
   Future<bool> uploadVisaDocuments({required String path, required String fieldName}) async{
@@ -37,19 +38,18 @@ class TeleconsultProvider extends BaseProvider {
     return false;
   }
 
-  Future getConsultationList() async{
+  Future<List<Consultation>> getConsultationList() async{
+    List<Consultation> consultations = [];
     try{
       Response? response = await get('/consultations');
-      if(response.status.hasError){
-        return Future.error(response.body);
-      }
-      else{
-        return response.body['DATA'];
-      }
+      var json = await responseHandler(response);
+      json.forEach((element) => {
+        consultations.add(Consultation.fromJson(element))
+      });
     }catch(e){
       Loaders.errorDialog(e.toString());
     }
-    return null;
+    return consultations;
   }
 
   Future<bool> storeConsultationRequest(data) async{

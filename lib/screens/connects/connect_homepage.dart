@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:MyMedTrip/models/consultation.dart';
+import 'package:MyMedTrip/providers/teleconsult_provider.dart';
 import 'package:MyMedTrip/screens/connects/AgoraVideoChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,27 +59,27 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
           child: Column(
             children: [
               Expanded(
-                child: SizedBox(
-                  child: GetBuilder<TeleconsultController>(builder: (ctrl) {
-                    if (!_controller.consultationsLoaded) {
+                child: FutureBuilder<List<Consultation>>(
+                  future: Get.put(TeleconsultProvider()).getConsultationList(),
+                  builder: (ctx, AsyncSnapshot<List<Consultation>> snapshot){
+                    // return Text(snapshot.data.toString());
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    if (_controller.consultationList.isEmpty &&
-                        _controller.consultationsLoaded) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.data!.isEmpty) {
                       return Text("No Consultation to show".tr);
                     }
                     return ListView.builder(
-                        itemCount: _controller.consultationList.length,
+                        itemCount: snapshot.data!.length,
                         itemBuilder: (ctx, idx) {
-                          var schedule = _controller.consultationList[idx]
-                              ['scheduled_at'];
+                          Consultation curr = snapshot.data![idx];
+                          var schedule = curr.scheduledAt;
                           var time = DateFormat('yyyy-MM-dd \nhh:mm a')
-                              .format(DateTime.parse(_controller
-                                  .consultationList[idx]['updated_at']));
+                              .format(DateTime.parse(curr.updatedAt));
                           return GestureDetector(
                             onTap: () {
-                              if (!_controller.consultationList[idx]
-                                  ['is_active']) {
+                              if (!curr.isActive) {
                                 Get.showSnackbar(GetSnackBar(
                                   title: "Consultation not yet active".tr,
                                   message: "Scheduled at :".tr +schedule,
@@ -98,10 +100,8 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                   Routes.videoChat,
                                   arguments: {
                                     "channelName":
-                                        _controller.consultationList[idx]
-                                            ['channel_name'],
-                                    "token": _controller.consultationList[idx]
-                                        ['agora_id']
+                                    curr.channelName,
+                                    "token": curr.agoraId
                                   },
                                 );
                               }
@@ -112,7 +112,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius:
-                                          BorderRadius.circular(100),
+                                      BorderRadius.circular(100),
                                     ),
                                     height: 80,
                                     width: 80,
@@ -127,12 +127,12 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "TELE-${_controller.consultationList[idx]['id']}",
+                                          "TELE-${curr.id}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               // fontFamily: "Brandon",
@@ -141,27 +141,22 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                                               MYcolors.blacklightcolors),
                                         ),
                                         Text(
-                                          "${_controller.consultationList[idx]
-                                          ['doctor_name'] ?? 'Doctor'}",
+                                          curr.doctorName ?? 'Doctor',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               // fontFamily: "Brandon",
                                               fontSize: 15,
                                               color:
-                                                  MYcolors.blacklightcolors),
+                                              MYcolors.blacklightcolors),
                                         ),
                                         Text(
-                                          _controller.consultationList[idx]
-                                                  ['is_active']
+                                              curr.isActive
                                               ? "Active Consultation Call".tr
                                               : "Waiting for call to become active".tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15,
-                                              color: _controller
-                                                          .consultationList[
-                                                      idx]['is_active']
-                                                  ? MYcolors.greencolor
+                                              color: curr.isActive ? MYcolors.greencolor
                                                   : MYcolors.redcolor),
                                         ),
                                       ],
@@ -179,7 +174,7 @@ class _Connect_Home_pageState extends State<Connect_Home_page> {
                             ),
                           );
                         });
-                  }),
+                  },
                 ),
               ),
             ],

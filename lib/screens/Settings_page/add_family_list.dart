@@ -134,9 +134,9 @@ class Add_Family_List_page extends GetView<UserController> {
                                 child: Text(
                                   controller.familiesList[index]
                                           .notificationSubscribed!
-                                      ? "Un-Subscribe to Notifications"
-                                      : "Subscribe to Notifications",
-                                  style: AppStyle.txtRobotoRegular20
+                                      ? "Un-Subscribe to Notifications".tr
+                                      : "Subscribe to Notifications".tr,
+                                  style: AppStyle.txtRobotoRegular16
                                       .copyWith(color: Colors.white),
                                 ),
                                 onPressed: () {

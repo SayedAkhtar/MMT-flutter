@@ -623,7 +623,7 @@ class _HomePageState extends State<HomePage> {
                         Visibility(
                             visible: stories.isNotEmpty,
                             child: Text(
-                              "Not convinced ?\nCheck out some of our Patient's stories."
+                              "Patient's Testimonials."
                                   .tr,
                               style: AppStyle.txtUrbanistRomanBold24,
                             )),
